@@ -36,7 +36,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ? Container(color: Colors.white)
                   : SkipButton(controller: _controller),
             ),
-            //SkipButton(controller: _controller),
             Expanded(
                 flex: 4,
                 child: PageView.builder(

@@ -28,6 +28,7 @@ class StepsContainer extends StatelessWidget {
             width: getProportionateScreenHeight(60),
             height: getProportionateScreenHeight(60),
             child: CircularProgressIndicator(
+                strokeWidth: getProportionateScreenHeight(4),
                 valueColor: const AlwaysStoppedAnimation(kMainPink),
                 value: (page + 1) / (_list.length)),
           ),
@@ -36,7 +37,7 @@ class StepsContainer extends StatelessWidget {
               onTap: () {
                 if (page < _list.length && page != _list.length - 1) {
                   _controller.animateToPage(page + 1,
-                      duration: const Duration(milliseconds: 500),
+                      duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {
                   // TODO Navigate to Auth
@@ -57,12 +58,12 @@ class StepsContainer extends StatelessWidget {
                     borderRadius: BorderRadius.all(
                         Radius.circular(getProportionateScreenHeight(100)))),
                 child: const Icon(
-                  Icons.arrow_forward_ios_rounded,
+                  Icons.arrow_forward_ios,
                   color: Colors.white,
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
