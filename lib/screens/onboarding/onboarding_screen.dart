@@ -19,14 +19,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int page = 0;
   final _controller = PageController();
 
-  _storeOnboardInfo() async {
-    print("Shared pref called");
-    int isViewed = 0;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('onBoard', isViewed);
-    print(prefs.getInt('onBoard'));
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

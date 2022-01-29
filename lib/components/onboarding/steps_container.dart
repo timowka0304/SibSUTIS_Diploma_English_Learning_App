@@ -20,11 +20,8 @@ class StepsContainer extends StatelessWidget {
   final PageController _controller;
 
   _storeOnboardInfo() async {
-    print("Shared pref called");
-    int isViewed = 1;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('onBoardingScreen', isViewed);
-    print(prefs.getInt('onBoardingScreen'));
+    await prefs.setInt('onBoardingScreen', 1);
   }
 
   @override
