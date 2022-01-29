@@ -1,3 +1,4 @@
+import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
@@ -40,13 +41,12 @@ class StepsContainer extends StatelessWidget {
                       duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {
-                  // TODO Auth screen
-                  // Navigator.of(context).pushAndRemoveUntil(
-                  //   MaterialPageRoute(
-                  //     builder: (_) => const SignIn(),
-                  //   ),
-                  //   (route) => false,
-                  // );
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const SignIn(),
+                    ),
+                    (route) => false,
+                  );
                 }
               },
               child: Container(
