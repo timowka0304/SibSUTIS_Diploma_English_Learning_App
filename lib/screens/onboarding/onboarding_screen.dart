@@ -5,6 +5,7 @@ import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -17,6 +18,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingModel> _list = OnboardingModel.list;
   int page = 0;
   final _controller = PageController();
+
+  _storeOnboardInfo() async {
+    print("Shared pref called");
+    int isViewed = 0;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('onBoard', isViewed);
+    print(prefs.getInt('onBoard'));
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

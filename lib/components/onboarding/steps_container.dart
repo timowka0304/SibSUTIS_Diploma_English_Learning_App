@@ -3,6 +3,7 @@ import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepsContainer extends StatelessWidget {
   const StepsContainer({
@@ -17,6 +18,14 @@ class StepsContainer extends StatelessWidget {
   final int page;
   final List<OnboardingModel> _list;
   final PageController _controller;
+
+  _storeOnboardInfo() async {
+    print("Shared pref called");
+    int isViewed = 1;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('onBoardingScreen', isViewed);
+    print(prefs.getInt('onBoardingScreen'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +44,13 @@ class StepsContainer extends StatelessWidget {
           ),
           Center(
             child: InkWell(
-              onTap: () {
+              onTap: () async {
                 if (page < _list.length && page != _list.length - 1) {
                   _controller.animateToPage(page + 1,
                       duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {
+                  await _storeOnboardInfo();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (_) => const SignIn(),
