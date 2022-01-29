@@ -40,11 +40,10 @@ class StepsContainer extends StatelessWidget {
                       duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {
-                  // TODO Navigate to Auth
+                  // TODO Auth screen
                   // Navigator.of(context).pushAndRemoveUntil(
                   //   MaterialPageRoute(
-                  //     builder: (_) =>
-                  //         Login(screenHeight: SizeConfig.defaultSize * 30),
+                  //     builder: (_) => const SignIn(),
                   //   ),
                   //   (route) => false,
                   // );
@@ -57,9 +56,10 @@ class StepsContainer extends StatelessWidget {
                     color: kMainPurple,
                     borderRadius: BorderRadius.all(
                         Radius.circular(getProportionateScreenHeight(100)))),
-                child: const Icon(
-                  Icons.arrow_forward_ios,
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
                   color: Colors.white,
+                  size: getProportionateScreenHeight(23),
                 ),
               ),
             ),

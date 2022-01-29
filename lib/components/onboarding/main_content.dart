@@ -23,12 +23,12 @@ class MainContent extends StatelessWidget {
           flex: 3,
           child: Image.asset(
             _list[index].image,
-            height: getProportionateScreenHeight(317),
-            width: getProportionateScreenWidth(305),
+            height: getProportionateScreenHeight(330),
+            width: getProportionateScreenWidth(350),
           ),
         ),
         SizedBox(
-          height: getProportionateScreenHeight(110),
+          height: getProportionateScreenHeight(80),
         ),
         Text(_list[index].title,
             textAlign: TextAlign.center,
