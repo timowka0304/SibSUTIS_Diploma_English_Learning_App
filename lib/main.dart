@@ -1,3 +1,4 @@
+import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,7 @@ int? onBoardingScreenIsViewed;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
   onBoardingScreenIsViewed = prefs.getInt('onBoardingScreen');
 
@@ -26,12 +27,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
-        ),
-        home: onBoardingScreenIsViewed != null
-            ? const SignIn()
-            : const OnboardingScreen());
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
+      ),
+      initialRoute: onBoardingScreenIsViewed != null
+          ? SignIn.routeName
+          : OnboardingScreen.routeName,
+      routes: routes,
+    );
   }
 }

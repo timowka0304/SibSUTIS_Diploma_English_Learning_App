@@ -5,9 +5,10 @@ import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  static String routeName = "/onboarding";
+
   const OnboardingScreen({Key? key}) : super(key: key);
 
   @override

@@ -48,12 +48,8 @@ class StepsContainer extends StatelessWidget {
                       curve: Curves.easeInOutCirc);
                 } else {
                   await _storeOnboardInfo();
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const SignIn(),
-                    ),
-                    (route) => false,
-                  );
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      SignIn.routeName, (route) => false);
                 }
               },
               child: Container(

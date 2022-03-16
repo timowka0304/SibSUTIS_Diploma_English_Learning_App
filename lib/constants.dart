@@ -10,5 +10,6 @@ const String k2ndImageOnboardingPath = 'assets/images/onboarding/2nd_img.png';
 const String k3rdImageOnboardingPath = 'assets/images/onboarding/3rd_img.png';
 const String kLogoWhitePath = 'assets/logo/logo_white.png';
 const String kLogoBluePath = 'assets/logo/logo_blue.png';
+const String kLogoGoogle = 'assets/logo/google_icon.png';
 
 const kAnimationDuration = Duration(milliseconds: 200);
