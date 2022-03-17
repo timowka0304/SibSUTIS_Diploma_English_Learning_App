@@ -1,10 +1,10 @@
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'screens/onboarding/onboarding_screen.dart';
 
 int? onBoardingScreenIsViewed;
@@ -15,9 +15,14 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   onBoardingScreenIsViewed = prefs.getInt('onBoardingScreen');
 
+  await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(const MyApp());
+    runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyApp(),
+    ));
   });
 }
 

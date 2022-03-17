@@ -97,7 +97,7 @@ class SignIn extends StatelessWidget {
                               style: TextStyle(
                                 color: kWhite,
                                 fontWeight: FontWeight.w200,
-                                fontSize: getProportionateScreenWidth(10),
+                                fontSize: getProportionateScreenWidth(12),
                                 decoration: TextDecoration.underline,
                               ),
                             ),
