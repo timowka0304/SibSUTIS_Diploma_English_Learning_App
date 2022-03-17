@@ -20,6 +20,7 @@ class SignIn extends StatelessWidget {
           textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
         ),
         home: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: kMainPurple,
             body: SafeArea(
               child: Center(
