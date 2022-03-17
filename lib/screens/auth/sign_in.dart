@@ -14,6 +14,7 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _controller = TextEditingController();
     SizeConfig().init(context);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -78,7 +79,9 @@ class SignIn extends StatelessWidget {
                               fixedSize: Size(getProportionateScreenWidth(120),
                                   getProportionateScreenHeight(40)),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              // print(_controller.text);
+                            },
                             child: Text(
                               'Войти',
                               style: TextStyle(
