@@ -1,13 +1,19 @@
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleButton extends StatelessWidget {
+class GoogleButton extends StatefulWidget {
   const GoogleButton({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<GoogleButton> createState() => _GoogleButtonState();
+}
+
+class _GoogleButtonState extends State<GoogleButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,7 +32,10 @@ class GoogleButton extends StatelessWidget {
                 (Set<MaterialState> states) {
               return kWhite;
             })),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              NavigationBarCustom.routeName, (route) => false);
+        },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(
             image: const AssetImage(

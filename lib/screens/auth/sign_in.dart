@@ -2,6 +2,7 @@ import 'package:easy_peasy/components/auth/email_field.dart';
 import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/password_field.dart';
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,7 @@ class SignIn extends StatelessWidget {
         theme: ThemeData(
           textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
         ),
+        routes: routes,
         home: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: kMainPurple,

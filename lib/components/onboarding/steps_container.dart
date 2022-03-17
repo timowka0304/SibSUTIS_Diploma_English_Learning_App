@@ -5,7 +5,7 @@ import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StepsContainer extends StatelessWidget {
+class StepsContainer extends StatefulWidget {
   const StepsContainer({
     Key? key,
     required this.page,
@@ -19,6 +19,11 @@ class StepsContainer extends StatelessWidget {
   final List<OnboardingModel> _list;
   final PageController _controller;
 
+  @override
+  State<StepsContainer> createState() => _StepsContainerState();
+}
+
+class _StepsContainerState extends State<StepsContainer> {
   _storeOnboardInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('onBoardingScreen', 1);
@@ -37,13 +42,14 @@ class StepsContainer extends StatelessWidget {
             child: CircularProgressIndicator(
                 strokeWidth: getProportionateScreenHeight(4),
                 valueColor: const AlwaysStoppedAnimation(kMainPink),
-                value: (page + 1) / (_list.length)),
+                value: (widget.page + 1) / (widget._list.length)),
           ),
           Center(
             child: InkWell(
               onTap: () async {
-                if (page < _list.length && page != _list.length - 1) {
-                  _controller.animateToPage(page + 1,
+                if (widget.page < widget._list.length &&
+                    widget.page != widget._list.length - 1) {
+                  widget._controller.animateToPage(widget.page + 1,
                       duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {

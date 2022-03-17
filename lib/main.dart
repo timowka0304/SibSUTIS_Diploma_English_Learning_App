@@ -15,8 +15,6 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   onBoardingScreenIsViewed = prefs.getInt('onBoardingScreen');
 
-  await Firebase.initializeApp();
-
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(const MaterialApp(
