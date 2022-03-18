@@ -1,3 +1,4 @@
+import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/screens/onboarding/onboarding_screen.dart';
 import 'package:flutter/widgets.dart';
@@ -9,4 +10,5 @@ final Map<String, WidgetBuilder> routes = {
   OnboardingScreen.routeName: (context) => const OnboardingScreen(),
   SignIn.routeName: (context) => const SignIn(),
   NavigationBarCustom.routeName: (context) => const NavigationBarCustom(),
+  HomePage.routeName: (context) => const NavigationBarCustom(),
 };

@@ -27,7 +27,7 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
   ];
 
   final screens = [
-    const HomePage(),
+    const HomePageLogged(),
     const CategoriesPage(),
     const ProfilePage()
   ];

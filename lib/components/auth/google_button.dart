@@ -1,8 +1,10 @@
+import 'package:easy_peasy/components/auth/login_google_controller.dart';
 import 'package:easy_peasy/constants.dart';
-import 'package:easy_peasy/screens/main/navigation_bar.dart';
+import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class GoogleButton extends StatefulWidget {
   const GoogleButton({
@@ -32,9 +34,12 @@ class _GoogleButtonState extends State<GoogleButton> {
                 (Set<MaterialState> states) {
               return kWhite;
             })),
-        onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              NavigationBarCustom.routeName, (route) => false);
+        onPressed: () async {
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //     NavigationBarCustom.routeName, (route) => false);
+          final provider =
+              Provider.of<LoginGoogleController>(context, listen: false);
+          await provider.googleLogin();
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(
