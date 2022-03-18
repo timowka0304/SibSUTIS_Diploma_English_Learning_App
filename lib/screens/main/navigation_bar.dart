@@ -44,7 +44,6 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        extendBody: true,
         bottomNavigationBar: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30.0),

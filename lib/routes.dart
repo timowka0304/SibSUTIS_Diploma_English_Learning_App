@@ -10,5 +10,5 @@ final Map<String, WidgetBuilder> routes = {
   OnboardingScreen.routeName: (context) => const OnboardingScreen(),
   SignIn.routeName: (context) => const SignIn(),
   NavigationBarCustom.routeName: (context) => const NavigationBarCustom(),
-  HomePage.routeName: (context) => const NavigationBarCustom(),
+  HomePage.routeName: (context) => const HomePage(),
 };

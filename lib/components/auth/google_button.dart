@@ -39,7 +39,7 @@ class _GoogleButtonState extends State<GoogleButton> {
           //     NavigationBarCustom.routeName, (route) => false);
           final provider =
               Provider.of<LoginGoogleController>(context, listen: false);
-          await provider.googleLogin();
+          await provider.googleLogin(context);
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(

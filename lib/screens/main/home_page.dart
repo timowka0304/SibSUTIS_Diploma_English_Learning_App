@@ -55,28 +55,28 @@ class HomePageLogged extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-    return Container(
-        color: Colors.black.withOpacity(0.3),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(user.photoURL!),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Text(
-                user.displayName!,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              )
-            ],
+    return Scaffold(
+        body: SafeArea(
+            child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 40,
+            backgroundImage: NetworkImage(user.photoURL!),
           ),
-        ));
+          const SizedBox(
+            height: 50,
+          ),
+          Text(
+            user.displayName!,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+            ),
+          )
+        ],
+      ),
+    )));
   }
 }
