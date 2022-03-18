@@ -57,7 +57,7 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
             unselectedFontSize: 0,
             selectedItemColor: kMainPink,
             unselectedItemColor: kMainPurple.withOpacity(0.5),
-            elevation: 0,
+            elevation: 15,
             currentIndex: currentIndex,
             items: items,
             onTap: onTap,
