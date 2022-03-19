@@ -3,6 +3,7 @@ import 'package:easy_peasy/screens/main/categories_page.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/screens/main/profile_page.dart';
 import 'package:easy_peasy/size_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBarCustom extends StatefulWidget {
@@ -42,25 +43,20 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
 
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
     SizeConfig().init(context);
     return Scaffold(
-        bottomNavigationBar: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          child: BottomNavigationBar(
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            selectedFontSize: 0,
-            unselectedFontSize: 0,
-            selectedItemColor: kMainPink,
-            unselectedItemColor: kMainPurple.withOpacity(0.5),
-            elevation: 15,
-            currentIndex: currentIndex,
-            items: items,
-            onTap: onTap,
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedFontSize: 0,
+          unselectedFontSize: 0,
+          selectedItemColor: kMainPink,
+          unselectedItemColor: kMainPurple.withOpacity(0.5),
+          elevation: 10,
+          currentIndex: currentIndex,
+          items: items,
+          onTap: onTap,
         ),
         body: screens[currentIndex]);
   }
