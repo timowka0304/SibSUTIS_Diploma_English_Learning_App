@@ -5,7 +5,6 @@ import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {

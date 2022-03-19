@@ -46,17 +46,24 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
     Firebase.initializeApp();
     SizeConfig().init(context);
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedFontSize: 0,
-          unselectedFontSize: 0,
-          selectedItemColor: kMainPink,
-          unselectedItemColor: kMainPurple.withOpacity(0.5),
-          elevation: 10,
-          currentIndex: currentIndex,
-          items: items,
-          onTap: onTap,
+        extendBody: true,
+        bottomNavigationBar: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+          child: BottomNavigationBar(
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedFontSize: 0,
+            unselectedFontSize: 0,
+            selectedItemColor: kMainPink,
+            unselectedItemColor: kMainPurple.withOpacity(0.5),
+            elevation: 10,
+            currentIndex: currentIndex,
+            items: items,
+            onTap: onTap,
+          ),
         ),
         body: screens[currentIndex]);
   }
