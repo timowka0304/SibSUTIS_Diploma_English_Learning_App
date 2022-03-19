@@ -3,6 +3,7 @@ import 'package:easy_peasy/screens/main/categories_page.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/screens/main/profile_page.dart';
 import 'package:easy_peasy/size_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBarCustom extends StatefulWidget {
@@ -42,6 +43,8 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
 
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
+
     SizeConfig().init(context);
     return Scaffold(
         bottomNavigationBar: ClipRRect(

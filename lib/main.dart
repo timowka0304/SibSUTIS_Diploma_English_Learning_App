@@ -1,6 +1,7 @@
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
+import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,6 @@ Future<void> main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   onBoardingScreenIsViewed = prefs.getInt('onBoardingScreen');
-
-  Firebase.initializeApp();
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
       ),
       initialRoute: onBoardingScreenIsViewed != null
-          ? HomePage.routeName
+          ? NavigationBarCustom.routeName
           : OnboardingScreen.routeName,
       routes: routes,
     );

@@ -20,8 +20,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    Firebase.initializeApp();
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
