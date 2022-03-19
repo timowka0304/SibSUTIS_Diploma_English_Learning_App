@@ -1,5 +1,6 @@
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
+import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasData) {
-              return const HomePageLogged();
+              return const NavigationBarCustom();
             } else if (snapshot.hasError) {
               return const Center(
                 child: Text('Что-то пошло не так! Попробуйте снова!'),

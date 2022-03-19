@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
       ),
       initialRoute: onBoardingScreenIsViewed != null
-          ? NavigationBarCustom.routeName
+          ? HomePage.routeName
           : OnboardingScreen.routeName,
       routes: routes,
     );
