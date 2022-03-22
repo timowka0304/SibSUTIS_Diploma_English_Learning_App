@@ -10,12 +10,12 @@ class OnboardingModel {
   static List<OnboardingModel> list = [
     OnboardingModel(
         image: k1stImageOnboardingPath,
-        title: "Занимайся",
-        text: "самостоятельно\nв интерактивных курсах"),
+        title: "Выбирай",
+        text: "нужные слова\nиз готовых подборок"),
     OnboardingModel(
         image: k2ndImageOnboardingPath,
-        title: "Слушай",
-        text: "книги и подкасты\nна английском языке"),
+        title: "Запоминай",
+        text: "слова с помощью\nлегкой игровой механики"),
     OnboardingModel(
         image: k3rdImageOnboardingPath,
         title: "Применяй",
