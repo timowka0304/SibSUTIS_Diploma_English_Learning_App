@@ -30,7 +30,7 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
   final screens = [
     const HomePageLogged(),
     const CategoriesPage(),
-    const ProfilePage()
+    ProfilePage()
   ];
 
   int currentIndex = 0;
@@ -59,7 +59,7 @@ class _NavigationBarCustomState extends State<NavigationBarCustom> {
             unselectedFontSize: 0,
             selectedItemColor: kMainPink,
             unselectedItemColor: kMainPurple.withOpacity(0.5),
-            elevation: 10,
+            elevation: 20,
             currentIndex: currentIndex,
             items: items,
             onTap: onTap,

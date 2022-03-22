@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const kWhite = Color(0xFFFFFFFF);
 const kMainPurple = Color(0xFF595ABA);
 const kMainPink = Color(0xFFED6078);
+const kSecondBlue = Color(0xFFE7F0FF);
 const kMainTextColor = Color(0xFF414141);
 
 const String k1stImageOnboardingPath = 'assets/images/onboarding/1st_img.png';
