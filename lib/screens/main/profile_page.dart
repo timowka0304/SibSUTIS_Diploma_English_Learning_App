@@ -245,7 +245,7 @@ class ProfilePage extends StatelessWidget {
                       InkWell(
                         onTap: () {},
                         child: Text(
-                          "Настройка уведомлений",
+                          "Часто задаваемые вопросы",
                           style: TextStyle(
                               color: kMainTextColor.withOpacity(0.8),
                               fontSize: getProportionateScreenWidth(14),
@@ -258,7 +258,7 @@ class ProfilePage extends StatelessWidget {
                       InkWell(
                         onTap: () {},
                         child: Text(
-                          "FAQ",
+                          "Настройка уведомлений",
                           style: TextStyle(
                               color: kMainTextColor.withOpacity(0.8),
                               fontSize: getProportionateScreenWidth(14),
