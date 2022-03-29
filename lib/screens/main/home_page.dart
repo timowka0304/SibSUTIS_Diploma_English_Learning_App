@@ -21,18 +21,28 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    Firebase.initializeApp();
-
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Object? user = snapshot.data;
-            return NavigationBarCustom();
-          } else {
-            return SignIn();
-          }
-        });
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
+      ),
+      routes: routes,
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              return const HomePageLogged();
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text('Что-то пошло не так! Попробуйте снова!'),
+              );
+            } else {
+              return SignIn();
+            }
+          }),
+    );
   }
 }
 
