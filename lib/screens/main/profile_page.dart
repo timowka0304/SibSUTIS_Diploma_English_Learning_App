@@ -1,4 +1,6 @@
+import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
@@ -69,10 +71,10 @@ class ProfilePage extends StatelessWidget {
                                         focusElevation: 0,
                                         hoverElevation: 0,
                                         highlightElevation: 0,
-                                        color: kMainPurple.withOpacity(0.3),
+                                        color: kMainPurple,
                                         child: Icon(
                                           Icons.camera_alt,
-                                          color: kMainTextColor,
+                                          color: kWhite,
                                           size: getProportionateScreenWidth(15),
                                         ),
                                         padding: EdgeInsets.all(
@@ -313,7 +315,12 @@ class ProfilePage extends StatelessWidget {
                                 (Set<MaterialState> states) {
                           return kMainPink;
                         })),
-                    onPressed: () {},
+                    onPressed: () => signOutUser().then(
+                      (value) {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => SignIn()));
+                      },
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -1,26 +1,25 @@
-import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
-import 'package:easy_peasy/screens/auth/sign_up.dart';
+import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class SignIn extends StatefulWidget {
-  static String routeName = "/signin";
+class SignUp extends StatefulWidget {
+  static String routeName = "/signup";
 
-  const SignIn({Key? key}) : super(key: key);
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInState extends State<SignUp> {
   bool _isObscure = true;
+  String _userName = '';
   String _userEmail = '';
   String _password = '';
   final _formKey = GlobalKey<FormState>();
@@ -32,10 +31,10 @@ class _SignInState extends State<SignIn> {
     void _trySubmitForm() {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        signIn(_userEmail, _password, context).then((value) {
+        signUp(_userEmail.trim(), _password, _userName, context).then((value) {
           if (value != null) {
-            Navigator.pushReplacementNamed(
-                context, NavigationBarCustom.routeName);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const NavigationBarCustom()));
           }
         });
       }
@@ -76,27 +75,9 @@ class _SignInState extends State<SignIn> {
                           height: getProportionateScreenHeight(120),
                         ),
                         Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: const [Center(child: GoogleButton())],
-                          ),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
-                        ),
-                        Expanded(
                           flex: 4,
                           child: Column(
                             children: [
-                              Text(
-                                "или",
-                                style: TextStyle(
-                                    color: kWhite,
-                                    fontSize: getProportionateScreenWidth(14)),
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
                               emeilFiled(),
                               SizedBox(
                                 height: getProportionateScreenHeight(20),
@@ -105,16 +86,20 @@ class _SignInState extends State<SignIn> {
                               SizedBox(
                                 height: getProportionateScreenHeight(30),
                               ),
+                              nameFiled(),
+                              SizedBox(
+                                height: getProportionateScreenHeight(60),
+                              ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: kWhite,
                                   fixedSize: Size(
-                                      getProportionateScreenWidth(120),
+                                      getProportionateScreenWidth(200),
                                       getProportionateScreenHeight(40)),
                                 ),
                                 onPressed: _trySubmitForm,
                                 child: Text(
-                                  'Войти',
+                                  'Зарегистрироваться',
                                   style: TextStyle(
                                     color: kMainTextColor,
                                     fontSize: getProportionateScreenWidth(14),
@@ -122,52 +107,27 @@ class _SignInState extends State<SignIn> {
                                 ),
                               ),
                               SizedBox(
-                                height: getProportionateScreenHeight(5),
+                                height: getProportionateScreenHeight(30),
                               ),
-                              InkWell(
-                                onTap: () {},
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: kWhite,
+                                  fixedSize: Size(
+                                      getProportionateScreenWidth(100),
+                                      getProportionateScreenHeight(40)),
+                                ),
+                                onPressed: () => Navigator.pushReplacementNamed(
+                                    context, SignIn.routeName),
                                 child: Text(
-                                  "Забыли пароль?",
+                                  'Назад',
                                   style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: getProportionateScreenWidth(12),
-                                    // decoration: TextDecoration.underline,
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(14),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: RichText(
-                              text: TextSpan(
-                                  text: "Еще нет аккаунта? ",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
-                                  children: [
-                                TextSpan(
-                                  text: "Зарегистрируйся!",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () =>
-                                        Navigator.pushReplacementNamed(
-                                            context, SignUp.routeName),
-                                )
-                              ])),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
                         ),
                       ],
                     ),
@@ -294,6 +254,74 @@ class _SignInState extends State<SignIn> {
               fontWeight: FontWeight.w200,
               fontSize: getProportionateScreenWidth(14)),
           hintText: 'example@gmail.com',
+          isDense: true,
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kMainPink,
+              width: 1.0,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kMainPink,
+              width: 1.0,
+            ),
+          ),
+          errorStyle: TextStyle(
+              color: kWhite,
+              fontWeight: FontWeight.w200,
+              fontSize: getProportionateScreenWidth(12)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kWhite,
+              width: 1.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kWhite,
+              width: 1.0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container nameFiled() {
+    return Container(
+      width: getProportionateScreenWidth(280),
+      decoration: const BoxDecoration(
+        color: kMainPurple,
+      ),
+      child: TextFormField(
+        onChanged: (value) => _userName = value,
+        style: TextStyle(
+            color: kWhite,
+            fontWeight: FontWeight.w200,
+            fontSize: getProportionateScreenWidth(14)),
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return "Введите имя";
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.person, color: kWhite),
+          hintStyle: TextStyle(
+              color: kWhite.withOpacity(0.5),
+              fontWeight: FontWeight.w200,
+              fontSize: getProportionateScreenWidth(14)),
+          labelText: "Имя",
+          labelStyle: TextStyle(
+              color: kWhite,
+              fontWeight: FontWeight.w200,
+              fontSize: getProportionateScreenWidth(14)),
+          hintText: 'Иван1982',
           isDense: true,
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
