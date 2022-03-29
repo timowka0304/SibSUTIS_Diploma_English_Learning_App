@@ -22,73 +22,20 @@ class ProfilePage extends StatelessWidget {
               SizedBox(
                 height: getProportionateScreenHeight(30),
               ),
-              Expanded(
-                child: Stack(children: [
-                  Container(
-                    margin: EdgeInsets.all(getProportionateScreenWidth(30)),
-                    height: getProportionateScreenHeight(150),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(
-                              getProportionateScreenWidth(0),
-                              getProportionateScreenHeight(
-                                  5)), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                      alignment: Alignment.topCenter,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            child: CircleAvatar(
-                              radius: getProportionateScreenWidth(40),
-                              backgroundColor: kWhite,
-                              child: CircleAvatar(
-                                radius: getProportionateScreenWidth(37),
-                                backgroundImage: NetworkImage(user.photoURL!),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(20)),
-                          Text(
-                            user.displayName!,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: getProportionateScreenWidth(16),
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          Text(
-                            user.email!,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: getProportionateScreenWidth(16),
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(20)),
-                        ],
-                      )),
-                ]),
-              ),
-              Expanded(
-                  child: Stack(children: [
+              Stack(children: [
                 Container(
-                  margin: EdgeInsets.all(getProportionateScreenWidth(30)),
-                  height: getProportionateScreenHeight(230),
+                  margin: EdgeInsets.fromLTRB(
+                      getProportionateScreenWidth(30),
+                      getProportionateScreenHeight(30),
+                      getProportionateScreenWidth(30),
+                      getProportionateScreenHeight(0)),
+                  height: getProportionateScreenHeight(200),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.05),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: Offset(
@@ -99,44 +46,271 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
-              ])),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5),
+                Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          child: CircleAvatar(
+                            radius: getProportionateScreenWidth(40),
+                            backgroundColor: kWhite,
+                            child: CircleAvatar(
+                              radius: getProportionateScreenWidth(37),
+                              backgroundImage: NetworkImage(user.photoURL!),
+                            ),
+                          ),
                         ),
+                        SizedBox(height: getProportionateScreenHeight(20)),
+                        Text(
+                          user.displayName!,
+                          style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: getProportionateScreenWidth(16),
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: getProportionateScreenHeight(10)),
+                        Text(
+                          user.email!,
+                          style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: getProportionateScreenWidth(16),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(height: getProportionateScreenHeight(20)),
+                        Stack(
+                          children: [
+                            Container(
+                              height: getProportionateScreenHeight(30),
+                              width: getProportionateScreenWidth(150),
+                              decoration: BoxDecoration(
+                                color: kMainPink,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Center(
+                                  child: RichText(
+                                      text: TextSpan(
+                                          text: "Дней подряд: ",
+                                          style: TextStyle(
+                                            color: kWhite,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize:
+                                                getProportionateScreenWidth(14),
+                                          ),
+                                          children: [
+                                    TextSpan(
+                                      text: "2",
+                                      style: TextStyle(
+                                        color: kWhite,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize:
+                                            getProportionateScreenWidth(14),
+                                      ),
+                                    )
+                                  ]))),
+                            ),
+                          ],
+                        )
+                      ],
+                    )),
+              ]),
+              Expanded(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(30),
+                  ),
+                  Stack(children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                          getProportionateScreenWidth(30),
+                          getProportionateScreenHeight(20),
+                          getProportionateScreenWidth(30),
+                          getProportionateScreenHeight(30)),
+                      height: getProportionateScreenHeight(230),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.05),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(
+                                  getProportionateScreenWidth(0),
+                                  getProportionateScreenHeight(
+                                      5)), // changes position of shadow
+                            ),
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.light_mode,
+                                    color: kMainPurple.withOpacity(0.3),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
+                                  ),
+                                  Text("Title"),
+                                  Text("Decription")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.dark_mode,
+                                    color: kMainPurple.withOpacity(1),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
+                                  ),
+                                  Text("Title"),
+                                  Text("Decription")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.watch_later,
+                                    color: kMainPurple.withOpacity(0.3),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
+                                  ),
+                                  Text("Title"),
+                                  Text("Decription")
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(30),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.turned_in,
+                                    color: kMainPurple.withOpacity(0.3),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
+                                  ),
+                                  Text("Title"),
+                                  Text("Decription")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.grade,
+                                    color: kMainPurple.withOpacity(0.3),
+                                  ),
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
+                                  ),
+                                  Text("Title"),
+                                  Text("Decription")
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                      return kMainPink;
-                    })),
-                onPressed: () {},
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.exit_to_app,
-                      color: kWhite,
-                    ),
-                    SizedBox(
-                      width: getProportionateScreenWidth(10),
-                    ),
-                    Text(
-                      "Выйти",
-                      style: TextStyle(
+                  ]),
+                  Column(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: Text(
+                          "Политика конфиденциальности",
+                          style: TextStyle(
+                              color: kMainTextColor.withOpacity(0.8),
+                              fontSize: getProportionateScreenWidth(14),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(10),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Text(
+                          "Настройка уведомлений",
+                          style: TextStyle(
+                              color: kMainTextColor.withOpacity(0.8),
+                              fontSize: getProportionateScreenWidth(14),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(10),
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Text(
+                          "FAQ",
+                          style: TextStyle(
+                              color: kMainTextColor.withOpacity(0.8),
+                              fontSize: getProportionateScreenWidth(14),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(10),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                          ),
+                        ),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                          return kMainPink;
+                        })),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.exit_to_app,
                           color: kWhite,
-                          fontSize: getProportionateScreenWidth(16),
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: getProportionateScreenHeight(30),
-              ),
+                        ),
+                        SizedBox(
+                          width: getProportionateScreenWidth(10),
+                        ),
+                        Text(
+                          "Выйти",
+                          style: TextStyle(
+                              color: kWhite,
+                              fontSize: getProportionateScreenWidth(16),
+                              fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: getProportionateScreenHeight(20),
+                  ),
+                ],
+              ))
             ]),
           ),
         ));
