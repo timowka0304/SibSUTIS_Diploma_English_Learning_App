@@ -32,7 +32,8 @@ class ProfilePage extends StatelessWidget {
                   height: getProportionateScreenHeight(200),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius:
+                        BorderRadius.circular(getProportionateScreenWidth(15)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.05),
@@ -55,9 +56,30 @@ class ProfilePage extends StatelessWidget {
                             radius: getProportionateScreenWidth(40),
                             backgroundColor: kWhite,
                             child: CircleAvatar(
-                              radius: getProportionateScreenWidth(37),
-                              backgroundImage: NetworkImage(user.photoURL!),
-                            ),
+                                radius: getProportionateScreenWidth(37),
+                                backgroundImage: NetworkImage(user.photoURL!),
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: getProportionateScreenWidth(12),
+                                      child: MaterialButton(
+                                        onPressed: () {},
+                                        elevation: 0,
+                                        focusElevation: 0,
+                                        hoverElevation: 0,
+                                        highlightElevation: 0,
+                                        color: kMainPurple.withOpacity(0.3),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: kMainTextColor,
+                                          size: getProportionateScreenWidth(15),
+                                        ),
+                                        padding: EdgeInsets.all(
+                                            getProportionateScreenWidth(2)),
+                                        shape: CircleBorder(),
+                                      )),
+                                )),
                           ),
                         ),
                         SizedBox(height: getProportionateScreenHeight(20)),
@@ -84,7 +106,8 @@ class ProfilePage extends StatelessWidget {
                               width: getProportionateScreenWidth(150),
                               decoration: BoxDecoration(
                                 color: kMainPink,
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(
+                                    getProportionateScreenWidth(5)),
                               ),
                               child: Center(
                                   child: RichText(
@@ -123,23 +146,25 @@ class ProfilePage extends StatelessWidget {
                   Stack(children: [
                     Container(
                       margin: EdgeInsets.fromLTRB(
-                          getProportionateScreenWidth(30),
-                          getProportionateScreenHeight(20),
-                          getProportionateScreenWidth(30),
-                          getProportionateScreenHeight(30)),
+                        getProportionateScreenWidth(30),
+                        getProportionateScreenHeight(20),
+                        getProportionateScreenWidth(30),
+                        getProportionateScreenHeight(30),
+                      ),
                       height: getProportionateScreenHeight(230),
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                              getProportionateScreenWidth(15)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.05),
                               spreadRadius: 5,
                               blurRadius: 7,
                               offset: Offset(
-                                  getProportionateScreenWidth(0),
-                                  getProportionateScreenHeight(
-                                      5)), // changes position of shadow
+                                getProportionateScreenWidth(0),
+                                getProportionateScreenHeight(5),
+                              ), // changes position of shadow
                             ),
                           ]),
                       child: Column(
@@ -158,7 +183,7 @@ class ProfilePage extends StatelessWidget {
                                     height: getProportionateScreenHeight(10),
                                   ),
                                   Text("Title"),
-                                  Text("Decription")
+                                  Text("Decription"),
                                 ],
                               ),
                               Column(
@@ -171,7 +196,7 @@ class ProfilePage extends StatelessWidget {
                                     height: getProportionateScreenHeight(10),
                                   ),
                                   Text("Title"),
-                                  Text("Decription")
+                                  Text("Decription"),
                                 ],
                               ),
                               Column(
@@ -184,7 +209,7 @@ class ProfilePage extends StatelessWidget {
                                     height: getProportionateScreenHeight(10),
                                   ),
                                   Text("Title"),
-                                  Text("Decription")
+                                  Text("Decription"),
                                 ],
                               )
                             ],
@@ -205,7 +230,7 @@ class ProfilePage extends StatelessWidget {
                                     height: getProportionateScreenHeight(10),
                                   ),
                                   Text("Title"),
-                                  Text("Decription")
+                                  Text("Decription"),
                                 ],
                               ),
                               Column(
@@ -218,7 +243,7 @@ class ProfilePage extends StatelessWidget {
                                     height: getProportionateScreenHeight(10),
                                   ),
                                   Text("Title"),
-                                  Text("Decription")
+                                  Text("Decription"),
                                 ],
                               ),
                             ],
@@ -232,11 +257,12 @@ class ProfilePage extends StatelessWidget {
                       InkWell(
                         onTap: () {},
                         child: Text(
-                          "Политика конфиденциальности",
+                          "Настройка уведомлений",
                           style: TextStyle(
-                              color: kMainTextColor.withOpacity(0.8),
-                              fontSize: getProportionateScreenWidth(14),
-                              fontWeight: FontWeight.w400),
+                            color: kMainTextColor.withOpacity(0.8),
+                            fontSize: getProportionateScreenWidth(14),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -247,9 +273,10 @@ class ProfilePage extends StatelessWidget {
                         child: Text(
                           "Часто задаваемые вопросы",
                           style: TextStyle(
-                              color: kMainTextColor.withOpacity(0.8),
-                              fontSize: getProportionateScreenWidth(14),
-                              fontWeight: FontWeight.w400),
+                            color: kMainTextColor.withOpacity(0.8),
+                            fontSize: getProportionateScreenWidth(14),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -258,11 +285,12 @@ class ProfilePage extends StatelessWidget {
                       InkWell(
                         onTap: () {},
                         child: Text(
-                          "Настройка уведомлений",
+                          "Политика конфиденциальности",
                           style: TextStyle(
-                              color: kMainTextColor.withOpacity(0.8),
-                              fontSize: getProportionateScreenWidth(14),
-                              fontWeight: FontWeight.w400),
+                            color: kMainTextColor.withOpacity(0.8),
+                            fontSize: getProportionateScreenWidth(14),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       SizedBox(
