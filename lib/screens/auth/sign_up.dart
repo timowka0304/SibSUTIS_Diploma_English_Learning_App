@@ -28,11 +28,20 @@ class _SignInState extends State<SignUp> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    void _trySubmitForm() {
+    void _trySubmitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        signUp(_userEmail.trim(), _password, _userName, context).then((value) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
+        await signUp(_userEmail.trim(), _password.trim(), _userName, context)
+            .then((value) {
           if (value != null) {
+            Navigator.of(context, rootNavigator: true).pop();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => const NavigationBarCustom()));
           }

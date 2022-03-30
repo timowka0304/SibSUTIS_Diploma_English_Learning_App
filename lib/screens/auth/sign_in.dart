@@ -5,10 +5,12 @@ import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_up.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class SignIn extends StatefulWidget {
   static String routeName = "/signin";
@@ -23,17 +25,106 @@ class _SignInState extends State<SignIn> {
   bool _isObscure = true;
   String _userEmail = '';
   String _password = '';
+  String _userEmailForgot = '';
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Введите почту'),
+            content: TextFormField(
+              onChanged: (value) {
+                setState(() {
+                  _userEmailForgot = value.trim();
+                });
+              },
+              controller: _textFieldController,
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: <Widget>[
+              ElevatedButton(
+                style: ButtonStyle(backgroundColor:
+                    MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                  return kMainPurple;
+                })),
+                child: const Text('Отмена'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              ElevatedButton(
+                style: ButtonStyle(backgroundColor:
+                    MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                  return kMainPink;
+                })),
+                child: const Text('Ок'),
+                onPressed: () async {
+                  try {
+                    await auth.sendPasswordResetEmail(
+                        email: _textFieldController.text.trim());
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                    setState(() {
+                      _userEmailForgot = "";
+                    });
+                    return showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Успешно"),
+                        content: const Text(
+                            "Письмо для сброса пароля отправлено на указанную почту"),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ButtonStyle(backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                              return kMainPurple;
+                            })),
+                            child: const Text("Ок"),
+                          ),
+                        ],
+                      ),
+                    );
+                  } on FirebaseAuthException catch (e) {
+                    print(e.code);
+                    print(e.message);
+                  }
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    void _trySubmitForm() {
+    void _trySubmitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        signIn(_userEmail, _password, context).then((value) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
+        await signIn(_userEmail.trim(), _password.trim(), context)
+            .then((value) {
           if (value != null) {
+            Navigator.of(context, rootNavigator: true).pop();
             Navigator.pushReplacementNamed(
                 context, NavigationBarCustom.routeName);
           }
@@ -78,7 +169,7 @@ class _SignInState extends State<SignIn> {
                         Expanded(
                           flex: 1,
                           child: Column(
-                            children: const [Center(child: GoogleButton())],
+                            children: [Center(child: GoogleButton())],
                           ),
                         ),
                         SizedBox(
@@ -125,7 +216,7 @@ class _SignInState extends State<SignIn> {
                                 height: getProportionateScreenHeight(5),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () => _displayTextInputDialog(context),
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 child: Text(

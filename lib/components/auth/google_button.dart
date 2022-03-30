@@ -8,17 +8,36 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GoogleButton extends StatefulWidget {
-  const GoogleButton({
-    Key? key,
-  }) : super(key: key);
+  GoogleButton({Key? key}) : super(key: key);
 
-  @override
   State<GoogleButton> createState() => _GoogleButtonState();
 }
 
 class _GoogleButtonState extends State<GoogleButton> {
   @override
   Widget build(BuildContext context) {
+    void _trySignIn() async {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+      googleSignIn().then((value) {
+        if (value != false) {
+          Navigator.of(context, rootNavigator: true).pop();
+          User? user = FirebaseAuth.instance.currentUser;
+          Navigator.pushReplacementNamed(
+              context, NavigationBarCustom.routeName);
+        }
+        if (value == false) {
+          print("false ");
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      });
+    }
+
     return SizedBox(
       height: getProportionateScreenHeight(50),
       width: getProportionateScreenWidth(230),
@@ -35,13 +54,7 @@ class _GoogleButtonState extends State<GoogleButton> {
                 (Set<MaterialState> states) {
               return kWhite;
             })),
-        onPressed: () => googleSignIn().then((value) {
-          if (value != false) {
-            User? user = FirebaseAuth.instance.currentUser;
-            Navigator.pushReplacementNamed(
-                context, NavigationBarCustom.routeName);
-          }
-        }),
+        onPressed: _trySignIn,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(
             image: const AssetImage(

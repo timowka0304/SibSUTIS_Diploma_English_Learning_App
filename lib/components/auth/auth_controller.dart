@@ -18,6 +18,7 @@ showErrDialog(BuildContext context, String err) {
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
           style: ButtonStyle(backgroundColor:
               MaterialStateProperty.resolveWith<Color>(
@@ -33,7 +34,7 @@ showErrDialog(BuildContext context, String err) {
 
 // many unhandled google error exist
 // will push them soon
-Future<bool> googleSignIn() async {
+Future googleSignIn() async {
   GoogleSignInAccount? googleSignInAccount = await gooleSignIn.signIn();
 
   if (googleSignInAccount != null) {
@@ -56,7 +57,7 @@ Future<bool> googleSignIn() async {
 
 // instead of returning true or false
 // returning user to directly access UserID
-Future<User> signIn(String email, String password, BuildContext context) async {
+Future signIn(String email, String password, BuildContext context) async {
   try {
     UserCredential result =
         await auth.signInWithEmailAndPassword(email: email, password: password);
@@ -83,11 +84,11 @@ Future<User> signIn(String email, String password, BuildContext context) async {
 }
 
 // change to Future<FirebaseUser> for returning a user
-Future<User> signUp(
+Future signUp(
     String email, String password, String name, BuildContext context) async {
   try {
     UserCredential result = await auth.createUserWithEmailAndPassword(
-        email: email, password: email);
+        email: email, password: password);
     User? user = result.user;
     await user!.updateDisplayName(name);
     await user.updatePhotoURL(kDefaultAvatar);
@@ -105,7 +106,7 @@ Future<User> signUp(
   }
 }
 
-Future<bool> signOutUser() async {
+Future signOutUser() async {
   if (auth.currentUser!.providerData[0].providerId == 'google.com') {
     await gooleSignIn.disconnect();
   }
