@@ -35,13 +35,13 @@ class _GoogleButtonState extends State<GoogleButton> {
                 (Set<MaterialState> states) {
               return kWhite;
             })),
-        onPressed: () => googleSignIn().whenComplete(
-          () async {
-            User? user = await FirebaseAuth.instance.currentUser;
+        onPressed: () => googleSignIn().then((value) {
+          if (value != false) {
+            User? user = FirebaseAuth.instance.currentUser;
             Navigator.pushReplacementNamed(
                 context, NavigationBarCustom.routeName);
-          },
-        ),
+          }
+        }),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(
             image: const AssetImage(
