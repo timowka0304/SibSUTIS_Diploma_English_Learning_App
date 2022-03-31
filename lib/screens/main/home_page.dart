@@ -1,4 +1,3 @@
-import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:easy_peasy/size_config.dart';
@@ -26,10 +25,10 @@ class _HomePageState extends State<HomePage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            Object? user = snapshot.data;
-            return NavigationBarCustom();
+            // Object? user = snapshot.data;
+            return const NavigationBarCustom();
           } else {
-            return SignIn();
+            return const SignIn();
           }
         });
   }
@@ -58,7 +57,7 @@ class HomePageLogged extends StatelessWidget {
           ),
           Text(
             user.displayName!,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
             ),

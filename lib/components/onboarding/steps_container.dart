@@ -4,7 +4,6 @@ import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StepsContainer extends StatefulWidget {
   const StepsContainer({
@@ -25,11 +24,6 @@ class StepsContainer extends StatefulWidget {
 }
 
 class _StepsContainerState extends State<StepsContainer> {
-  _storeOnboardInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('onBoardingScreen', 1);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(

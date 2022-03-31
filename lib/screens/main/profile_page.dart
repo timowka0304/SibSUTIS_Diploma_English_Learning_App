@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         padding: EdgeInsets.all(
                                             getProportionateScreenWidth(2)),
-                                        shape: CircleBorder(),
+                                        shape: const CircleBorder(),
                                       )),
                                 )),
                           ),
@@ -431,7 +431,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () => signOutUser().then(
                       (value) {
                         Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => SignIn()));
+                            MaterialPageRoute(builder: (context) => const SignIn()));
                       },
                     ),
                     child: Row(

@@ -1,7 +1,5 @@
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
-import 'package:easy_peasy/screens/main/home_page.dart';
-import 'package:easy_peasy/screens/main/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,32 +7,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 FirebaseAuth auth = FirebaseAuth.instance;
 final gooleSignIn = GoogleSignIn();
 
-// showErrDialog(BuildContext context, String err) {
-//   return showDialog(
-//     context: context,
-//     builder: (context) => AlertDialog(
-//       title: Text("Ошибка"),
-//       content: Text(err),
-//       actions: <Widget>[
-//         ElevatedButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//             Navigator.of(context).pop();
-//           },
-//           style: ButtonStyle(backgroundColor:
-//               MaterialStateProperty.resolveWith<Color>(
-//                   (Set<MaterialState> states) {
-//             return kMainPurple;
-//           })),
-//           child: Text("Ок"),
-//         ),
-//       ],
-//     ),
-//   );
-// }
-
-// many unhandled google error exist
-// will push them soon
 Future googleSignIn() async {
   GoogleSignInAccount? googleSignInAccount = await gooleSignIn.signIn();
 
@@ -54,8 +26,6 @@ Future googleSignIn() async {
   return Future.value(false);
 }
 
-// instead of returning true or false
-// returning user to directly access UserID
 Future signIn(String email, String password, BuildContext context) async {
   try {
     UserCredential result =
@@ -75,7 +45,6 @@ Future signIn(String email, String password, BuildContext context) async {
   }
 }
 
-// change to Future<FirebaseUser> for returning a user
 Future signUp(
     String email, String password, String name, BuildContext context) async {
   try {
