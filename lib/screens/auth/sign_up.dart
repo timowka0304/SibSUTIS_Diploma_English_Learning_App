@@ -1,4 +1,5 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
@@ -41,6 +42,7 @@ class _SignInState extends State<SignUp> {
         await signUp(_userEmail.trim(), _password.trim(), _userName, context)
             .then((value) {
           if (value != null) {
+            storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => const NavigationBarCustom()));

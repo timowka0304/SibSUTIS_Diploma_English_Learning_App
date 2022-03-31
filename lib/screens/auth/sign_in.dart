@@ -1,5 +1,6 @@
 import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_up.dart';
@@ -124,6 +125,7 @@ class _SignInState extends State<SignIn> {
         await signIn(_userEmail.trim(), _password.trim(), context)
             .then((value) {
           if (value != null) {
+            storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.pushReplacementNamed(
                 context, NavigationBarCustom.routeName);
@@ -251,9 +253,8 @@ class _SignInState extends State<SignIn> {
                                     fontSize: getProportionateScreenWidth(14),
                                   ),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () =>
-                                        Navigator.pushReplacementNamed(
-                                            context, SignUp.routeName),
+                                    ..onTap = () => Navigator.pushNamed(
+                                        context, SignUp.routeName),
                                 )
                               ])),
                         ),

@@ -1,4 +1,5 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
@@ -6,16 +7,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
+  late String uid;
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    // Firebase.initializeApp();
+    getProfileUid().then((gettedUid) {
+      setState(() {
+        uid = gettedUid;
+      });
+    });
+
     return Scaffold(
         backgroundColor: kSecondBlue,
         body: SafeArea(

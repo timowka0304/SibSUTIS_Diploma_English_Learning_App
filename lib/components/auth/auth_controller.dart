@@ -48,7 +48,6 @@ Future googleSignIn() async {
     UserCredential result = await auth.signInWithCredential(credential);
 
     User? user = await auth.currentUser;
-    print(user!.uid);
 
     return Future.value(true);
   }
@@ -62,23 +61,16 @@ Future signIn(String email, String password, BuildContext context) async {
     UserCredential result =
         await auth.signInWithEmailAndPassword(email: email, password: password);
     User? user = result.user;
-    // return Future.value(true);
     return Future.value(user);
-  } catch (e) {
-    // print(e.toString());
-    // print(e.hashCode);
-    switch (e.hashCode) {
-      case 185768934:
+  } on FirebaseException catch (e) {
+    switch (e.code) {
+      case "wrong-password":
         showErrDialog(context, "Неверный пароль");
         break;
-      case 505284406:
+      case "user-not-found":
         showErrDialog(context, "Пользователь не найден");
         break;
     }
-    // since we are not actually continuing after displaying errors
-    // the false value will not be returned
-    // hence we don't have to check the valur returned in from the signin function
-    // whenever we call it anywhere
     return Future.value(null);
   }
 }
@@ -93,12 +85,9 @@ Future signUp(
     await user!.updateDisplayName(name);
     await user.updatePhotoURL(kDefaultAvatar);
     return Future.value(user);
-    // return Future.value(true);
-  } catch (error) {
-    // print(error.toString());
-    // print(error.hashCode);
-    switch (error.hashCode) {
-      case 34618382:
+  } on FirebaseException catch (e) {
+    switch (e.code) {
+      case "email-already-in-use":
         showErrDialog(context, "Этот адрес уже используется");
         break;
     }
