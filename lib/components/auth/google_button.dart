@@ -26,10 +26,10 @@ class _GoogleButtonState extends State<GoogleButton> {
               child: CircularProgressIndicator(),
             );
           });
-      googleSignIn().then((value) {
+      googleSignIn().then((value) async {
         if (value != false) {
           User? user = FirebaseAuth.instance.currentUser;
-          storeProfileUid(user!.uid);
+          await storeProfileUid(user!.uid);
           Navigator.of(context, rootNavigator: true).pop();
           Navigator.pushReplacementNamed(
               context, NavigationBarCustom.routeName);

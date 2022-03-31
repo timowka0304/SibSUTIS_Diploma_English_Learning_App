@@ -135,9 +135,9 @@ class _SignInState extends State<SignIn> {
               );
             });
         await signIn(_userEmail.trim(), _password.trim(), context)
-            .then((value) {
+            .then((value) async {
           if (value != null) {
-            storeProfileUid(value!.uid);
+            await storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.pushReplacementNamed(
                 context, NavigationBarCustom.routeName);

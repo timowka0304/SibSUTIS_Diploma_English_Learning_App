@@ -1,3 +1,4 @@
+import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/size_config.dart';
@@ -5,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
 int? onBoardingScreenIsViewed;
@@ -13,8 +13,9 @@ int? onBoardingScreenIsViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  onBoardingScreenIsViewed = prefs.getInt('onBoardingScreen');
+  getOnboardInfo().then((gettedInfo) {
+    onBoardingScreenIsViewed = gettedInfo;
+  });
 
   await Firebase.initializeApp();
 

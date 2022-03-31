@@ -1,3 +1,4 @@
+import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
@@ -53,7 +54,7 @@ class _StepsContainerState extends State<StepsContainer> {
                       duration: kAnimationDuration,
                       curve: Curves.easeInOutCirc);
                 } else {
-                  await _storeOnboardInfo();
+                  await storeOnboardInfo();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       SignIn.routeName, (route) => false);
                 }
