@@ -1,4 +1,4 @@
-import 'package:easy_peasy/components/others/error_dialog.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';

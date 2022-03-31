@@ -1,6 +1,6 @@
 import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
-import 'package:easy_peasy/components/others/error_dialog.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
@@ -30,29 +30,6 @@ class _SignInState extends State<SignIn> {
   late String _userEmailForgot;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _textFieldController = TextEditingController();
-
-  // showErrDialog(BuildContext context, String err) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: Text("Ошибка"),
-  //       content: Text(err),
-  //       actions: <Widget>[
-  //         ElevatedButton(
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //           },
-  //           style: ButtonStyle(backgroundColor:
-  //               MaterialStateProperty.resolveWith<Color>(
-  //                   (Set<MaterialState> states) {
-  //             return kMainPurple;
-  //           })),
-  //           child: Text("Ок"),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(

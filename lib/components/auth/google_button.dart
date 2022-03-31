@@ -28,9 +28,9 @@ class _GoogleButtonState extends State<GoogleButton> {
           });
       googleSignIn().then((value) {
         if (value != false) {
-          Navigator.of(context, rootNavigator: true).pop();
           User? user = FirebaseAuth.instance.currentUser;
           storeProfileUid(user!.uid);
+          Navigator.of(context, rootNavigator: true).pop();
           Navigator.pushReplacementNamed(
               context, NavigationBarCustom.routeName);
         }

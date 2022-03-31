@@ -1,6 +1,8 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -157,15 +159,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     height: getProportionateScreenHeight(30),
                   ),
+                  Text(
+                    "Достижения",
+                    style: TextStyle(
+                        color: kMainTextColor,
+                        fontSize: getProportionateScreenWidth(16),
+                        fontWeight: FontWeight.w600),
+                  ),
                   Stack(children: [
                     Container(
                       margin: EdgeInsets.fromLTRB(
                         getProportionateScreenWidth(30),
-                        getProportionateScreenHeight(20),
+                        getProportionateScreenHeight(0),
                         getProportionateScreenWidth(30),
                         getProportionateScreenHeight(30),
                       ),
-                      height: getProportionateScreenHeight(230),
+                      height: getProportionateScreenHeight(150),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(
@@ -187,78 +196,170 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.light_mode,
-                                    color: kMainPurple.withOpacity(0.3),
+                              TextButton(
+                                onPressed: () => showAchivementsDialog(
+                                  context,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 1)
+                                      .title,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 1)
+                                      .text,
+                                ),
+                                style: ButtonStyle(
+                                  textStyle: MaterialStateProperty.resolveWith<
+                                      TextStyle>((Set<MaterialState> states) {
+                                    return TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(14),
+                                      fontWeight: FontWeight.w400,
+                                    );
+                                  }),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(10),
-                                  ),
-                                  Text("Title"),
-                                  Text("Decription"),
-                                ],
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                    return kMainPink.withOpacity(0.1);
+                                  }),
+                                ),
+                                child: Column(
+                                  children: [
+                                    AchivementsModel.list
+                                        .firstWhere((e) => e.num == 1)
+                                        .icon,
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(15),
+                                    ),
+                                    Text(
+                                      AchivementsModel.list
+                                          .firstWhere((e) => e.num == 1)
+                                          .title,
+                                      style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize:
+                                            getProportionateScreenWidth(14),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.dark_mode,
-                                    color: kMainPurple.withOpacity(1),
+                              TextButton(
+                                onPressed: () => showAchivementsDialog(
+                                  context,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 2)
+                                      .title,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 2)
+                                      .text,
+                                ),
+                                style: ButtonStyle(
+                                  textStyle: MaterialStateProperty.resolveWith<
+                                      TextStyle>((Set<MaterialState> states) {
+                                    return TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(14),
+                                      fontWeight: FontWeight.w400,
+                                    );
+                                  }),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(10),
-                                  ),
-                                  Text("Title"),
-                                  Text("Decription"),
-                                ],
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                    return kMainPink.withOpacity(0.1);
+                                  }),
+                                ),
+                                child: Column(
+                                  children: [
+                                    AchivementsModel.list
+                                        .firstWhere((e) => e.num == 2)
+                                        .icon,
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(15),
+                                    ),
+                                    Text(
+                                      AchivementsModel.list
+                                          .firstWhere((e) => e.num == 2)
+                                          .title,
+                                      style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize:
+                                            getProportionateScreenWidth(14),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.watch_later,
-                                    color: kMainPurple.withOpacity(0.3),
+                              TextButton(
+                                onPressed: () => showAchivementsDialog(
+                                  context,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 3)
+                                      .title,
+                                  AchivementsModel.list
+                                      .firstWhere((e) => e.num == 3)
+                                      .text,
+                                ),
+                                style: ButtonStyle(
+                                  textStyle: MaterialStateProperty.resolveWith<
+                                      TextStyle>((Set<MaterialState> states) {
+                                    return TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(14),
+                                      fontWeight: FontWeight.w400,
+                                    );
+                                  }),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(10),
-                                  ),
-                                  Text("Title"),
-                                  Text("Decription"),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: getProportionateScreenHeight(30),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.turned_in,
-                                    color: kMainPurple.withOpacity(0.3),
-                                  ),
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(10),
-                                  ),
-                                  Text("Title"),
-                                  Text("Decription"),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Icon(
-                                    Icons.grade,
-                                    color: kMainPurple.withOpacity(0.3),
-                                  ),
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(10),
-                                  ),
-                                  Text("Title"),
-                                  Text("Decription"),
-                                ],
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                    return kMainPink.withOpacity(0.1);
+                                  }),
+                                ),
+                                child: Column(
+                                  children: [
+                                    AchivementsModel.list
+                                        .firstWhere((e) => e.num == 3)
+                                        .icon,
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(15),
+                                    ),
+                                    Text(
+                                      AchivementsModel.list
+                                          .firstWhere((e) => e.num == 3)
+                                          .title,
+                                      style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize:
+                                            getProportionateScreenWidth(14),
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
