@@ -1,3 +1,4 @@
+import 'package:easy_peasy/components/others/error_dialog.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/home_page.dart';
 import 'package:easy_peasy/screens/main/navigation_bar.dart';
@@ -8,29 +9,29 @@ import 'package:google_sign_in/google_sign_in.dart';
 FirebaseAuth auth = FirebaseAuth.instance;
 final gooleSignIn = GoogleSignIn();
 
-showErrDialog(BuildContext context, String err) {
-  return showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text("Ошибка"),
-      content: Text(err),
-      actions: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-          style: ButtonStyle(backgroundColor:
-              MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-            return kMainPurple;
-          })),
-          child: Text("Ок"),
-        ),
-      ],
-    ),
-  );
-}
+// showErrDialog(BuildContext context, String err) {
+//   return showDialog(
+//     context: context,
+//     builder: (context) => AlertDialog(
+//       title: Text("Ошибка"),
+//       content: Text(err),
+//       actions: <Widget>[
+//         ElevatedButton(
+//           onPressed: () {
+//             Navigator.of(context).pop();
+//             Navigator.of(context).pop();
+//           },
+//           style: ButtonStyle(backgroundColor:
+//               MaterialStateProperty.resolveWith<Color>(
+//                   (Set<MaterialState> states) {
+//             return kMainPurple;
+//           })),
+//           child: Text("Ок"),
+//         ),
+//       ],
+//     ),
+//   );
+// }
 
 // many unhandled google error exist
 // will push them soon
@@ -64,10 +65,10 @@ Future signIn(String email, String password, BuildContext context) async {
   } on FirebaseException catch (e) {
     switch (e.code) {
       case "wrong-password":
-        showErrDialog(context, "Неверный пароль");
+        showErrDialog(context, "Неверный пароль", 2);
         break;
       case "user-not-found":
-        showErrDialog(context, "Пользователь не найден");
+        showErrDialog(context, "Пользователь не найден", 2);
         break;
     }
     return Future.value(null);
@@ -87,7 +88,7 @@ Future signUp(
   } on FirebaseException catch (e) {
     switch (e.code) {
       case "email-already-in-use":
-        showErrDialog(context, "Этот адрес уже используется");
+        showErrDialog(context, "Этот адрес уже используется", 2);
         break;
     }
     return Future.value(null);

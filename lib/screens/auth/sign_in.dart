@@ -1,5 +1,6 @@
 import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/error_dialog.dart';
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
@@ -30,28 +31,28 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _textFieldController = TextEditingController();
 
-  showErrDialog(BuildContext context, String err) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Ошибка"),
-        content: Text(err),
-        actions: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: ButtonStyle(backgroundColor:
-                MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-              return kMainPurple;
-            })),
-            child: Text("Ок"),
-          ),
-        ],
-      ),
-    );
-  }
+  // showErrDialog(BuildContext context, String err) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: Text("Ошибка"),
+  //       content: Text(err),
+  //       actions: <Widget>[
+  //         ElevatedButton(
+  //           onPressed: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //           style: ButtonStyle(backgroundColor:
+  //               MaterialStateProperty.resolveWith<Color>(
+  //                   (Set<MaterialState> states) {
+  //             return kMainPurple;
+  //           })),
+  //           child: Text("Ок"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
@@ -106,6 +107,7 @@ class _SignInState extends State<SignIn> {
                         title: const Text("Успешно"),
                         content: const Text(
                             "Письмо для сброса пароля отправлено на указанную почту"),
+                        actionsAlignment: MainAxisAlignment.center,
                         actions: <Widget>[
                           ElevatedButton(
                             onPressed: () {
@@ -124,13 +126,13 @@ class _SignInState extends State<SignIn> {
                   } on FirebaseAuthException catch (e) {
                     switch (e.code) {
                       case "unknown":
-                        showErrDialog(context, "Пустое поле");
+                        showErrDialog(context, "Пустое поле", 1);
                         break;
                       case "invalid-email":
-                        showErrDialog(context, "Неверный формат");
+                        showErrDialog(context, "Неверный формат", 1);
                         break;
                       case "user-not-found":
-                        showErrDialog(context, "Пользователь не найден");
+                        showErrDialog(context, "Пользователь не найден", 1);
                         break;
                     }
                   }
