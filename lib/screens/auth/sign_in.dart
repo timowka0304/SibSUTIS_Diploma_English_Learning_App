@@ -26,9 +26,32 @@ class _SignInState extends State<SignIn> {
   bool _isObscure = true;
   String _userEmail = '';
   String _password = '';
-  String _userEmailForgot = '';
+  late String _userEmailForgot;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _textFieldController = TextEditingController();
+
+  showErrDialog(BuildContext context, String err) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Ошибка"),
+        content: Text(err),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ButtonStyle(backgroundColor:
+                MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+              return kMainPurple;
+            })),
+            child: Text("Ок"),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
@@ -55,6 +78,8 @@ class _SignInState extends State<SignIn> {
                 child: const Text('Отмена'),
                 onPressed: () {
                   setState(() {
+                    _textFieldController.text = "";
+                    _userEmailForgot = "";
                     Navigator.pop(context);
                   });
                 },
@@ -70,10 +95,9 @@ class _SignInState extends State<SignIn> {
                   try {
                     await auth.sendPasswordResetEmail(
                         email: _textFieldController.text.trim());
+                    Navigator.pop(context);
                     setState(() {
-                      Navigator.pop(context);
-                    });
-                    setState(() {
+                      _textFieldController.text = "";
                       _userEmailForgot = "";
                     });
                     return showDialog(
@@ -98,8 +122,17 @@ class _SignInState extends State<SignIn> {
                       ),
                     );
                   } on FirebaseAuthException catch (e) {
-                    print(e.code);
-                    print(e.message);
+                    switch (e.code) {
+                      case "unknown":
+                        showErrDialog(context, "Пустое поле");
+                        break;
+                      case "invalid-email":
+                        showErrDialog(context, "Неверный формат");
+                        break;
+                      case "user-not-found":
+                        showErrDialog(context, "Пользователь не найден");
+                        break;
+                    }
                   }
                 },
               ),

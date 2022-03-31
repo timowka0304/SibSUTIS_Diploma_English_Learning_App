@@ -46,7 +46,6 @@ Future googleSignIn() async {
         accessToken: googleSignInAuthentication.accessToken);
 
     UserCredential result = await auth.signInWithCredential(credential);
-
     User? user = await auth.currentUser;
 
     return Future.value(true);
