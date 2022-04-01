@@ -22,6 +22,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(const MaterialApp(
+      title: "Easy Peasy",
       debugShowCheckedModeBanner: false,
       home: MyApp(),
     ));
