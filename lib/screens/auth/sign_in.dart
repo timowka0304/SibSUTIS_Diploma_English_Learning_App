@@ -5,7 +5,7 @@ import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_up.dart';
-import 'package:easy_peasy/screens/main/navigation_bar.dart';
+import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/gestures.dart';
@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
   String _password = '';
   late String _userEmailForgot;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
@@ -137,8 +137,7 @@ class _SignInState extends State<SignIn> {
           if (value != null) {
             await storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
-            Navigator.pushReplacementNamed(
-                context, NavigationBarCustom.routeName);
+            Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
           }
         });
       }

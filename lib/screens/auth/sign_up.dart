@@ -3,7 +3,7 @@ import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
-import 'package:easy_peasy/screens/main/navigation_bar.dart';
+import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,7 +44,7 @@ class _SignInState extends State<SignUp> {
             storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const NavigationBarCustom()));
+                builder: (context) => const MainScreenCheck()));
           }
         });
       }

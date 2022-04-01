@@ -1,6 +1,6 @@
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/routes.dart';
-import 'package:easy_peasy/screens/main/home_page.dart';
+import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
       ),
       initialRoute: onBoardingScreenIsViewed != null
-          ? HomePage.routeName
+          ? MainScreenCheck.routeName
           : OnboardingScreen.routeName,
       routes: routes,
     );

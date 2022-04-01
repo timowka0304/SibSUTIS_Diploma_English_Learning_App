@@ -1,7 +1,7 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
-import 'package:easy_peasy/screens/main/navigation_bar.dart';
+import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +28,7 @@ class _GoogleButtonState extends State<GoogleButton> {
           User? user = FirebaseAuth.instance.currentUser;
           await storeProfileUid(user!.uid);
           Navigator.of(context, rootNavigator: true).pop();
-          Navigator.pushReplacementNamed(
-              context, NavigationBarCustom.routeName);
+          Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
         }
         if (value == false) {
           Navigator.of(context, rootNavigator: true).pop();
