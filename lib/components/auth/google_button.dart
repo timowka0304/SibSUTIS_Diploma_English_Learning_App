@@ -27,8 +27,8 @@ class _GoogleButtonState extends State<GoogleButton> {
         if (value != false) {
           User? user = FirebaseAuth.instance.currentUser;
           await storeProfileUid(user!.uid);
-          Navigator.of(context, rootNavigator: true).pop();
           Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
+          Navigator.of(context, rootNavigator: true).pop();
         }
         if (value == false) {
           Navigator.of(context, rootNavigator: true).pop();
@@ -36,41 +36,35 @@ class _GoogleButtonState extends State<GoogleButton> {
       });
     }
 
-    return SizedBox(
-      height: getProportionateScreenHeight(50),
-      width: getProportionateScreenWidth(230),
-      child: ElevatedButton(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
-                ),
-              ),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          minimumSize: Size(getProportionateScreenWidth(250),
+              getProportionateScreenHeight(50)),
+          maximumSize: Size(getProportionateScreenWidth(280),
+              getProportionateScreenHeight(50)),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
             ),
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              return kWhite;
-            })),
-        onPressed: _trySignIn,
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image(
-            image: const AssetImage(
-              kLogoGoogle,
-            ),
-            width: getProportionateScreenWidth(25),
           ),
-          SizedBox(
-            width: getProportionateScreenWidth(20),
+          primary: kWhite),
+      onPressed: _trySignIn,
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image(
+          image: const AssetImage(
+            kLogoGoogle,
           ),
-          Text(
-            "Войти через Google",
-            style: TextStyle(
-                color: kMainTextColor,
-                fontSize: getProportionateScreenWidth(14)),
-          ),
-        ]),
-      ),
+          width: getProportionateScreenWidth(25),
+        ),
+        SizedBox(
+          width: getProportionateScreenWidth(20),
+        ),
+        Text(
+          "Войти через Google",
+          style: TextStyle(
+              color: kMainTextColor, fontSize: getProportionateScreenWidth(14)),
+        ),
+      ]),
     );
   }
 }

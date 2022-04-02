@@ -66,7 +66,7 @@ Future signUp(
 
 Future signOutUser() async {
   if (auth.currentUser!.providerData[0].providerId == 'google.com') {
-    await gooleSignIn.disconnect();
+    await gooleSignIn.signOut();
   }
   await auth.signOut();
   return Future.value(true);

@@ -25,9 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
     SizeConfig().init(context);
 
     getProfileUid().then((gettedUid) {
-      setState(() {
-        uid = gettedUid;
-      });
+      uid = gettedUid;
     });
 
     return Scaffold(
@@ -414,24 +412,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   ElevatedButton(
-                    style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
-                            ),
-                          ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(getProportionateScreenWidth(120),
+                          getProportionateScreenHeight(50)),
+                      maximumSize: Size(getProportionateScreenWidth(120),
+                          getProportionateScreenHeight(50)),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                          return kMainPink;
-                        })),
+                      ),
+                      primary: kMainPink,
+                    ),
                     onPressed: () => signOutUser().then(
                       (value) {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => const SignIn()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const SignIn()));
                       },
                     ),
                     child: Row(

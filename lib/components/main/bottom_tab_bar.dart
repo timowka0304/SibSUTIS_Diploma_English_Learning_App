@@ -20,7 +20,6 @@ class _BottomTabBarState extends State<BottomTabBar> {
         topRight: Radius.circular(30.0),
       ),
       child: BottomAppBar(
-        elevation: 40,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

@@ -3,14 +3,12 @@ import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/shared_pref_user.dart';
 import 'package:easy_peasy/constants.dart';
-import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_up.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignIn extends StatefulWidget {
   static String routeName = "/signin";
@@ -136,8 +134,8 @@ class _SignInState extends State<SignIn> {
             .then((value) async {
           if (value != null) {
             await storeProfileUid(value!.uid);
-            Navigator.of(context, rootNavigator: true).pop();
             Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
+            Navigator.of(context, rootNavigator: true).pop();
           }
         });
       }
@@ -147,134 +145,136 @@ class _SignInState extends State<SignIn> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
-          ),
-          routes: routes,
-          home: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: kMainPurple,
-              body: SafeArea(
-                child: Center(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          height: getProportionateScreenHeight(90),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Image.asset(
-                            kLogoWhitePath,
-                            height: getProportionateScreenHeight(135),
-                            width: getProportionateScreenWidth(180),
-                          ),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(120),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [Center(child: GoogleButton())],
-                          ),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            children: [
-                              Text(
-                                "или",
-                                style: TextStyle(
-                                    color: kWhite,
-                                    fontSize: getProportionateScreenWidth(14)),
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              emeilFiled(),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              passwordField(),
-                              SizedBox(
-                                height: getProportionateScreenHeight(30),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: kWhite,
-                                  fixedSize: Size(
-                                      getProportionateScreenWidth(120),
-                                      getProportionateScreenHeight(40)),
-                                ),
-                                onPressed: _trySubmitForm,
-                                child: Text(
-                                  'Войти',
-                                  style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(5),
-                              ),
-                              InkWell(
-                                onTap: () => _displayTextInputDialog(context),
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                child: Text(
-                                  "Забыли пароль?",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: getProportionateScreenWidth(12),
-                                    // decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: RichText(
-                              text: TextSpan(
-                                  text: "Еще нет аккаунта? ",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
-                                  children: [
-                                TextSpan(
-                                  text: "Зарегистрируйся!",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => Navigator.pushNamed(
-                                        context, SignUp.routeName),
-                                )
-                              ])),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
-                        ),
-                      ],
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: kMainPurple,
+          body: SafeArea(
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(90),
                     ),
-                  ),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        kLogoWhitePath,
+                        height: getProportionateScreenHeight(135),
+                        width: getProportionateScreenWidth(180),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(120),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [Center(child: GoogleButton())],
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        children: [
+                          Text(
+                            "или",
+                            style: TextStyle(
+                                color: kWhite,
+                                fontSize: getProportionateScreenWidth(14)),
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(20),
+                          ),
+                          emeilFiled(),
+                          SizedBox(
+                            height: getProportionateScreenHeight(20),
+                          ),
+                          passwordField(),
+                          SizedBox(
+                            height: getProportionateScreenHeight(30),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(
+                                  getProportionateScreenWidth(120),
+                                  getProportionateScreenHeight(50)),
+                              maximumSize: Size(
+                                  getProportionateScreenWidth(120),
+                                  getProportionateScreenHeight(50)),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              primary: kWhite,
+                            ),
+                            onPressed: _trySubmitForm,
+                            child: Text(
+                              'Войти',
+                              style: TextStyle(
+                                color: kMainTextColor,
+                                fontSize: getProportionateScreenWidth(14),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(15),
+                          ),
+                          InkWell(
+                            onTap: () => _displayTextInputDialog(context),
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            child: Text(
+                              "Забыли пароль?",
+                              style: TextStyle(
+                                color: kWhite,
+                                fontWeight: FontWeight.w600,
+                                fontSize: getProportionateScreenWidth(12),
+                                // decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: RichText(
+                          text: TextSpan(
+                              text: "Еще нет аккаунта? ",
+                              style: TextStyle(
+                                color: kWhite,
+                                fontWeight: FontWeight.w400,
+                                fontSize: getProportionateScreenWidth(14),
+                              ),
+                              children: [
+                            TextSpan(
+                              text: "Зарегистрируйся!",
+                              style: TextStyle(
+                                color: kWhite,
+                                fontWeight: FontWeight.w800,
+                                fontSize: getProportionateScreenWidth(14),
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => Navigator.pushNamed(
+                                    context, SignUp.routeName),
+                            )
+                          ])),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+                  ],
                 ),
-              ))),
+              ),
+            ),
+          )),
     );
   }
 
@@ -296,7 +296,7 @@ class _SignInState extends State<SignIn> {
             return "Введите пароль";
           }
           if (value.trim().length < 8) {
-            return 'Минимальная длина пароля — 8 символов';
+            return 'Минимальная длина 8';
           }
           return null;
         },
@@ -376,10 +376,10 @@ class _SignInState extends State<SignIn> {
             fontSize: getProportionateScreenWidth(14)),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
-            return "Введите адрес электронной почты";
+            return "Введите почту";
           }
           if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-            return 'Проверьте правильность введенных данных';
+            return 'Проверьте формат';
           }
           return null;
         },

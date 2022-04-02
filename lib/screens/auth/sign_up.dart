@@ -102,10 +102,18 @@ class _SignInState extends State<SignUp> {
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                      getProportionateScreenWidth(180),
+                                      getProportionateScreenHeight(50)),
+                                  maximumSize: Size(
+                                      getProportionateScreenWidth(180),
+                                      getProportionateScreenHeight(50)),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
                                   primary: kWhite,
-                                  fixedSize: Size(
-                                      getProportionateScreenWidth(200),
-                                      getProportionateScreenHeight(40)),
                                 ),
                                 onPressed: _trySubmitForm,
                                 child: Text(
@@ -121,10 +129,18 @@ class _SignInState extends State<SignUp> {
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: kWhite,
-                                  fixedSize: Size(
+                                  minimumSize: Size(
                                       getProportionateScreenWidth(100),
-                                      getProportionateScreenHeight(40)),
+                                      getProportionateScreenHeight(50)),
+                                  maximumSize: Size(
+                                      getProportionateScreenWidth(100),
+                                      getProportionateScreenHeight(50)),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  primary: kWhite,
                                 ),
                                 onPressed: () => Navigator.pushReplacementNamed(
                                     context, SignIn.routeName),
@@ -165,7 +181,7 @@ class _SignInState extends State<SignUp> {
             return "Введите пароль";
           }
           if (value.trim().length < 8) {
-            return 'Минимальная длина пароля — 8 символов';
+            return 'Минимальная длина 8';
           }
           return null;
         },
@@ -245,10 +261,10 @@ class _SignInState extends State<SignUp> {
             fontSize: getProportionateScreenWidth(14)),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
-            return "Введите адрес электронной почты";
+            return "Введите почту";
           }
           if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-            return 'Проверьте правильность введенных данных';
+            return 'Проверьте формат';
           }
           return null;
         },
