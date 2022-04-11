@@ -1,14 +1,17 @@
+import 'dart:io';
+
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
+import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
-import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,12 +21,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  late var user = FirebaseAuth.instance.currentUser!;
+  late var userImg = user.photoURL!;
   late String uid;
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    // SizeConfig().init(context);
 
     getProfileUid().then((gettedUid) {
       uid = gettedUid;
@@ -75,14 +79,23 @@ class _ProfilePageState extends State<ProfilePage> {
                             backgroundColor: kWhite,
                             child: CircleAvatar(
                                 radius: ScreenUtil().setWidth(37),
-                                backgroundImage: NetworkImage(user.photoURL!),
+                                backgroundImage: NetworkImage(userImg),
+                                backgroundColor: kMainPink,
                                 child: Align(
                                   alignment: Alignment.bottomRight,
                                   child: CircleAvatar(
                                       backgroundColor: Colors.white,
                                       radius: ScreenUtil().setWidth(12),
                                       child: MaterialButton(
-                                        onPressed: () {},
+                                        onPressed: () =>
+                                            updateImg(user).then((downloadUrl) {
+                                          user.updatePhotoURL(downloadUrl);
+
+                                          setState(() {
+                                            user.updatePhotoURL(downloadUrl);
+                                            userImg = downloadUrl;
+                                          });
+                                        }),
                                         elevation: 0,
                                         focusElevation: 0,
                                         hoverElevation: 0,
@@ -249,8 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           .firstWhere((e) => e.num == 1)
                                           .icon,
                                       SizedBox(
-                                        height:
-                                            getProportionateScreenHeight(15),
+                                        height: ScreenUtil().setHeight(15),
                                       ),
                                       Text(
                                         AchivementsModel.list

@@ -18,8 +18,8 @@ Future googleSignIn() async {
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
 
-    UserCredential result = await auth.signInWithCredential(credential);
-    User? user = await auth.currentUser;
+    await auth.signInWithCredential(credential);
+    auth.currentUser;
 
     return Future.value(true);
   }
