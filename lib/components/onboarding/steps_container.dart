@@ -1,4 +1,4 @@
-import 'package:easy_peasy/components/others/shared_pref_user.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:easy_peasy/constants.dart';
