@@ -1,10 +1,10 @@
-import 'package:easy_peasy/components/others/shared_pref_user.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
-import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
@@ -34,16 +34,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
+    return ScreenUtilInit(
+      designSize: const Size(414, 896),
+      minTextAdapt: true,
+      builder: () => MaterialApp(
+        builder: (context, widget) {
+          ScreenUtil.setContext(context);
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: widget!,
+          );
+        },
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
+        ),
+        initialRoute: onBoardingScreenIsViewed != null
+            ? MainScreenCheck.routeName
+            : OnboardingScreen.routeName,
+        routes: routes,
       ),
-      initialRoute: onBoardingScreenIsViewed != null
-          ? MainScreenCheck.routeName
-          : OnboardingScreen.routeName,
-      routes: routes,
     );
   }
 }

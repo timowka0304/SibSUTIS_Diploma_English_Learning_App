@@ -1,10 +1,10 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
-import 'package:easy_peasy/components/others/shared_pref_user.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
-import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GoogleButton extends StatefulWidget {
   GoogleButton({Key? key}) : super(key: key);
@@ -38,10 +38,10 @@ class _GoogleButtonState extends State<GoogleButton> {
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          minimumSize: Size(getProportionateScreenWidth(250),
-              getProportionateScreenHeight(50)),
-          maximumSize: Size(getProportionateScreenWidth(280),
-              getProportionateScreenHeight(50)),
+          minimumSize:
+              Size(ScreenUtil().setWidth(250), ScreenUtil().setHeight(50)),
+          maximumSize:
+              Size(ScreenUtil().setWidth(290), ScreenUtil().setHeight(50)),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(10),
@@ -54,15 +54,17 @@ class _GoogleButtonState extends State<GoogleButton> {
           image: const AssetImage(
             kLogoGoogle,
           ),
-          width: getProportionateScreenWidth(25),
+          width: ScreenUtil().setWidth(25),
         ),
         SizedBox(
-          width: getProportionateScreenWidth(20),
+          width: ScreenUtil().setWidth(20),
         ),
         Text(
           "Войти через Google",
           style: TextStyle(
-              color: kMainTextColor, fontSize: getProportionateScreenWidth(14)),
+            color: kMainTextColor,
+            fontSize: 18.sp,
+          ),
         ),
       ]),
     );

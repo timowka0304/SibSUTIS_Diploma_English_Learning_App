@@ -1,11 +1,17 @@
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 showErrDialog(BuildContext context, String err, int flag) {
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text("Ошибка"),
+      title: Text(
+        "Ошибка",
+        style: TextStyle(
+          fontSize: 28.sp,
+        ),
+      ),
       content: Text(err),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
@@ -19,7 +25,12 @@ showErrDialog(BuildContext context, String err, int flag) {
                   (Set<MaterialState> states) {
             return kMainPurple;
           })),
-          child: const Text("Ок"),
+          child: Text(
+            "Ок",
+            style: TextStyle(
+              fontSize: 18.sp,
+            ),
+          ),
         ),
       ],
     ),
@@ -43,7 +54,12 @@ showAchivementsDialog(BuildContext context, String title, String text) {
                   (Set<MaterialState> states) {
             return kMainPurple;
           })),
-          child: const Text("Ок"),
+          child: Text(
+            "Ок",
+            style: TextStyle(
+              fontSize: 18.sp,
+            ),
+          ),
         ),
       ],
     ),

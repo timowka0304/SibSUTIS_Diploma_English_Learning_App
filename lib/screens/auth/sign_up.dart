@@ -1,11 +1,12 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
-import 'package:easy_peasy/components/others/shared_pref_user.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignUp extends StatefulWidget {
@@ -67,95 +68,102 @@ class _SignInState extends State<SignUp> {
                 child: Center(
                   child: Form(
                     key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          height: getProportionateScreenHeight(90),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Image.asset(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: ScreenUtil().setHeight(90),
+                          ),
+                          Image.asset(
                             kLogoWhitePath,
-                            height: getProportionateScreenHeight(135),
-                            width: getProportionateScreenWidth(180),
+                            height: ScreenUtil().setHeight(135),
+                            width: ScreenUtil().setWidth(180),
                           ),
-                        ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(120),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            children: [
-                              emeilFiled(),
-                              SizedBox(
-                                height: getProportionateScreenHeight(20),
-                              ),
-                              passwordField(),
-                              SizedBox(
-                                height: getProportionateScreenHeight(30),
-                              ),
-                              nameFiled(),
-                              SizedBox(
-                                height: getProportionateScreenHeight(60),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(
-                                      getProportionateScreenWidth(180),
-                                      getProportionateScreenHeight(50)),
-                                  maximumSize: Size(
-                                      getProportionateScreenWidth(180),
-                                      getProportionateScreenHeight(50)),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                          SizedBox(
+                            height: ScreenUtil().setHeight(60),
+                          ),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Column(
+                              children: [
+                                emeilFiled(),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(20),
+                                ),
+                                passwordField(),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(20),
+                                ),
+                                nameFiled(),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(60),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(
+                                      ScreenUtil().setWidth(180),
+                                      ScreenUtil().setHeight(50),
+                                    ),
+                                    maximumSize: Size(
+                                      ScreenUtil().setWidth(230),
+                                      ScreenUtil().setHeight(50),
+                                    ),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    primary: kWhite,
+                                  ),
+                                  onPressed: _trySubmitForm,
+                                  child: Text(
+                                    'Зарегистрироваться',
+                                    style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
-                                  primary: kWhite,
                                 ),
-                                onPressed: _trySubmitForm,
-                                child: Text(
-                                  'Зарегистрироваться',
-                                  style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: getProportionateScreenWidth(14),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(50),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(
+                                      ScreenUtil().setWidth(80),
+                                      ScreenUtil().setHeight(40),
+                                    ),
+                                    maximumSize: Size(
+                                      ScreenUtil().setWidth(100),
+                                      ScreenUtil().setHeight(40),
+                                    ),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    primary: kWhite,
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: getProportionateScreenHeight(30),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(
-                                      getProportionateScreenWidth(100),
-                                      getProportionateScreenHeight(50)),
-                                  maximumSize: Size(
-                                      getProportionateScreenWidth(100),
-                                      getProportionateScreenHeight(50)),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                                  onPressed: () =>
+                                      Navigator.pushReplacementNamed(
+                                          context, SignIn.routeName),
+                                  child: Text(
+                                    'Назад',
+                                    style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
-                                  primary: kWhite,
                                 ),
-                                onPressed: () => Navigator.pushReplacementNamed(
-                                    context, SignIn.routeName),
-                                child: Text(
-                                  'Назад',
-                                  style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: getProportionateScreenWidth(14),
-                                  ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(50),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -165,16 +173,14 @@ class _SignInState extends State<SignUp> {
 
   Container passwordField() {
     return Container(
-      width: getProportionateScreenWidth(280),
+      width: ScreenUtil().setWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
       child: TextFormField(
         obscureText: _isObscure,
         style: TextStyle(
-            color: kWhite,
-            fontWeight: FontWeight.w200,
-            fontSize: getProportionateScreenWidth(14)),
+            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
         onChanged: (value) => _password = value,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -190,12 +196,10 @@ class _SignInState extends State<SignUp> {
             hintStyle: TextStyle(
                 color: kWhite.withOpacity(0.5),
                 fontWeight: FontWeight.w200,
-                fontSize: getProportionateScreenWidth(14)),
+                fontSize: 16.sp),
             labelText: "Пароль",
             labelStyle: TextStyle(
-                color: kWhite,
-                fontWeight: FontWeight.w200,
-                fontSize: getProportionateScreenWidth(14)),
+                color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
             hintText: 'qwerty123',
             isDense: true,
             focusedErrorBorder: OutlineInputBorder(
@@ -213,9 +217,7 @@ class _SignInState extends State<SignUp> {
               ),
             ),
             errorStyle: TextStyle(
-                color: kWhite,
-                fontWeight: FontWeight.w200,
-                fontSize: getProportionateScreenWidth(12)),
+                color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -249,16 +251,14 @@ class _SignInState extends State<SignUp> {
 
   Container emeilFiled() {
     return Container(
-      width: getProportionateScreenWidth(280),
+      width: ScreenUtil().setWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
       child: TextFormField(
         onChanged: (value) => _userEmail = value,
         style: TextStyle(
-            color: kWhite,
-            fontWeight: FontWeight.w200,
-            fontSize: getProportionateScreenWidth(14)),
+            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return "Введите почту";
@@ -273,12 +273,10 @@ class _SignInState extends State<SignUp> {
           hintStyle: TextStyle(
               color: kWhite.withOpacity(0.5),
               fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(14)),
+              fontSize: 16.sp),
           labelText: "Почта",
           labelStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(14)),
+              color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
           hintText: 'example@gmail.com',
           isDense: true,
           focusedErrorBorder: OutlineInputBorder(
@@ -296,9 +294,7 @@ class _SignInState extends State<SignUp> {
             ),
           ),
           errorStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(12)),
+              color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
@@ -320,16 +316,14 @@ class _SignInState extends State<SignUp> {
 
   Container nameFiled() {
     return Container(
-      width: getProportionateScreenWidth(280),
+      width: ScreenUtil().setWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
       child: TextFormField(
         onChanged: (value) => _userName = value,
         style: TextStyle(
-            color: kWhite,
-            fontWeight: FontWeight.w200,
-            fontSize: getProportionateScreenWidth(14)),
+            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return "Введите имя";
@@ -341,12 +335,10 @@ class _SignInState extends State<SignUp> {
           hintStyle: TextStyle(
               color: kWhite.withOpacity(0.5),
               fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(14)),
+              fontSize: 16.sp),
           labelText: "Имя",
           labelStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(14)),
+              color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
           hintText: 'Иван1982',
           isDense: true,
           focusedErrorBorder: OutlineInputBorder(
@@ -364,9 +356,7 @@ class _SignInState extends State<SignUp> {
             ),
           ),
           errorStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: getProportionateScreenWidth(12)),
+              color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
