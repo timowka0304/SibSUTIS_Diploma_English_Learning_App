@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:ui';
+import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
@@ -19,49 +20,67 @@ class CategoriesPage extends StatefulWidget {
 class _CategoriesPageState extends State<CategoriesPage> {
   final translator = GoogleTranslator();
   late int num;
-  late Map<String, String> wordsImage;
+  int? _info;
+  late Map<String, dynamic> wordsImage;
 
   Future<void> generateCards() async {
     num = 6;
-    // wordsImage = {};
-    // await getImagesForBegginers();
-    // await getImagesForIntermediate();
+    _info = await getCategoriesInfo();
+    if (_info == null) {
+      wordsImage = {};
+      await getImagesForBegginers();
+      await getImagesForIntermediate();
+      await storeCategoriesInfo(json.encode(wordsImage));
+    } else {
+      wordsImage = {};
+      var decode = json.decode(await getCategoriesImages());
+      wordsImage = decode;
+    }
   }
 
-  // Future<void> getImagesForBegginers() async {
-  //   for (String element in nameOfCategoryForBeginner.keys) {
-  //     String url =
-  //         await searchImage(nameOfCategoryForBeginner[element].toString());
-  //     wordsImage[element] = url;
-  //   }
-  // }
+  Future<void> getInfos() async {
+    print("2222");
+    getCategoriesInfo().then((value) {
+      print("3333");
+      _info = value;
+      print("Value = $value");
+    }).onError((error, stackTrace) => null);
+  }
 
-  // Future<void> getImagesForIntermediate() async {
-  //   for (String element in nameOfCategoryForIntermediate.keys) {
-  //     String url =
-  //         await searchImage(nameOfCategoryForIntermediate[element].toString());
-  //     wordsImage[element] = url;
-  //   }
-  // }
+  Future<void> getImagesForBegginers() async {
+    for (String element in nameOfCategoryForBeginner.keys) {
+      String url =
+          await searchImage(nameOfCategoryForBeginner[element].toString());
+      wordsImage[element] = url;
+    }
+  }
 
-  // Future<http.Response> fetchImageByKeyword(String keyWord) async {
-  //   String apiKey = 'Ppw1eG0YzUaD-rRKTyLO3UXnrpLMK8Vi9qAFRQCoRmI';
-  //   final uri = Uri.parse(
-  //       'https://api.unsplash.com/search/photos/?client_id=$apiKey&query=${keyWord.toLowerCase()}&page=1');
+  Future<void> getImagesForIntermediate() async {
+    for (String element in nameOfCategoryForIntermediate.keys) {
+      String url =
+          await searchImage(nameOfCategoryForIntermediate[element].toString());
+      wordsImage[element] = url;
+    }
+  }
 
-  //   return http.get(uri);
-  // }
+  Future<http.Response> fetchImageByKeyword(String keyWord) async {
+    String apiKey = 'Ppw1eG0YzUaD-rRKTyLO3UXnrpLMK8Vi9qAFRQCoRmI';
+    final uri = Uri.parse(
+        'https://api.unsplash.com/search/photos/?client_id=$apiKey&query=${keyWord.toLowerCase()}&page=1');
 
-  // Future<String> searchImage(String keyWord) async {
-  //   final response = await fetchImageByKeyword(keyWord);
+    return http.get(uri);
+  }
 
-  //   if (response.statusCode == 200) {
-  //     Map<String, dynamic> result = jsonDecode(response.body);
-  //     return (result["results"][0]["links"]["download"]);
-  //   } else {
-  //     return "https://source.unsplash.com/random/${Random().nextInt(100000)}";
-  //   }
-  // }
+  Future<String> searchImage(String keyWord) async {
+    final response = await fetchImageByKeyword(keyWord);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(response.body);
+      return (result["results"][0]["urls"]["small"]);
+    } else {
+      return "http://via.placeholder.com/200x150";
+    }
+  }
 
   Map<String, String> nameOfCategoryForBeginner = {
     'Погода': 'Weather',
@@ -110,7 +129,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         "Начальный уровень:",
                         style: TextStyle(
                             color: kMainTextColor,
-                            fontSize: 18.sp,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -154,7 +173,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         "Средний уровень:",
                         style: TextStyle(
                             color: kMainTextColor,
-                            fontSize: 18.sp,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -200,14 +219,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return SizedBox(
         width: ScreenUtil().setWidth(180),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(ScreenUtil().setWidth(15)),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withOpacity(0.6),
                   spreadRadius: 5,
                   blurRadius: 7, // changes position of shadow
                 ),
@@ -217,85 +236,52 @@ class _CategoriesPageState extends State<CategoriesPage> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Stack(
-                    children: [
-                      Container(
-                        color: kMainPurple,
-                      ),
-                      Center(
-                        child: numOfList == 1
-                            ? Text(
-                                "${nameOfCategoryForBeginner.keys.elementAt(index)}",
-                                style: TextStyle(
-                                  color: kWhite,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20.sp,
-                                ),
-                              )
-                            : Text(
-                                "${nameOfCategoryForIntermediate.keys.elementAt(index)}",
-                                style: TextStyle(
-                                  color: kWhite,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20.sp,
-                                ),
-                              ),
-                      )
-                    ],
+                  child: CachedNetworkImage(
+                    width: ScreenUtil().setWidth(180),
+                    fit: BoxFit.fitWidth,
+                    imageUrl: numOfList == 1
+                        ? wordsImage[
+                                nameOfCategoryForBeginner.keys.elementAt(index)]
+                            .toString()
+                        : wordsImage[nameOfCategoryForIntermediate.keys
+                                .elementAt(index)]
+                            .toString(),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    kMainPink.withOpacity(0.3)),
+                                backgroundColor: kWhite,
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
-                  // child: CachedNetworkImage(
-                  //   width: ScreenUtil().setWidth(180),
-                  //   fit: BoxFit.fitWidth,
-                  //   imageUrl: "http://via.placeholder.com/200x150",
-                  //   imageBuilder: (context, imageProvider) => Container(
-                  //     decoration: BoxDecoration(
-                  //       image: DecorationImage(
-                  //           image: imageProvider,
-                  //           fit: BoxFit.cover,
-                  //           colorFilter: ColorFilter.mode(
-                  //               Colors.red, BlendMode.colorBurn)),
-                  //     ),
-                  //   ),
-                  //   placeholder: (context, url) => CircularProgressIndicator(),
-                  //   errorWidget: (context, url, error) => Icon(Icons.error),
-                  // ),
-                  // child: Image.network(
-                  //   numOfList == 1
-                  //       ? wordsImage[
-                  //               nameOfCategoryForBeginner.keys.elementAt(index)]
-                  //           .toString()
-                  //       : wordsImage[
-                  //               nameOfCategoryForBeginner.keys.elementAt(index)]
-                  //           .toString(),
-                  //   width: ScreenUtil().setWidth(180),
-                  //   fit: BoxFit.fitWidth,
-                  // ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.fromLTRB(
-                //     ScreenUtil().setWidth(0),
-                //     ScreenUtil().setHeight(10),
-                //     ScreenUtil().setWidth(0),
-                //     ScreenUtil().setHeight(10),
-                //   ),
-                //   child: numOfList == 1
-                //       ? Text(
-                //           "${nameOfCategoryForBeginner.keys.elementAt(index)}",
-                //           style: TextStyle(
-                //             color: kMainTextColor,
-                //             fontWeight: FontWeight.w400,
-                //             fontSize: 16.sp,
-                //           ),
-                //         )
-                //       : Text(
-                //           "${nameOfCategoryForBeginner.keys.elementAt(index)}",
-                //           style: TextStyle(
-                //             color: kMainTextColor,
-                //             fontWeight: FontWeight.w400,
-                //             fontSize: 16.sp,
-                //           ),
-                //         ),
-                // ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    ScreenUtil().setWidth(0),
+                    ScreenUtil().setHeight(10),
+                    ScreenUtil().setWidth(0),
+                    ScreenUtil().setHeight(10),
+                  ),
+                  child: numOfList == 1
+                      ? Text(
+                          "${nameOfCategoryForBeginner.keys.elementAt(index)}",
+                          style: TextStyle(
+                            color: kMainTextColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.sp,
+                          ),
+                        )
+                      : Text(
+                          "${nameOfCategoryForIntermediate.keys.elementAt(index)}",
+                          style: TextStyle(
+                            color: kMainTextColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                ),
               ],
             ),
           ),

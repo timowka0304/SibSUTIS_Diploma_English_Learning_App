@@ -19,3 +19,19 @@ Future getOnboardInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getInt('onBoardingScreen')!;
 }
+
+storeCategoriesInfo(String info) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('CategoriesPageImages', info);
+  await prefs.setInt('CategoriesPage', 1);
+}
+
+getCategoriesInfo() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('CategoriesPage')!;
+}
+
+getCategoriesImages() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('CategoriesPageImages')!;
+}
