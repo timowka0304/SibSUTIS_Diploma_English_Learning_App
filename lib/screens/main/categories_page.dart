@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:easy_peasy/components/others/shared_pref.dart';
@@ -20,31 +21,22 @@ class CategoriesPage extends StatefulWidget {
 class _CategoriesPageState extends State<CategoriesPage> {
   final translator = GoogleTranslator();
   late int num;
-  int? _info;
   late Map<String, dynamic> wordsImage;
 
   Future<void> generateCards() async {
+    final c = Completer();
     num = 6;
-    _info = await getCategoriesInfo();
-    if (_info == null) {
-      wordsImage = {};
-      await getImagesForBegginers();
-      await getImagesForIntermediate();
-      await storeCategoriesInfo(json.encode(wordsImage));
-    } else {
-      wordsImage = {};
-      var decode = json.decode(await getCategoriesImages());
-      wordsImage = decode;
-    }
-  }
-
-  Future<void> getInfos() async {
-    print("2222");
-    getCategoriesInfo().then((value) {
-      print("3333");
-      _info = value;
-      print("Value = $value");
-    }).onError((error, stackTrace) => null);
+    await getCategoriesInfo().then((value) async {
+      if (value == null) {
+        wordsImage = {};
+        await getImagesForBegginers();
+        await getImagesForIntermediate();
+        await storeCategoriesInfo(json.encode(wordsImage));
+      } else {
+        wordsImage = {};
+        wordsImage = json.decode(await getCategoriesImages());
+      }
+    });
   }
 
   Future<void> getImagesForBegginers() async {
@@ -102,7 +94,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
+    return FutureBuilder(
         future: generateCards(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

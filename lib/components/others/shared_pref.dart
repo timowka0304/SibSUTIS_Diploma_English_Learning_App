@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 storeProfileUid(String uid) async {
@@ -17,21 +19,24 @@ storeOnboardInfo() async {
 
 Future getOnboardInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('onBoardingScreen')!;
+  return prefs.getInt('onBoardingScreen');
 }
 
 storeCategoriesInfo(String info) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('CategoriesPageImages', info);
   await prefs.setInt('CategoriesPage', 1);
+  print("Stored");
 }
 
-getCategoriesInfo() async {
+Future getCategoriesInfo() async {
+  final whenDone = Completer();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('CategoriesPage')!;
+  print("Getted = ${prefs.getInt('CategoriesPage')}");
+  return prefs.getInt('CategoriesPage');
 }
 
-getCategoriesImages() async {
+Future getCategoriesImages() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('CategoriesPageImages')!;
+  return prefs.getString('CategoriesPageImages');
 }
