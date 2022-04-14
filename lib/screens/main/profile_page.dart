@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
@@ -8,10 +6,8 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
