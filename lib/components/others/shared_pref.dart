@@ -26,13 +26,11 @@ storeCategoriesInfo(String info) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('CategoriesPageImages', info);
   await prefs.setInt('CategoriesPage', 1);
-  print("Stored");
 }
 
 Future getCategoriesInfo() async {
   final whenDone = Completer();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  print("Getted = ${prefs.getInt('CategoriesPage')}");
   return prefs.getInt('CategoriesPage');
 }
 

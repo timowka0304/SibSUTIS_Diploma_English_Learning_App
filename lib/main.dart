@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(414, 896),
       minTextAdapt: true,
       builder: () => MaterialApp(
+        title: "Easy Peasy",
         builder: (context, widget) {
           ScreenUtil.setContext(context);
           return MediaQuery(

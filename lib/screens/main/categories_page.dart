@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
+import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:translator/translator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({Key? key}) : super(key: key);
@@ -20,23 +20,49 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final translator = GoogleTranslator();
-  late int num;
+  late int beginersCount;
+  late int intermediateCount;
+  late int filmsCount;
   late Map<String, dynamic> wordsImage;
+  late Map<String, dynamic> dictionary;
 
   Future<void> generateCards() async {
-    final c = Completer();
-    num = 6;
+    await getDictionaryJSON().then(
+      ((value) async {
+        final response = await fetchJSON(value);
+        Map<String, dynamic> dictionary =
+            json.decode(utf8.decode(response.bodyBytes));
+        beginersCount = (dictionary["begginer"] as Map<String, dynamic>).length;
+        intermediateCount =
+            (dictionary["intermediate"] as Map<String, dynamic>).length;
+        filmsCount = (dictionary["films"] as Map<String, dynamic>).length;
+      }),
+    );
     await getCategoriesInfo().then((value) async {
       if (value == null) {
         wordsImage = {};
         await getImagesForBegginers();
         await getImagesForIntermediate();
+        await getImagesForFilms();
         await storeCategoriesInfo(json.encode(wordsImage));
       } else {
         wordsImage = {};
         wordsImage = json.decode(await getCategoriesImages());
       }
     });
+  }
+
+  Future<http.Response> fetchJSON(String value) async {
+    final uri = Uri.parse(value);
+    return http.get(uri);
+  }
+
+  Future<void> getImagesForFilms() async {
+    for (String element in nameOfCategoryForFilms.keys) {
+      String url =
+          await getFilmsImage(nameOfCategoryForFilms[element].toString());
+      wordsImage[element] = url;
+    }
   }
 
   Future<void> getImagesForBegginers() async {
@@ -74,6 +100,15 @@ class _CategoriesPageState extends State<CategoriesPage> {
     }
   }
 
+  Map<String, String> nameOfCategoryForFilms = {
+    'Во все тяжкие': 'breaking_bad',
+    'Друзья': 'friends',
+    'Игра престолов': 'game_of_thrones',
+    'Анатомия страсти': 'grace_anatomy',
+    'Гарри Поттер': 'harry_potter-min',
+    'Очень странные дела': 'stranger_things'
+  };
+
   Map<String, String> nameOfCategoryForBeginner = {
     'Погода': 'Weather',
     'Одежда': 'Clothing',
@@ -98,9 +133,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
         future: generateCards(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: kMainPink,
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(
+                    color: kMainPink,
+                  ),
+                  SizedBox(
+                    height: ScreenUtil().setHeight(20),
+                  ),
+                  Text(
+                    "Подождите несколько секунд.\nПолучаем карточки с сервера ...",
+                    style: TextStyle(
+                        color: kMainTextColor,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
               ),
             );
           } else {
@@ -111,7 +161,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: ScreenUtil().setHeight(30),
+                      height: ScreenUtil().setHeight(50),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
@@ -141,14 +191,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               ScreenUtil().setHeight(0),
                             ),
                             physics: const BouncingScrollPhysics(),
-                            itemCount: num,
+                            itemCount: beginersCount,
                             separatorBuilder: (context, index) {
                               return SizedBox(
                                 width: ScreenUtil().setWidth(20),
                               );
                             },
                             itemBuilder: (context, index) {
-                              return categoryCard(1, index);
+                              return categoryCard("Beginer", index);
                             },
                           ),
                         ),
@@ -185,14 +235,58 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               ScreenUtil().setHeight(0),
                             ),
                             physics: const BouncingScrollPhysics(),
-                            itemCount: num,
+                            itemCount: intermediateCount,
                             separatorBuilder: (context, index) {
                               return SizedBox(
                                 width: ScreenUtil().setWidth(20),
                               );
                             },
                             itemBuilder: (context, index) {
-                              return categoryCard(2, index);
+                              return categoryCard("Intermediate", index);
+                            },
+                          ),
+                        ),
+                      ]),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(50),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: ScreenUtil().setWidth(30),
+                      ),
+                      child: Text(
+                        "По сериалам и фильмам:",
+                        style: TextStyle(
+                            color: kMainTextColor,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(20),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(150),
+                      child: Column(children: [
+                        Expanded(
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.fromLTRB(
+                              ScreenUtil().setWidth(20),
+                              ScreenUtil().setHeight(0),
+                              ScreenUtil().setWidth(20),
+                              ScreenUtil().setHeight(0),
+                            ),
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: filmsCount,
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                width: ScreenUtil().setWidth(20),
+                              );
+                            },
+                            itemBuilder: (context, index) {
+                              return categoryCard("Films", index);
                             },
                           ),
                         ),
@@ -206,7 +300,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         });
   }
 
-  Widget categoryCard(int numOfList, int index) {
+  Widget categoryCard(String typeList, int index) {
     {
       return SizedBox(
         width: ScreenUtil().setWidth(180),
@@ -230,14 +324,20 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   flex: 2,
                   child: CachedNetworkImage(
                     width: ScreenUtil().setWidth(180),
-                    fit: BoxFit.fitWidth,
-                    imageUrl: numOfList == 1
+                    fit: BoxFit.cover,
+                    imageUrl: typeList == "Beginer"
                         ? wordsImage[
                                 nameOfCategoryForBeginner.keys.elementAt(index)]
                             .toString()
-                        : wordsImage[nameOfCategoryForIntermediate.keys
-                                .elementAt(index)]
-                            .toString(),
+                        : typeList == "Intermediate"
+                            ? wordsImage[nameOfCategoryForIntermediate.keys
+                                    .elementAt(index)]
+                                .toString()
+                            : typeList == "Films"
+                                ? wordsImage[nameOfCategoryForFilms.keys
+                                        .elementAt(index)]
+                                    .toString()
+                                : "https://via.placeholder.com/200x150/595ABA/595ABA",
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) =>
                             LinearProgressIndicator(
@@ -250,30 +350,42 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    ScreenUtil().setWidth(0),
-                    ScreenUtil().setHeight(10),
-                    ScreenUtil().setWidth(0),
-                    ScreenUtil().setHeight(10),
-                  ),
-                  child: numOfList == 1
-                      ? Text(
-                          "${nameOfCategoryForBeginner.keys.elementAt(index)}",
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16.sp,
-                          ),
-                        )
-                      : Text(
-                          "${nameOfCategoryForIntermediate.keys.elementAt(index)}",
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16.sp,
-                          ),
-                        ),
-                ),
+                    padding: EdgeInsets.fromLTRB(
+                      ScreenUtil().setWidth(0),
+                      ScreenUtil().setHeight(10),
+                      ScreenUtil().setWidth(0),
+                      ScreenUtil().setHeight(10),
+                    ),
+                    child: typeList == "Beginer"
+                        ? Text(
+                            nameOfCategoryForBeginner.keys.elementAt(index),
+                            style: TextStyle(
+                              color: kMainTextColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16.sp,
+                            ),
+                          )
+                        : typeList == "Intermediate"
+                            ? Text(
+                                nameOfCategoryForIntermediate.keys
+                                    .elementAt(index),
+                                style: TextStyle(
+                                  color: kMainTextColor,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16.sp,
+                                ),
+                              )
+                            : typeList == "Films"
+                                ? Text(
+                                    nameOfCategoryForFilms.keys
+                                        .elementAt(index),
+                                    style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16.sp,
+                                    ),
+                                  )
+                                : null),
               ],
             ),
           ),
