@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
@@ -26,28 +24,72 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Map<String, dynamic> wordsImage;
   late Map<String, dynamic> dictionary;
 
+  late Map<String, dynamic> nameOfCategoryForBeginner;
+  late Map<String, dynamic> nameOfCategoryForIntermediate;
+  late Map<String, dynamic> nameOfCategoryForFilms;
+
   Future<void> generateCards() async {
-    await getDictionaryJSON().then(
-      ((value) async {
-        final response = await fetchJSON(value);
-        Map<String, dynamic> dictionary =
-            json.decode(utf8.decode(response.bodyBytes));
-        beginersCount = (dictionary["begginer"] as Map<String, dynamic>).length;
-        intermediateCount =
-            (dictionary["intermediate"] as Map<String, dynamic>).length;
-        filmsCount = (dictionary["films"] as Map<String, dynamic>).length;
-      }),
-    );
     await getCategoriesInfo().then((value) async {
+      nameOfCategoryForBeginner = {};
+      nameOfCategoryForIntermediate = {};
+      nameOfCategoryForFilms = {};
+      wordsImage = {};
+
       if (value == null) {
-        wordsImage = {};
+        await getDictionaryJSON().then(
+          ((value) async {
+            final response = await fetchJSON(value);
+            Map<String, dynamic> dictionary =
+                json.decode(utf8.decode(response.bodyBytes));
+            beginersCount =
+                (dictionary["begginer"] as Map<String, dynamic>).length;
+            intermediateCount =
+                (dictionary["intermediate"] as Map<String, dynamic>).length;
+            filmsCount = (dictionary["films"] as Map<String, dynamic>).length;
+
+            for (String element
+                in (dictionary["begginer"] as Map<String, dynamic>).keys) {
+              nameOfCategoryForBeginner[element] =
+                  dictionary["begginer"][element]["keyword"];
+            }
+
+            for (String element
+                in (dictionary["intermediate"] as Map<String, dynamic>).keys) {
+              nameOfCategoryForIntermediate[element] =
+                  dictionary["intermediate"][element]["keyword"];
+            }
+
+            for (String element
+                in (dictionary["films"] as Map<String, dynamic>).keys) {
+              nameOfCategoryForFilms[element] =
+                  dictionary["films"][element]["keyword"];
+            }
+          }),
+        );
+
         await getImagesForBegginers();
         await getImagesForIntermediate();
         await getImagesForFilms();
-        await storeCategoriesInfo(json.encode(wordsImage));
+
+        await storeCategoriesInfo(
+            json.encode(wordsImage),
+            json.encode(nameOfCategoryForBeginner),
+            json.encode(nameOfCategoryForIntermediate),
+            json.encode(nameOfCategoryForFilms),
+            beginersCount,
+            intermediateCount,
+            filmsCount);
       } else {
-        wordsImage = {};
         wordsImage = json.decode(await getCategoriesImages());
+
+        nameOfCategoryForBeginner = json.decode(await getBeginersDict());
+        nameOfCategoryForIntermediate =
+            json.decode(await getIntermediateDict());
+        nameOfCategoryForFilms = json.decode(await getFilmsDict());
+
+        beginersCount = await getBeginersCount();
+        intermediateCount = await getIntermediateCount();
+        filmsCount = await getFilmsCount();
       }
     });
   }
@@ -84,7 +126,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Future<http.Response> fetchImageByKeyword(String keyWord) async {
     String apiKey = 'Ppw1eG0YzUaD-rRKTyLO3UXnrpLMK8Vi9qAFRQCoRmI';
     final uri = Uri.parse(
-        'https://api.unsplash.com/search/photos/?client_id=$apiKey&query=${keyWord.toLowerCase()}&page=1');
+        'https://api.unsplash.com/search/photos/?client_id=$apiKey&query=${keyWord.toLowerCase()}&order_by=relevant&orientation=landscape');
 
     return http.get(uri);
   }
@@ -96,37 +138,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
       Map<String, dynamic> result = jsonDecode(response.body);
       return (result["results"][0]["urls"]["small"]);
     } else {
-      return "http://via.placeholder.com/200x150";
+      return "https://via.placeholder.com/200x150/595ABA/595ABA";
     }
   }
-
-  Map<String, String> nameOfCategoryForFilms = {
-    'Во все тяжкие': 'breaking_bad',
-    'Друзья': 'friends',
-    'Игра престолов': 'game_of_thrones',
-    'Анатомия страсти': 'grace_anatomy',
-    'Гарри Поттер': 'harry_potter-min',
-    'Очень странные дела': 'stranger_things'
-  };
-
-  Map<String, String> nameOfCategoryForBeginner = {
-    'Погода': 'Weather',
-    'Одежда': 'Clothing',
-    'Природа': 'Nature',
-    'Еда': 'Food',
-    'Город': 'City',
-    'Страны и столицы': 'Countries and Capitals'
-  };
-
-  Map<String, String> nameOfCategoryForIntermediate = {
-    'Внешность': 'Appearance',
-    'Одежда и мода': 'Clothes and Fashion',
-    'Характер': 'Character',
-    'Блюда': 'Dishes',
-    'Путешествия': 'Trips',
-    'Транспорт': 'Transport'
-  };
-
+  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

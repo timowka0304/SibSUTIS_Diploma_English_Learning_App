@@ -22,19 +22,69 @@ Future getOnboardInfo() async {
   return prefs.getInt('onBoardingScreen');
 }
 
-storeCategoriesInfo(String info) async {
+storeCategoriesInfo(
+    String info,
+    String beginers,
+    String intermediate,
+    String films,
+    int beginersCount,
+    int intermediateCount,
+    int filmsCount) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('CategoriesPageImages', info);
+
+  await prefs.setString('beginersDictionary', beginers);
+  await prefs.setString('intermediateDictionary', intermediate);
+  await prefs.setString('filmsDictionary', films);
+
+  await prefs.setInt('beginersCount', beginersCount);
+  await prefs.setInt('intermediateCount', intermediateCount);
+  await prefs.setInt('filmsCount', filmsCount);
+
+  await prefs.setInt('CategoriesPage', 1);
+}
+
+storeBeginNum(int num) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setInt('CategoriesPage', 1);
 }
 
 Future getCategoriesInfo() async {
-  final whenDone = Completer();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getInt('CategoriesPage');
+}
+
+Future getBeginersCount() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('beginersCount');
+}
+
+Future getIntermediateCount() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('intermediateCount');
+}
+
+Future getFilmsCount() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('filmsCount');
 }
 
 Future getCategoriesImages() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('CategoriesPageImages');
+}
+
+Future getBeginersDict() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('beginersDictionary');
+}
+
+Future getIntermediateDict() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('intermediateDictionary');
+}
+
+Future getFilmsDict() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('filmsDictionary');
 }
