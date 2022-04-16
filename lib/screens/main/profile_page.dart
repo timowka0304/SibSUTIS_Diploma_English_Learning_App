@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
@@ -75,7 +76,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             backgroundColor: kWhite,
                             child: CircleAvatar(
                                 radius: ScreenUtil().setWidth(37),
-                                backgroundImage: NetworkImage(userImg),
+                                backgroundImage:
+                                    CachedNetworkImageProvider(userImg),
                                 backgroundColor: kMainPink,
                                 child: Align(
                                   alignment: Alignment.bottomRight,

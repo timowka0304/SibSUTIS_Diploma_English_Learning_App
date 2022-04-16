@@ -22,56 +22,27 @@ Future getOnboardInfo() async {
   return prefs.getInt('onBoardingScreen');
 }
 
-storeCategoriesInfo(
-    String info,
-    String beginers,
-    String intermediate,
-    String films,
-    int beginersCount,
-    int intermediateCount,
-    int filmsCount) async {
+storeCategoriesInfo(String wordsImage, String beginers, String intermediate,
+    String films) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('CategoriesPageImages', info);
+
+  await prefs.setString('categoriesPageImages', wordsImage);
 
   await prefs.setString('beginersDictionary', beginers);
   await prefs.setString('intermediateDictionary', intermediate);
   await prefs.setString('filmsDictionary', films);
 
-  await prefs.setInt('beginersCount', beginersCount);
-  await prefs.setInt('intermediateCount', intermediateCount);
-  await prefs.setInt('filmsCount', filmsCount);
-
-  await prefs.setInt('CategoriesPage', 1);
-}
-
-storeBeginNum(int num) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setInt('CategoriesPage', 1);
+  await prefs.setInt('categoriesPage', 1);
 }
 
 Future getCategoriesInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('CategoriesPage');
-}
-
-Future getBeginersCount() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('beginersCount');
-}
-
-Future getIntermediateCount() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('intermediateCount');
-}
-
-Future getFilmsCount() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('filmsCount');
+  return prefs.getInt('categoriesPage');
 }
 
 Future getCategoriesImages() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('CategoriesPageImages');
+  return prefs.getString('categoriesPageImages');
 }
 
 Future getBeginersDict() async {

@@ -18,11 +18,11 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final translator = GoogleTranslator();
-  late int beginersCount;
-  late int intermediateCount;
-  late int filmsCount;
   late Map<String, dynamic> wordsImage;
-  late Map<String, dynamic> dictionary;
+
+  late Map<String, dynamic> beginnerDictionary;
+  late Map<String, dynamic> intermediateDictionary;
+  late Map<String, dynamic> filmsDictionary;
 
   late Map<String, dynamic> nameOfCategoryForBeginner;
   late Map<String, dynamic> nameOfCategoryForIntermediate;
@@ -30,9 +30,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   Future<void> generateCards() async {
     await getCategoriesInfo().then((value) async {
-      nameOfCategoryForBeginner = {};
-      nameOfCategoryForIntermediate = {};
-      nameOfCategoryForFilms = {};
+      beginnerDictionary = {};
+      intermediateDictionary = {};
+      filmsDictionary = {};
       wordsImage = {};
 
       if (value == null) {
@@ -41,29 +41,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
             final response = await fetchJSON(value);
             Map<String, dynamic> dictionary =
                 json.decode(utf8.decode(response.bodyBytes));
-            beginersCount =
-                (dictionary["begginer"] as Map<String, dynamic>).length;
-            intermediateCount =
-                (dictionary["intermediate"] as Map<String, dynamic>).length;
-            filmsCount = (dictionary["films"] as Map<String, dynamic>).length;
 
-            for (String element
-                in (dictionary["begginer"] as Map<String, dynamic>).keys) {
-              nameOfCategoryForBeginner[element] =
-                  dictionary["begginer"][element]["keyword"];
-            }
-
-            for (String element
-                in (dictionary["intermediate"] as Map<String, dynamic>).keys) {
-              nameOfCategoryForIntermediate[element] =
-                  dictionary["intermediate"][element]["keyword"];
-            }
-
-            for (String element
-                in (dictionary["films"] as Map<String, dynamic>).keys) {
-              nameOfCategoryForFilms[element] =
-                  dictionary["films"][element]["keyword"];
-            }
+            beginnerDictionary = dictionary["begginer"];
+            intermediateDictionary = dictionary["intermediate"];
+            filmsDictionary = dictionary["films"];
           }),
         );
 
@@ -72,24 +53,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
         await getImagesForFilms();
 
         await storeCategoriesInfo(
-            json.encode(wordsImage),
-            json.encode(nameOfCategoryForBeginner),
-            json.encode(nameOfCategoryForIntermediate),
-            json.encode(nameOfCategoryForFilms),
-            beginersCount,
-            intermediateCount,
-            filmsCount);
+          json.encode(wordsImage),
+          json.encode(beginnerDictionary),
+          json.encode(intermediateDictionary),
+          json.encode(filmsDictionary),
+        );
       } else {
         wordsImage = json.decode(await getCategoriesImages());
 
-        nameOfCategoryForBeginner = json.decode(await getBeginersDict());
-        nameOfCategoryForIntermediate =
-            json.decode(await getIntermediateDict());
-        nameOfCategoryForFilms = json.decode(await getFilmsDict());
-
-        beginersCount = await getBeginersCount();
-        intermediateCount = await getIntermediateCount();
-        filmsCount = await getFilmsCount();
+        beginnerDictionary = json.decode(await getBeginersDict());
+        intermediateDictionary = json.decode(await getIntermediateDict());
+        filmsDictionary = json.decode(await getFilmsDict());
       }
     });
   }
@@ -99,27 +73,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
     return http.get(uri);
   }
 
-  Future<void> getImagesForFilms() async {
-    for (String element in nameOfCategoryForFilms.keys) {
-      String url =
-          await getFilmsImage(nameOfCategoryForFilms[element].toString());
-      wordsImage[element] = url;
-    }
-  }
-
   Future<void> getImagesForBegginers() async {
-    for (String element in nameOfCategoryForBeginner.keys) {
-      String url =
-          await searchImage(nameOfCategoryForBeginner[element].toString());
-      wordsImage[element] = url;
+    for (var element in beginnerDictionary.entries) {
+      String url = await searchImage(element.value['keyword']);
+      wordsImage[element.key] = url;
     }
   }
 
   Future<void> getImagesForIntermediate() async {
-    for (String element in nameOfCategoryForIntermediate.keys) {
-      String url =
-          await searchImage(nameOfCategoryForIntermediate[element].toString());
-      wordsImage[element] = url;
+    for (var element in intermediateDictionary.entries) {
+      String url = await searchImage(element.value['keyword']);
+      wordsImage[element.key] = url;
+    }
+  }
+
+  Future<void> getImagesForFilms() async {
+    for (var element in filmsDictionary.entries) {
+      String url = await getFilmsImage(element.value['keyword']);
+      wordsImage[element.key] = url;
     }
   }
 
@@ -141,7 +112,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return "https://via.placeholder.com/200x150/595ABA/595ABA";
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -172,142 +143,150 @@ class _CategoriesPageState extends State<CategoriesPage> {
             return Scaffold(
               backgroundColor: kSecondBlue,
               body: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: ScreenUtil().setHeight(50),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: ScreenUtil().setWidth(30),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: ScreenUtil().setHeight(50),
                       ),
-                      child: Text(
-                        "Начальный уровень:",
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(20),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(150),
-                      child: Column(children: [
-                        Expanded(
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.fromLTRB(
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
-                            ),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: beginersCount,
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                width: ScreenUtil().setWidth(20),
-                              );
-                            },
-                            itemBuilder: (context, index) {
-                              return categoryCard("Beginer", index);
-                            },
-                          ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: ScreenUtil().setWidth(30),
                         ),
-                      ]),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(50),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: ScreenUtil().setWidth(30),
-                      ),
-                      child: Text(
-                        "Средний уровень:",
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(20),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(150),
-                      child: Column(children: [
-                        Expanded(
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.fromLTRB(
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
-                            ),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: intermediateCount,
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                width: ScreenUtil().setWidth(20),
-                              );
-                            },
-                            itemBuilder: (context, index) {
-                              return categoryCard("Intermediate", index);
-                            },
-                          ),
+                        child: Text(
+                          "Начальный уровень:",
+                          style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600),
                         ),
-                      ]),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(50),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: ScreenUtil().setWidth(30),
                       ),
-                      child: Text(
-                        "По сериалам и фильмам:",
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
                       ),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(20),
-                    ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(150),
-                      child: Column(children: [
-                        Expanded(
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.fromLTRB(
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
-                              ScreenUtil().setWidth(20),
-                              ScreenUtil().setHeight(0),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(150),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.fromLTRB(
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                ),
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: beginnerDictionary.length,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: ScreenUtil().setWidth(20),
+                                  );
+                                },
+                                itemBuilder: (context, index) {
+                                  return categoryCard("Beginer", index);
+                                },
+                              ),
                             ),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: filmsCount,
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                width: ScreenUtil().setWidth(20),
-                              );
-                            },
-                            itemBuilder: (context, index) {
-                              return categoryCard("Films", index);
-                            },
-                          ),
+                          ],
                         ),
-                      ]),
-                    ),
-                  ],
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(50),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: ScreenUtil().setWidth(30),
+                        ),
+                        child: Text(
+                          "Средний уровень:",
+                          style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(150),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.fromLTRB(
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                ),
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: intermediateDictionary.length,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: ScreenUtil().setWidth(20),
+                                  );
+                                },
+                                itemBuilder: (context, index) {
+                                  return categoryCard("Intermediate", index);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(50),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: ScreenUtil().setWidth(30),
+                        ),
+                        child: Text(
+                          "По сериалам и фильмам:",
+                          style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(20),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(150),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.fromLTRB(
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                  ScreenUtil().setWidth(20),
+                                  ScreenUtil().setHeight(0),
+                                ),
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: filmsDictionary.length,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: ScreenUtil().setWidth(20),
+                                  );
+                                },
+                                itemBuilder: (context, index) {
+                                  return categoryCard("Films", index);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -319,89 +298,86 @@ class _CategoriesPageState extends State<CategoriesPage> {
     {
       return SizedBox(
         width: ScreenUtil().setWidth(180),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.6),
-                  spreadRadius: 5,
-                  blurRadius: 7, // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CachedNetworkImage(
-                    width: ScreenUtil().setWidth(180),
-                    fit: BoxFit.cover,
-                    imageUrl: typeList == "Beginer"
-                        ? wordsImage[
-                                nameOfCategoryForBeginner.keys.elementAt(index)]
-                            .toString()
-                        : typeList == "Intermediate"
-                            ? wordsImage[nameOfCategoryForIntermediate.keys
-                                    .elementAt(index)]
-                                .toString()
-                            : typeList == "Films"
-                                ? wordsImage[nameOfCategoryForFilms.keys
-                                        .elementAt(index)]
-                                    .toString()
-                                : "https://via.placeholder.com/200x150/595ABA/595ABA",
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            LinearProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    kMainPink.withOpacity(0.3)),
-                                backgroundColor: kWhite,
-                                value: downloadProgress.progress),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      ScreenUtil().setWidth(0),
-                      ScreenUtil().setHeight(10),
-                      ScreenUtil().setWidth(0),
-                      ScreenUtil().setHeight(10),
+        child: Card(
+          elevation: 4,
+          shadowColor: kMainTextColor.withOpacity(0.1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CachedNetworkImage(
+                      width: ScreenUtil().setWidth(180),
+                      fit: BoxFit.cover,
+                      imageUrl: typeList == "Beginer"
+                          ? wordsImage[beginnerDictionary.keys.elementAt(index)]
+                              .toString()
+                          : typeList == "Intermediate"
+                              ? wordsImage[intermediateDictionary.keys
+                                      .elementAt(index)]
+                                  .toString()
+                              : typeList == "Films"
+                                  ? wordsImage[
+                                          filmsDictionary.keys.elementAt(index)]
+                                      .toString()
+                                  : "https://via.placeholder.com/200x150/595ABA/595ABA",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              LinearProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      kMainPink.withOpacity(0.3)),
+                                  backgroundColor: kWhite,
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    child: typeList == "Beginer"
-                        ? Text(
-                            nameOfCategoryForBeginner.keys.elementAt(index),
-                            style: TextStyle(
-                              color: kMainTextColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.sp,
-                            ),
-                          )
-                        : typeList == "Intermediate"
-                            ? Text(
-                                nameOfCategoryForIntermediate.keys
-                                    .elementAt(index),
-                                style: TextStyle(
-                                  color: kMainTextColor,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16.sp,
-                                ),
-                              )
-                            : typeList == "Films"
-                                ? Text(
-                                    nameOfCategoryForFilms.keys
-                                        .elementAt(index),
-                                    style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16.sp,
-                                    ),
-                                  )
-                                : null),
-              ],
+                  ),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        ScreenUtil().setWidth(0),
+                        ScreenUtil().setHeight(10),
+                        ScreenUtil().setWidth(0),
+                        ScreenUtil().setHeight(10),
+                      ),
+                      child: typeList == "Beginer"
+                          ? Text(
+                              beginnerDictionary.keys.elementAt(index),
+                              style: TextStyle(
+                                color: kMainTextColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.sp,
+                              ),
+                            )
+                          : typeList == "Intermediate"
+                              ? Text(
+                                  intermediateDictionary.keys.elementAt(index),
+                                  style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16.sp,
+                                  ),
+                                )
+                              : typeList == "Films"
+                                  ? Text(
+                                      filmsDictionary.keys.elementAt(index),
+                                      style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16.sp,
+                                      ),
+                                    )
+                                  : null),
+                ],
+              ),
             ),
           ),
         ),
