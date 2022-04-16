@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:easy_peasy/screens/choice_of_word/choice_of_word.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
@@ -296,87 +297,95 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   Widget categoryCard(String typeList, int index) {
     {
+      final String img = typeList == "Beginer"
+          ? wordsImage[beginnerDictionary.keys.elementAt(index)].toString()
+          : typeList == "Intermediate"
+              ? wordsImage[intermediateDictionary.keys.elementAt(index)]
+                  .toString()
+              : typeList == "Films"
+                  ? wordsImage[filmsDictionary.keys.elementAt(index)].toString()
+                  : "https://via.placeholder.com/200x150/595ABA/595ABA";
+
+      final String name = typeList == "Beginer"
+          ? beginnerDictionary.keys.elementAt(index)
+          : typeList == "Intermediate"
+              ? intermediateDictionary.keys.elementAt(index)
+              : typeList == "Films"
+                  ? filmsDictionary.keys.elementAt(index)
+                  : "https://via.placeholder.com/200x150/595ABA/595ABA";
+
+      final List<dynamic> words = typeList == "Beginer"
+          ? beginnerDictionary[name]['words']
+          : typeList == "Intermediate"
+              ? intermediateDictionary[name]['words']
+              : typeList == "Films"
+                  ? filmsDictionary[name]['words']
+                  : null;
+
       return SizedBox(
         width: ScreenUtil().setWidth(180),
-        child: Card(
-          elevation: 4,
-          shadowColor: kMainTextColor.withOpacity(0.1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+        child: GestureDetector(
+          onTap: () {
+            // print(words);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => WordsChoice(
+                  name: name,
+                  words: List<String>.from(words),
+                ),
               ),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: CachedNetworkImage(
-                      width: ScreenUtil().setWidth(180),
-                      fit: BoxFit.cover,
-                      imageUrl: typeList == "Beginer"
-                          ? wordsImage[beginnerDictionary.keys.elementAt(index)]
-                              .toString()
-                          : typeList == "Intermediate"
-                              ? wordsImage[intermediateDictionary.keys
-                                      .elementAt(index)]
-                                  .toString()
-                              : typeList == "Films"
-                                  ? wordsImage[
-                                          filmsDictionary.keys.elementAt(index)]
-                                      .toString()
-                                  : "https://via.placeholder.com/200x150/595ABA/595ABA",
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              LinearProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      kMainPink.withOpacity(0.3)),
-                                  backgroundColor: kWhite,
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+            );
+          },
+          child: Card(
+            elevation: 4,
+            shadowColor: kMainTextColor.withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: CachedNetworkImage(
+                        width: ScreenUtil().setWidth(180),
+                        fit: BoxFit.cover,
+                        imageUrl: img,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                LinearProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        kMainPink.withOpacity(0.3)),
+                                    backgroundColor: kWhite,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
-                  ),
-                  Padding(
+                    Padding(
                       padding: EdgeInsets.fromLTRB(
                         ScreenUtil().setWidth(0),
                         ScreenUtil().setHeight(10),
                         ScreenUtil().setWidth(0),
                         ScreenUtil().setHeight(10),
                       ),
-                      child: typeList == "Beginer"
-                          ? Text(
-                              beginnerDictionary.keys.elementAt(index),
-                              style: TextStyle(
-                                color: kMainTextColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16.sp,
-                              ),
-                            )
-                          : typeList == "Intermediate"
-                              ? Text(
-                                  intermediateDictionary.keys.elementAt(index),
-                                  style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16.sp,
-                                  ),
-                                )
-                              : typeList == "Films"
-                                  ? Text(
-                                      filmsDictionary.keys.elementAt(index),
-                                      style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 16.sp,
-                                      ),
-                                    )
-                                  : null),
-                ],
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          color: kMainTextColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
