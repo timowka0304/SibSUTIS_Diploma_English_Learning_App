@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/choice_of_word/choice_of_word.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
@@ -29,6 +30,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Map<String, dynamic> intermediateDictionary;
   late Map<String, dynamic> filmsDictionary;
   late Map<String, String> headersTranslate;
+
+  late List<Word> wordsList;
 
   Future<void> generateCards() async {
     await getCategoriesInfo().then((value) async {
@@ -127,61 +130,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Future<void> getWords(List<String> words) async {
+    wordsList = [];
     final bearerToken = await getAuthToken();
     headersTranslate = {'Authorization': 'Bearer ' + bearerToken.body};
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < words.length; i++) {
       final urlWord = Uri.parse(
           'https://api.lingvolive.com/Translation/tutor-cards?text=${words[i]}&srcLang=1033&dstLang=1049');
-      // final resultWord = await http.get(urlWord, headers: headersTranslate);
-      // final urlSound = Uri.parse(
-      //     'https://api.lingvolive.com/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName={fileName}');
-      // await http.get(urlSound, headers: headersTranslate);
+      final response = await http.get(urlWord, headers: headersTranslate);
 
-      // print("Translate: " + json.decode(results[0].body));
-      // Map<String, dynamic> result1 = await jsonDecode(results[0].body);
-      // Map<String, dynamic> result2 = await jsonDecode(results[1].body);
-      List<dynamic> resultWordInfo = await jsonDecode(
-          (await http.get(urlWord, headers: headersTranslate)).body);
-      print(resultWordInfo);
-      final urlSound = Uri.parse(
-          'https://developers.lingvolive.com/api/v1/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName=${resultWordInfo[0]['soundFileName']}');
-      final resultSound = await jsonDecode(
-          (await http.get(urlSound, headers: headersTranslate)).body);
-      print(resultSound);
-
-      final soundString = base64Decode(resultSound);
-
-      final player = AudioPlayer();
-      await player.playBytes(soundString);
-
-      // inspect(result1['Translation']['SoundName']);
-      // List<dynamic> result3 = await jsonDecode(results[2].body);
-      // inspect(result3[0]);
-      // print(result3[0]['transcription'] +
-      //     " " +
-      //     result3[0]['soundFileName'] +
-      //     " " +
-      //     result3[0]['translations'] +
-      //     " " +
-      //     result3[0]['examples'].split('\r').first);
-
-      // print(result1['Translation']['Translation'].toString() +
-      //     ": " +
-      //     result2['foundUnits'][0]['sourceFragment']['text'].toString() +
-      //     " — " +
-      //     result2['foundUnits'][0]['targetFragment']['text'].toString());
-
-      // inspect(translationRes
-      //     .firstWhere((element) => element['node'] == 'List')['items']);
-      //['items'][0]['markup'])
-      //['items'][0]['markup'][0]['markup'][0]['text']
-      // for (var j = 0; j < translationRes.length; j++) {
-      //   if (translationRes[j]['node'] == 'List') {
-      //     inspect(translationRes[j]);
-      //   }
-      // }
-
-      // print("Phrases: " + jsonDecode(results[1].body).toString());
+      if (response.body != 'null') {
+        List<dynamic> resultWordInfo = await jsonDecode(response.body);
+        wordsList.add(Word.fromJson(resultWordInfo));
+      }
     }
   }
 
@@ -404,8 +364,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => WordsChoice(
-                  name: name,
-                  words: List<String>.from(words),
+                  wordsList: wordsList,
+                  headersTranslate: headersTranslate,
                 ),
               ),
             );

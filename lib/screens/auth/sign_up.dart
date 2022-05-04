@@ -57,9 +57,9 @@ class _SignInState extends State<SignUp> {
       },
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
-          ),
+          // theme: ThemeData(
+          //   textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
+          // ),
           routes: routes,
           home: Scaffold(
               resizeToAvoidBottomInset: false,
