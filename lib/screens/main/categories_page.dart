@@ -10,6 +10,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:translator/translator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:audioplayers/audioplayers.dart';
+
+import 'dart:developer';
+
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({Key? key}) : super(key: key);
 
@@ -24,10 +28,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Map<String, dynamic> beginnerDictionary;
   late Map<String, dynamic> intermediateDictionary;
   late Map<String, dynamic> filmsDictionary;
-
-  late Map<String, dynamic> nameOfCategoryForBeginner;
-  late Map<String, dynamic> nameOfCategoryForIntermediate;
-  late Map<String, dynamic> nameOfCategoryForFilms;
+  late Map<String, String> headersTranslate;
 
   Future<void> generateCards() async {
     await getCategoriesInfo().then((value) async {
@@ -111,6 +112,76 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return (result["results"][0]["urls"]["small"]);
     } else {
       return "https://via.placeholder.com/200x150/595ABA/595ABA";
+    }
+  }
+
+  Future<http.Response> getAuthToken() async {
+    String key =
+        "ZDVlZjZhYWItZGFhZC00ZDlkLWEwOTEtYzY2MWRkYWFlZWU3OjRiZTZjMjhkNDNmZTQ1M2ZiZDZlNTUyZTBiMjhmYmI2";
+    final uri =
+        Uri.parse('https://developers.lingvolive.com/api/v1.1/authenticate');
+    return http.post(
+      uri,
+      headers: {'Authorization': 'Basic ' + key},
+    );
+  }
+
+  Future<void> getWords(List<String> words) async {
+    final bearerToken = await getAuthToken();
+    headersTranslate = {'Authorization': 'Bearer ' + bearerToken.body};
+    for (var i = 0; i < 2; i++) {
+      final urlWord = Uri.parse(
+          'https://api.lingvolive.com/Translation/tutor-cards?text=${words[i]}&srcLang=1033&dstLang=1049');
+      // final resultWord = await http.get(urlWord, headers: headersTranslate);
+      // final urlSound = Uri.parse(
+      //     'https://api.lingvolive.com/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName={fileName}');
+      // await http.get(urlSound, headers: headersTranslate);
+
+      // print("Translate: " + json.decode(results[0].body));
+      // Map<String, dynamic> result1 = await jsonDecode(results[0].body);
+      // Map<String, dynamic> result2 = await jsonDecode(results[1].body);
+      List<dynamic> resultWordInfo = await jsonDecode(
+          (await http.get(urlWord, headers: headersTranslate)).body);
+      print(resultWordInfo);
+      final urlSound = Uri.parse(
+          'https://developers.lingvolive.com/api/v1/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName=${resultWordInfo[0]['soundFileName']}');
+      final resultSound = await jsonDecode(
+          (await http.get(urlSound, headers: headersTranslate)).body);
+      print(resultSound);
+
+      final soundString = base64Decode(resultSound);
+
+      final player = AudioPlayer();
+      await player.playBytes(soundString);
+
+      // inspect(result1['Translation']['SoundName']);
+      // List<dynamic> result3 = await jsonDecode(results[2].body);
+      // inspect(result3[0]);
+      // print(result3[0]['transcription'] +
+      //     " " +
+      //     result3[0]['soundFileName'] +
+      //     " " +
+      //     result3[0]['translations'] +
+      //     " " +
+      //     result3[0]['examples'].split('\r').first);
+
+      // print(result1['Translation']['Translation'].toString() +
+      //     ": " +
+      //     result2['foundUnits'][0]['sourceFragment']['text'].toString() +
+      //     " — " +
+      //     result2['foundUnits'][0]['targetFragment']['text'].toString());
+
+      // inspect(translationRes
+      //     .firstWhere((element) => element['node'] == 'List')['items']);
+      //['items'][0]['markup'])
+      //['items'][0]['markup'][0]['markup'][0]['text']
+      // for (var j = 0; j < translationRes.length; j++) {
+      //   if (translationRes[j]['node'] == 'List') {
+      //     inspect(translationRes[j]);
+      //   }
+      // }
+
+      // print("Phrases: " + jsonDecode(results[1].body).toString());
     }
   }
 
@@ -325,8 +396,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return SizedBox(
         width: ScreenUtil().setWidth(180),
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
             // print(words);
+            await getWords(
+              List<String>.from(words),
+            );
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => WordsChoice(

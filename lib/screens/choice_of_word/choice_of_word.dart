@@ -1,17 +1,99 @@
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tcard/tcard.dart';
+import 'package:flip_card/flip_card.dart';
 
-class WordsChoice extends StatelessWidget {
+class WordsChoice extends StatefulWidget {
   final String name;
   final List<String> words;
   const WordsChoice({Key? key, required this.name, required this.words})
       : super(key: key);
 
   @override
+  State<WordsChoice> createState() => _WordsChoiceState();
+}
+
+class _WordsChoiceState extends State<WordsChoice> {
+  @override
   Widget build(BuildContext context) {
+    List<Widget> cards = List.generate(
+      widget.words.length,
+      (index) => FlipCard(
+        speed: 1000,
+        onFlipDone: (status) {
+          print(status);
+        },
+        direction: FlipDirection.HORIZONTAL,
+        front: Card(
+          elevation: 4,
+          shadowColor: kMainTextColor.withOpacity(0.3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(60),
+          ),
+          color: kWhite,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.words[index],
+                  style: TextStyle(
+                      color: kMainTextColor,
+                      fontSize: 26.sp,
+                      fontWeight: FontWeight.w600),
+                ),
+                GestureDetector(
+                  onTap: () => print("Sound"),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "sound",
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          color: kMainPurple,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.volume_up_rounded,
+                        color: kMainPurple,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        back: Card(
+          elevation: 4,
+          shadowColor: kMainTextColor.withOpacity(0.3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(60),
+          ),
+          color: kWhite,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.words[index],
+                  style: TextStyle(
+                      color: kMainTextColor,
+                      fontSize: 26.sp,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: kMainPurple,
+      backgroundColor: kSecondBlue,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -19,30 +101,36 @@ class WordsChoice extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    color: kWhite,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                  ),
+                TCard(
+                  cards: cards,
                 ),
+                // Text(
+                //   widget.name,
+                //   style: const TextStyle(
+                //     color: kWhite,
+                //     fontWeight: FontWeight.w600,
+                //     fontSize: 20,
+                //   ),
+                // ),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // Column(
+                //     children: widget.words.map((word) {
+                //   return Text(
+                //     word,
+                //     style: const TextStyle(
+                //       color: kWhite,
+                //       fontWeight: FontWeight.w400,
+                //       fontSize: 16,
+                //     ),
+                //   );
+                // }).toList()),
+                // const SizedBox(
+                //   height: 80,
+                // ),
                 const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                    children: words.map((word) {
-                  return Text(
-                    word,
-                    style: const TextStyle(
-                      color: kWhite,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-                  );
-                }).toList()),
-                const SizedBox(
-                  height: 80,
+                  height: 60,
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
