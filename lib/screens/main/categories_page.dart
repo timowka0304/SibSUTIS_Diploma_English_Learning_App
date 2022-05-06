@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:translator/translator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -23,15 +22,11 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  final translator = GoogleTranslator();
   late Map<String, dynamic> wordsImage;
 
   late Map<String, dynamic> beginnerDictionary;
   late Map<String, dynamic> intermediateDictionary;
   late Map<String, dynamic> filmsDictionary;
-  late Map<String, String> headersTranslate;
-
-  late List<Word> wordsList;
 
   Future<void> generateCards() async {
     await getCategoriesInfo().then((value) async {
@@ -118,33 +113,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
     }
   }
 
-  Future<http.Response> getAuthToken() async {
-    String key =
-        "ZDVlZjZhYWItZGFhZC00ZDlkLWEwOTEtYzY2MWRkYWFlZWU3OjRiZTZjMjhkNDNmZTQ1M2ZiZDZlNTUyZTBiMjhmYmI2";
-    final uri =
-        Uri.parse('https://developers.lingvolive.com/api/v1.1/authenticate');
-    return http.post(
-      uri,
-      headers: {'Authorization': 'Basic ' + key},
-    );
-  }
-
-  Future<void> getWords(List<String> words) async {
-    wordsList = [];
-    final bearerToken = await getAuthToken();
-    headersTranslate = {'Authorization': 'Bearer ' + bearerToken.body};
-    for (var i = 0; i < words.length; i++) {
-      final urlWord = Uri.parse(
-          'https://api.lingvolive.com/Translation/tutor-cards?text=${words[i]}&srcLang=1033&dstLang=1049');
-      final response = await http.get(urlWord, headers: headersTranslate);
-
-      if (response.body != 'null') {
-        List<dynamic> resultWordInfo = await jsonDecode(response.body);
-        wordsList.add(Word.fromJson(resultWordInfo));
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -164,9 +132,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   Text(
                     "Подождите несколько секунд.\nПолучаем карточки с сервера ...",
                     style: TextStyle(
-                        color: kMainTextColor,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w400),
+                      color: kMainTextColor,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
@@ -358,14 +327,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         child: GestureDetector(
           onTap: () async {
             // print(words);
-            await getWords(
-              List<String>.from(words),
-            );
+            // await getWords(
+            //   List<String>.from(words),
+            // );
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => WordsChoice(
-                  wordsList: wordsList,
-                  headersTranslate: headersTranslate,
+                  wordsList: List<String>.from(words),
                 ),
               ),
             );

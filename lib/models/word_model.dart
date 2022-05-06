@@ -21,4 +21,9 @@ class Word {
         example: json[0]['examples'].split('\r').first ?? '',
         audioFile: json[0]['soundFileName'] ?? '');
   }
+
+  Future<Word> fetch() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    return this;
+  }
 }
