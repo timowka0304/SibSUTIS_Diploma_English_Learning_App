@@ -23,6 +23,40 @@ class WordsChoice extends StatefulWidget {
   State<WordsChoice> createState() => _WordsChoiceState();
 }
 
+class TagWidget extends StatelessWidget {
+  const TagWidget({
+    Key? key,
+    required this.text,
+    required this.color,
+  }) : super(key: key);
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: color,
+            width: 2,
+          ),
+        ),
+      ),
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: color,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        child: Text(text),
+      ),
+    );
+  }
+}
+
 class LoadingIndicatorDialog {
   static final LoadingIndicatorDialog _singleton =
       LoadingIndicatorDialog._internal();
@@ -87,7 +121,7 @@ class _WordsChoiceState extends State<WordsChoice> {
   late http.Response bearerToken;
 
   late bool _flipped = false;
-  late bool _isDropped = false;
+  late bool _returnFlipped = false;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -114,7 +148,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   Future<void> swipe() async {
     datas.removeAt(0);
-    print('Swipe cardIndex = $cardIndex');
+    // print('Swipe cardIndex = $cardIndex');
     await getWord(widget.wordsList, cardIndex).then((value) => word = value);
     datas.add(word);
   }
@@ -185,7 +219,7 @@ class _WordsChoiceState extends State<WordsChoice> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: DragTarget(
+                  child: DragTarget<Word>(
                     builder: (
                       BuildContext context,
                       List<dynamic> accepted,
@@ -193,13 +227,14 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        color: kMainPink,
+                        // color: kMainPink,
                       );
                     },
-                    onAccept: (data) {
+                    onAccept: (_) {
                       setState(
                         () {
                           _flipped = false;
+                          _returnFlipped = false;
                           cardIndex++;
                           dataFuture = swipe();
                           print('dislike');
@@ -214,7 +249,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: DragTarget(
+                  child: DragTarget<Word>(
                     builder: (
                       BuildContext context,
                       List<dynamic> accepted,
@@ -222,13 +257,14 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        color: kMainPurple,
+                        // color: kMainPurple,
                       );
                     },
                     onAccept: (data) {
                       setState(
                         () {
                           _flipped = false;
+                          _returnFlipped = false;
                           cardIndex++;
                           dataFuture = swipe();
                           print('like');
@@ -241,7 +277,18 @@ class _WordsChoiceState extends State<WordsChoice> {
             ),
             Draggable(
               childWhenDragging: Container(),
-              data: 'word',
+              data: data,
+              onDraggableCanceled: (_, __) {
+                _flipped
+                    ? setState(() {
+                        _returnFlipped = true;
+                      })
+                    : setState(() {
+                        _returnFlipped = false;
+                      });
+                print('Flipped: $_flipped');
+                print('Return Flipped: $_returnFlipped');
+              },
               // onDragEnd: (drag) {
               //   print("${drag.offset.dx}");
               //   if (drag.offset.dx < 0) {
@@ -261,107 +308,147 @@ class _WordsChoiceState extends State<WordsChoice> {
                   ? SizedBox(
                       height: 350,
                       width: 350,
-                      child: Card(
-                        elevation: 4,
-                        shadowColor: kMainTextColor.withOpacity(0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        color: kWhite,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                data.wordEn,
-                                style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: 26.sp,
-                                    fontWeight: FontWeight.w600),
+                      child: Stack(
+                        children: [
+                          Card(
+                            elevation: 4,
+                            shadowColor: kMainTextColor.withOpacity(0.3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(60),
+                            ),
+                            color: kWhite,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    data.wordEn,
+                                    style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  data.audioFile == ''
+                                      ? Container()
+                                      : GestureDetector(
+                                          onTap: () => {
+                                            playSound(data.audioFile,
+                                                headersTranslate, context)
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                data.transcription,
+                                                style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  color: kMainPurple,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Icon(
+                                                Icons.volume_up_rounded,
+                                                color: kMainPurple,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              data.audioFile == ''
-                                  ? Container()
-                                  : GestureDetector(
-                                      onTap: () => {
-                                        playSound(data.audioFile,
-                                            headersTranslate, context)
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            data.transcription,
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              color: kMainPurple,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          const Icon(
-                                            Icons.volume_up_rounded,
-                                            color: kMainPurple,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            top: 40,
+                            right: 40,
+                            child: TagWidget(
+                              text: 'Добавить',
+                              color: Colors.green[400]!,
+                            ),
+                          ),
+                          Positioned(
+                            top: 40,
+                            left: 40,
+                            child: TagWidget(
+                              text: 'Пропустить',
+                              color: Colors.red[400]!,
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   : SizedBox(
                       height: 350,
                       width: 350,
-                      child: Card(
-                        elevation: 4,
-                        shadowColor: kMainTextColor.withOpacity(0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        color: kWhite,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                data.wordEn,
-                                style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: 26.sp,
-                                    fontWeight: FontWeight.w600),
+                      child: Stack(
+                        children: [
+                          Card(
+                            elevation: 4,
+                            shadowColor: kMainTextColor.withOpacity(0.3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(60),
+                            ),
+                            color: kWhite,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    data.wordEn,
+                                    style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    data.wordRu,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    data.example,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: kMainTextColor,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                data.wordRu,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: 26.sp,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                data.example,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            top: 40,
+                            right: 40,
+                            child: TagWidget(
+                              text: 'Добавить',
+                              color: Colors.green[400]!,
+                            ),
+                          ),
+                          Positioned(
+                            top: 40,
+                            left: 40,
+                            child: TagWidget(
+                              text: 'Пропустить',
+                              color: Colors.red[400]!,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
               child: SizedBox(
@@ -372,107 +459,209 @@ class _WordsChoiceState extends State<WordsChoice> {
                   speed: 1000,
                   onFlipDone: (status) {
                     setState(() {
-                      _flipped = status;
+                      _flipped = !_flipped;
                     });
+                    print('onFlipDone: $_flipped');
                   },
                   direction: FlipDirection.HORIZONTAL,
-                  front: Card(
-                    elevation: 4,
-                    shadowColor: kMainTextColor.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    color: kWhite,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.wordEn,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 26.sp,
-                                fontWeight: FontWeight.w600),
+                  front: !_returnFlipped
+                      ? Card(
+                          elevation: 4,
+                          shadowColor: kMainTextColor.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          data.audioFile == ''
-                              ? Container()
-                              : GestureDetector(
-                                  onTap: () => {
-                                    playSound(data.audioFile, headersTranslate,
-                                        context)
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        data.transcription,
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
-                                          color: kMainPurple,
-                                          fontWeight: FontWeight.w400,
+                          color: kWhite,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  data.wordEn,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                data.audioFile == ''
+                                    ? Container()
+                                    : GestureDetector(
+                                        onTap: () => {
+                                          playSound(data.audioFile,
+                                              headersTranslate, context)
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              data.transcription,
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                color: kMainPurple,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Icon(
+                                              Icons.volume_up_rounded,
+                                              color: kMainPurple,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      const Icon(
-                                        Icons.volume_up_rounded,
-                                        color: kMainPurple,
-                                      ),
-                                    ],
-                                  ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Card(
+                          elevation: 4,
+                          shadowColor: kMainTextColor.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60),
+                          ),
+                          color: kWhite,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Text(
+                                //   data.wordEn,
+                                //   style: TextStyle(
+                                //       color: kMainTextColor,
+                                //       fontSize: 26.sp,
+                                //       fontWeight: FontWeight.w600),
+                                // ),
+                                // const SizedBox(
+                                //   height: 20,
+                                // ),
+                                Text(
+                                  data.wordRu,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  back: Card(
-                    elevation: 4,
-                    shadowColor: kMainTextColor.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    color: kWhite,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.wordEn,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 26.sp,
-                                fontWeight: FontWeight.w600),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  data.example,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(
-                            height: 20,
+                        ),
+                  back: _returnFlipped
+                      ? Card(
+                          elevation: 4,
+                          shadowColor: kMainTextColor.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60),
                           ),
-                          Text(
-                            data.wordRu,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 26.sp,
-                                fontWeight: FontWeight.w600),
+                          color: kWhite,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  data.wordEn,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                data.audioFile == ''
+                                    ? Container()
+                                    : GestureDetector(
+                                        onTap: () => {
+                                          playSound(data.audioFile,
+                                              headersTranslate, context)
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              data.transcription,
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                                color: kMainPurple,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Icon(
+                                              Icons.volume_up_rounded,
+                                              color: kMainPurple,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(
-                            height: 10,
+                        )
+                      : Card(
+                          elevation: 4,
+                          shadowColor: kMainTextColor.withOpacity(0.3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60),
                           ),
-                          Text(
-                            data.example,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w400),
+                          color: kWhite,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Text(
+                                //   data.wordEn,
+                                //   style: TextStyle(
+                                //       color: kMainTextColor,
+                                //       fontSize: 26.sp,
+                                //       fontWeight: FontWeight.w600),
+                                // ),
+                                // const SizedBox(
+                                //   height: 20,
+                                // ),
+                                Text(
+                                  data.wordRu,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  data.example,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: kMainTextColor,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
               ),
             ),
