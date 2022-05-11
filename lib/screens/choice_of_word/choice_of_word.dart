@@ -87,6 +87,7 @@ class _WordsChoiceState extends State<WordsChoice> {
   late http.Response bearerToken;
 
   late bool _flipped = false;
+  late bool _isDropped = false;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -106,9 +107,9 @@ class _WordsChoiceState extends State<WordsChoice> {
       await getFirstWords(i);
       datas.add(word);
       cardIndex++;
-      print('cardIndex = $cardIndex');
+      // print('cardIndex = $cardIndex');
     }
-    inspect(datas);
+    // inspect(datas);
   }
 
   Future<void> swipe() async {
@@ -177,29 +178,205 @@ class _WordsChoiceState extends State<WordsChoice> {
 
     List<Widget> renderCards() {
       render(Word data, int index) {
-        return Draggable(
-          childWhenDragging: Container(
-            color: kSecondBlue,
-          ),
-          onDragEnd: (drag) {
-            if (drag.velocity.pixelsPerSecond.dx < 0) {
-              print("Swipe left");
-            } else {
-              print("Swipe right");
-            }
-            setState(
-              () {
-                _flipped = false;
-                cardIndex++;
-                dataFuture = swipe();
-              },
-            );
-          },
-          feedback: !_flipped
-              ? SizedBox(
-                  height: 350,
-                  width: 350,
-                  child: Card(
+        return Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: DragTarget(
+                    builder: (
+                      BuildContext context,
+                      List<dynamic> accepted,
+                      List<dynamic> rejected,
+                    ) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: kMainPink,
+                      );
+                    },
+                    onAccept: (data) {
+                      setState(
+                        () {
+                          _flipped = false;
+                          cardIndex++;
+                          dataFuture = swipe();
+                          print('dislike');
+                        },
+                      );
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 3,
+                  child: SizedBox.shrink(),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: DragTarget(
+                    builder: (
+                      BuildContext context,
+                      List<dynamic> accepted,
+                      List<dynamic> rejected,
+                    ) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: kMainPurple,
+                      );
+                    },
+                    onAccept: (data) {
+                      setState(
+                        () {
+                          _flipped = false;
+                          cardIndex++;
+                          dataFuture = swipe();
+                          print('like');
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Draggable(
+              childWhenDragging: Container(),
+              data: 'word',
+              // onDragEnd: (drag) {
+              //   print("${drag.offset.dx}");
+              //   if (drag.offset.dx < 0) {
+              //     print("Swipe left");
+              //   } else {
+              //     print("Swipe right");
+              //   }
+              //   setState(
+              //     () {
+              //       _flipped = false;
+              //       cardIndex++;
+              //       dataFuture = swipe();
+              //     },
+              //   );
+              // },
+              feedback: !_flipped
+                  ? SizedBox(
+                      height: 350,
+                      width: 350,
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: kMainTextColor.withOpacity(0.3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        color: kWhite,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                data.wordEn,
+                                style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontSize: 26.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              data.audioFile == ''
+                                  ? Container()
+                                  : GestureDetector(
+                                      onTap: () => {
+                                        playSound(data.audioFile,
+                                            headersTranslate, context)
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            data.transcription,
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color: kMainPurple,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          const Icon(
+                                            Icons.volume_up_rounded,
+                                            color: kMainPurple,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 350,
+                      width: 350,
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: kMainTextColor.withOpacity(0.3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                        color: kWhite,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                data.wordEn,
+                                style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontSize: 26.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                data.wordRu,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontSize: 26.sp,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                data.example,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+              child: SizedBox(
+                height: 350,
+                width: 350,
+                child: FlipCard(
+                  controller: _controller,
+                  speed: 1000,
+                  onFlipDone: (status) {
+                    setState(() {
+                      _flipped = status;
+                    });
+                  },
+                  direction: FlipDirection.HORIZONTAL,
+                  front: Card(
                     elevation: 4,
                     shadowColor: kMainTextColor.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
@@ -252,11 +429,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                       ),
                     ),
                   ),
-                )
-              : SizedBox(
-                  height: 350,
-                  width: 350,
-                  child: Card(
+                  back: Card(
                     elevation: 4,
                     shadowColor: kMainTextColor.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
@@ -301,117 +474,9 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ),
                   ),
                 ),
-          child: SizedBox(
-            height: 350,
-            width: 350,
-            child: FlipCard(
-              controller: _controller,
-              speed: 1000,
-              onFlipDone: (status) {
-                setState(() {
-                  _flipped = status;
-                });
-              },
-              direction: FlipDirection.HORIZONTAL,
-              front: Card(
-                elevation: 4,
-                shadowColor: kMainTextColor.withOpacity(0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                color: kWhite,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        data.wordEn,
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 26.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      data.audioFile == ''
-                          ? Container()
-                          : GestureDetector(
-                              onTap: () => {
-                                playSound(
-                                    data.audioFile, headersTranslate, context)
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    data.transcription,
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      color: kMainPurple,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const Icon(
-                                    Icons.volume_up_rounded,
-                                    color: kMainPurple,
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              back: Card(
-                elevation: 4,
-                shadowColor: kMainTextColor.withOpacity(0.3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(60),
-                ),
-                color: kWhite,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        data.wordEn,
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 26.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        data.wordRu,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 26.sp,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        data.example,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ),
-          ),
+          ],
         );
       }
 
