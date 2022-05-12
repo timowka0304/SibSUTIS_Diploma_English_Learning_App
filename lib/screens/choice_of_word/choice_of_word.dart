@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/choice_of_word/result_page.dart';
@@ -155,7 +156,7 @@ class _WordsChoiceState extends State<WordsChoice> {
   late bool _flipped = false;
   late bool _returnFlipped = false;
   late bool _visible = false;
-  late bool _hintVisible = true;
+  late bool _hintVisible;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -165,8 +166,8 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   @override
   void initState() {
-    super.initState();
     dataFuture = initial();
+    super.initState();
   }
 
   Future<void> initial() async {
@@ -177,6 +178,12 @@ class _WordsChoiceState extends State<WordsChoice> {
       cardIndex++;
       // print('cardIndex = $cardIndex');
     }
+    await getGragHint().then(
+      (value) {
+        _hintVisible = value;
+        print(value);
+      },
+    );
     // inspect(datas);
   }
 
@@ -857,8 +864,10 @@ class _WordsChoiceState extends State<WordsChoice> {
                                     //     offset: const Offset(0, 3),
                                     //   ),
                                     // ],
-                                    onChanged: (value) =>
-                                        setState(() => _hintVisible = value),
+                                    onChanged: (value) => setState(() {
+                                      _hintVisible = value;
+                                      storeGragHint(value);
+                                    }),
                                     colorBuilder: (value) => value
                                         ? kMainPurple
                                         : kMainPurple.withOpacity(0.3),
