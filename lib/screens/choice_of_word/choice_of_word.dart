@@ -7,9 +7,9 @@ import 'package:easy_peasy/models/word_model.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tcard/tcard.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
+import 'package:slider_button/slider_button.dart';
 
 class WordsChoice extends StatefulWidget {
   final List<String> wordsList;
@@ -27,31 +27,55 @@ class TagWidget extends StatelessWidget {
   const TagWidget({
     Key? key,
     required this.text,
-    required this.color,
+    required this.side,
   }) : super(key: key);
+
   final String text;
-  final Color color;
+  final String side;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: BorderSide(
-            color: color,
-            width: 2,
+          side: const BorderSide(
+            color: kMainPink,
+            width: 1,
           ),
         ),
       ),
-      child: DefaultTextStyle(
-        style: TextStyle(
-          color: color,
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
         ),
-        child: Text(text),
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: kMainTextColor,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400,
+          ),
+          child: Row(
+            children: [
+              side == 'left'
+                  ? const Icon(
+                      Icons.arrow_back_rounded,
+                      color: kMainTextColor,
+                    )
+                  : Text(text),
+              const SizedBox(
+                width: 5,
+              ),
+              side == 'left'
+                  ? Text(text)
+                  : const Icon(
+                      Icons.arrow_forward_rounded,
+                      color: kMainTextColor,
+                    ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -122,6 +146,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   late bool _flipped = false;
   late bool _returnFlipped = false;
+  late bool _visible = false;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -227,14 +252,16 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPink,
+                        // color: kMainPurple,
                       );
                     },
+                    // hitTestBehavior: HitTestBehavior.opaque,
                     onAccept: (_) {
                       setState(
                         () {
                           _flipped = false;
                           _returnFlipped = false;
+                          _visible = false;
                           cardIndex++;
                           dataFuture = swipe();
                           print('dislike');
@@ -257,7 +284,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPurple,
+                        // color: kMainPink,
                       );
                     },
                     onAccept: (data) {
@@ -276,8 +303,22 @@ class _WordsChoiceState extends State<WordsChoice> {
               ],
             ),
             Draggable(
-              childWhenDragging: Container(),
+              childWhenDragging: Container(
+                height: 350,
+                width: 350,
+                color: kSecondBlue,
+              ),
               data: data,
+              onDragStarted: () {
+                setState(() {
+                  _visible = true;
+                });
+              },
+              onDragEnd: (_) {
+                setState(() {
+                  _visible = false;
+                });
+              },
               onDraggableCanceled: (_, __) {
                 _flipped
                     ? setState(() {
@@ -289,21 +330,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                 print('Flipped: $_flipped');
                 print('Return Flipped: $_returnFlipped');
               },
-              // onDragEnd: (drag) {
-              //   print("${drag.offset.dx}");
-              //   if (drag.offset.dx < 0) {
-              //     print("Swipe left");
-              //   } else {
-              //     print("Swipe right");
-              //   }
-              //   setState(
-              //     () {
-              //       _flipped = false;
-              //       cardIndex++;
-              //       dataFuture = swipe();
-              //     },
-              //   );
-              // },
               feedback: !_flipped
                   ? SizedBox(
                       height: 350,
@@ -311,7 +337,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                       child: Stack(
                         children: [
                           Card(
-                            elevation: 4,
+                            elevation: 6,
                             shadowColor: kMainTextColor.withOpacity(0.3),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(60),
@@ -364,22 +390,22 @@ class _WordsChoiceState extends State<WordsChoice> {
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 40,
-                            right: 40,
-                            child: TagWidget(
-                              text: 'Добавить',
-                              color: Colors.green[400]!,
-                            ),
-                          ),
-                          Positioned(
-                            top: 40,
-                            left: 40,
-                            child: TagWidget(
-                              text: 'Пропустить',
-                              color: Colors.red[400]!,
-                            ),
-                          ),
+                          // const Positioned(
+                          //   top: 40,
+                          //   right: 40,
+                          //   child: TagWidget(
+                          //     text: 'Добавить',
+                          //     side: 'right',
+                          //   ),
+                          // ),
+                          // const Positioned(
+                          //   top: 40,
+                          //   left: 40,
+                          //   child: TagWidget(
+                          //     text: 'Пропустить',
+                          //     side: 'left',
+                          //   ),
+                          // ),
                         ],
                       ),
                     )
@@ -389,7 +415,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                       child: Stack(
                         children: [
                           Card(
-                            elevation: 4,
+                            elevation: 6,
                             shadowColor: kMainTextColor.withOpacity(0.3),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(60),
@@ -399,16 +425,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    data.wordEn,
-                                    style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
                                   Text(
                                     data.wordRu,
                                     textAlign: TextAlign.center,
@@ -432,22 +448,22 @@ class _WordsChoiceState extends State<WordsChoice> {
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 40,
-                            right: 40,
-                            child: TagWidget(
-                              text: 'Добавить',
-                              color: Colors.green[400]!,
-                            ),
-                          ),
-                          Positioned(
-                            top: 40,
-                            left: 40,
-                            child: TagWidget(
-                              text: 'Пропустить',
-                              color: Colors.red[400]!,
-                            ),
-                          ),
+                          // const Positioned(
+                          //   top: 40,
+                          //   right: 40,
+                          //   child: TagWidget(
+                          //     text: 'Добавить',
+                          //     side: 'right',
+                          //   ),
+                          // ),
+                          // const Positioned(
+                          //   top: 40,
+                          //   left: 40,
+                          //   child: TagWidget(
+                          //     text: 'Пропустить',
+                          //     side: 'left',
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -466,7 +482,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                   direction: FlipDirection.HORIZONTAL,
                   front: !_returnFlipped
                       ? Card(
-                          elevation: 4,
+                          elevation: 3,
                           shadowColor: kMainTextColor.withOpacity(0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(60),
@@ -665,6 +681,36 @@ class _WordsChoiceState extends State<WordsChoice> {
                 ),
               ),
             ),
+            Positioned(
+              top: 100,
+              child: Container(
+                width: 320,
+                child: AnimatedOpacity(
+                  opacity: _visible ? 1 : 0,
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 400),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Transform.rotate(
+                        angle: -0.2,
+                        child: const TagWidget(
+                          text: 'Пропустить',
+                          side: 'left',
+                        ),
+                      ),
+                      Transform.rotate(
+                        angle: 0.2,
+                        child: const TagWidget(
+                          text: 'Добавить',
+                          side: 'right',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         );
       }
@@ -694,7 +740,20 @@ class _WordsChoiceState extends State<WordsChoice> {
             body: SafeArea(
               child: Center(
                 child: Stack(
-                  children: renderCards(),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Row(
+                        children: [
+                          Text("Назад"),
+                          Text("data"),
+                        ],
+                      ),
+                    ),
+                    Stack(
+                      children: renderCards(),
+                    ),
+                  ],
                 ),
               ),
             ),
