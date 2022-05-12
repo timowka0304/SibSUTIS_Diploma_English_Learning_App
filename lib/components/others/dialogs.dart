@@ -65,3 +65,33 @@ showAchivementsDialog(BuildContext context, String title, String text) {
     ),
   );
 }
+
+showInfoDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Справка'),
+      content: Text(
+          'Перечлючатель слева от значчка справки включает и выключает подсказку.'),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: ButtonStyle(backgroundColor:
+              MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+            return kMainPurple;
+          })),
+          child: Text(
+            "Ок",
+            style: TextStyle(
+              fontSize: 18.sp,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

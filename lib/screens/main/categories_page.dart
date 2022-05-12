@@ -330,10 +330,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
             // await getWords(
             //   List<String>.from(words),
             // );
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => WordsChoice(
                   wordsList: List<String>.from(words),
+                  cardName: name,
                 ),
               ),
             );

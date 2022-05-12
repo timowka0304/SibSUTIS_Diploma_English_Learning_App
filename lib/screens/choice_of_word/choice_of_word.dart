@@ -2,22 +2,28 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
+import 'package:easy_peasy/screens/choice_of_word/result_page.dart';
+import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
-import 'package:slider_button/slider_button.dart';
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:confetti/confetti.dart';
 
 class WordsChoice extends StatefulWidget {
-  final List<String> wordsList;
-
   const WordsChoice({
     Key? key,
     required this.wordsList,
+    required this.cardName,
   }) : super(key: key);
+
+  final List<String> wordsList;
+  final String cardName;
 
   @override
   State<WordsChoice> createState() => _WordsChoiceState();
@@ -62,6 +68,7 @@ class TagWidget extends StatelessWidget {
                   ? const Icon(
                       Icons.arrow_back_rounded,
                       color: kMainTextColor,
+                      size: 12,
                     )
                   : Text(text),
               const SizedBox(
@@ -72,6 +79,7 @@ class TagWidget extends StatelessWidget {
                   : const Icon(
                       Icons.arrow_forward_rounded,
                       color: kMainTextColor,
+                      size: 12,
                     ),
             ],
           ),
@@ -147,6 +155,7 @@ class _WordsChoiceState extends State<WordsChoice> {
   late bool _flipped = false;
   late bool _returnFlipped = false;
   late bool _visible = false;
+  late bool _hintVisible = true;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -173,9 +182,38 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   Future<void> swipe() async {
     datas.removeAt(0);
-    // print('Swipe cardIndex = $cardIndex');
-    await getWord(widget.wordsList, cardIndex).then((value) => word = value);
-    datas.add(word);
+    if (cardIndex == widget.wordsList.length) {
+      print("Done!");
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => ResultPage(
+            cardName: widget.cardName,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = 0.0;
+            const end = 1.0;
+            const curve = Curves.ease;
+
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(
+              CurveTween(
+                curve: curve,
+              ),
+            );
+
+            return FadeTransition(
+              opacity: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    } else {
+      await getWord(widget.wordsList, cardIndex).then((value) => word = value);
+      datas.add(word);
+    }
   }
 
   Future<http.Response> getAuthToken() async {
@@ -233,7 +271,6 @@ class _WordsChoiceState extends State<WordsChoice> {
   @override
   Widget build(BuildContext context) {
     FlipCardController _controller = FlipCardController();
-    FlipCardController _controllerFeedback = FlipCardController();
 
     List<Widget> renderCards() {
       render(Word data, int index) {
@@ -243,7 +280,7 @@ class _WordsChoiceState extends State<WordsChoice> {
             Row(
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: DragTarget<Word>(
                     builder: (
                       BuildContext context,
@@ -252,7 +289,9 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPurple,
+                        // color: _hintVisible
+                        //     ? kMainPink.withOpacity(0.1)
+                        //     : Colors.transparent,
                       );
                     },
                     // hitTestBehavior: HitTestBehavior.opaque,
@@ -261,7 +300,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                         () {
                           _flipped = false;
                           _returnFlipped = false;
-                          _visible = false;
                           cardIndex++;
                           dataFuture = swipe();
                           print('dislike');
@@ -275,7 +313,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                   child: SizedBox.shrink(),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: DragTarget<Word>(
                     builder: (
                       BuildContext context,
@@ -284,7 +322,9 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPink,
+                        // color: _hintVisible
+                        //     ? kMainPink.withOpacity(0.1)
+                        //     : Colors.transparent,
                       );
                     },
                     onAccept: (data) {
@@ -304,10 +344,10 @@ class _WordsChoiceState extends State<WordsChoice> {
             ),
             Draggable(
               childWhenDragging: Container(
-                height: 350,
-                width: 350,
-                color: kSecondBlue,
-              ),
+                  // height: 350,
+                  // width: 350,
+                  // color: kSecondBlue,
+                  ),
               data: data,
               onDragStarted: () {
                 setState(() {
@@ -682,11 +722,11 @@ class _WordsChoiceState extends State<WordsChoice> {
               ),
             ),
             Positioned(
-              top: 100,
+              top: 120,
               child: Container(
                 width: 320,
                 child: AnimatedOpacity(
-                  opacity: _visible ? 1 : 0,
+                  opacity: _visible && _hintVisible ? 1 : 0,
                   curve: Curves.easeInOut,
                   duration: const Duration(milliseconds: 400),
                   child: Row(
@@ -742,11 +782,127 @@ class _WordsChoiceState extends State<WordsChoice> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Row(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Назад"),
-                          Text("data"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                style: ButtonStyle(
+                                  overlayColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
+                                    return kMainPurple.withOpacity(0.1);
+                                  }),
+                                ),
+                                child: Text(
+                                  'Назад',
+                                  style: TextStyle(
+                                    color: kMainTextColor,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                    PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            const MainScreen(
+                                              pageIndex: 1,
+                                              isStart: false,
+                                            ),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          const begin = 0.0;
+                                          const end = 1.0;
+                                          const curve = Curves.ease;
+
+                                          var tween = Tween(
+                                            begin: begin,
+                                            end: end,
+                                          ).chain(
+                                            CurveTween(
+                                              curve: curve,
+                                            ),
+                                          );
+
+                                          return FadeTransition(
+                                            opacity: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        }),
+                                  );
+                                },
+                              ),
+                              Row(
+                                children: [
+                                  AnimatedToggleSwitch<bool>.dual(
+                                    current: _hintVisible,
+                                    first: false,
+                                    second: true,
+                                    dif: 0,
+                                    borderColor: Colors.transparent,
+                                    innerColor: kMainPurple.withOpacity(0.3),
+                                    borderWidth: 0,
+                                    height: 15,
+                                    indicatorSize: const Size(15, 15),
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: kMainTextColor.withOpacity(0.1),
+                                    //     spreadRadius: 1,
+                                    //     blurRadius: 2,
+                                    //     offset: const Offset(0, 3),
+                                    //   ),
+                                    // ],
+                                    onChanged: (value) =>
+                                        setState(() => _hintVisible = value),
+                                    colorBuilder: (value) => value
+                                        ? kMainPurple
+                                        : kMainPurple.withOpacity(0.3),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.info,
+                                        color: kMainPurple),
+                                    splashRadius: 15,
+                                    splashColor: kWhite.withOpacity(0.5),
+                                    highlightColor: kWhite.withOpacity(0.5),
+                                    onPressed: () {
+                                      showInfoDialog(context);
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '$cardIndex / ${widget.wordsList.length}',
+                                style: TextStyle(
+                                  color: kMainTextColor,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              LinearProgressIndicator(
+                                value: cardIndex / widget.wordsList.length,
+                                color: kMainPurple,
+                                backgroundColor: kMainPurple.withOpacity(0.3),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),

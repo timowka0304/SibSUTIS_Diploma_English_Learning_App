@@ -22,7 +22,10 @@ class MainScreenCheck extends StatelessWidget {
             return const CircularProgressIndicator();
           } else {
             if (snapshot.hasData) {
-              return const MainScreen();
+              return const MainScreen(
+                pageIndex: 0,
+                isStart: true,
+              );
             } else {
               return const SignIn();
             }
@@ -32,14 +35,21 @@ class MainScreenCheck extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({
+    Key? key,
+    required this.pageIndex,
+    required this.isStart,
+  }) : super(key: key);
+  final int pageIndex;
+  final bool isStart;
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int pageIndex = 0;
+  int page = 0;
+  bool _done = false;
 
   final List<Widget> pageList = <Widget>[
     const HomePage(),
@@ -49,11 +59,18 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int newPage = widget.pageIndex;
+    int pageIndexFinal = widget.isStart
+        ? page
+        : _done
+            ? page
+            : newPage;
+
     return Scaffold(
       extendBody: true,
-      body: pageList[pageIndex],
+      body: pageList[pageIndexFinal],
       bottomNavigationBar: BottomTabBar(
-        index: pageIndex,
+        index: pageIndexFinal,
         onChangedTab: onChangeTab,
       ),
     );
@@ -61,7 +78,8 @@ class _MainScreenState extends State<MainScreen> {
 
   void onChangeTab(int index) {
     setState(() {
-      pageIndex = index;
+      page = index;
+      _done = true;
     });
   }
 }
