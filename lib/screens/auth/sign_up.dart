@@ -7,7 +7,6 @@ import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignUp extends StatefulWidget {
   static String routeName = "/signup";

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/main/bottom_tab_bar.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';

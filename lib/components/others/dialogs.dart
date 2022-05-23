@@ -70,9 +70,9 @@ showInfoDialog(BuildContext context) {
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Справка'),
-      content: Text(
-          'Перечлючатель слева от значчка справки включает и выключает подсказку.'),
+      title: const Text('Справка'),
+      content: const Text(
+          'Здесь нужно выбирать слова: какие ты еще не знаешь, а какие хочешь выучить.\n\nПереключатель слева включает и отключает подсказку при перетаскивании карты.\n\nПопробуй!'),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
         ElevatedButton(

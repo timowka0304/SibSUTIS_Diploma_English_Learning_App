@@ -18,15 +18,15 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   try {
-    await getGragHint().then((value) async {
+    await getDragHint().then((value) async {
       if (value) {
-        await storeGragHint(true);
+        await storeDragHint(true);
       } else {
-        await storeGragHint(false);
+        await storeDragHint(false);
       }
     });
   } catch (e) {
-    await storeGragHint(true);
+    await storeDragHint(true);
   }
 
   SystemChrome.setPreferredOrientations(

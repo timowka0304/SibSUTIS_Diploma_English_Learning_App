@@ -60,12 +60,12 @@ Future getFilmsDict() async {
   return prefs.getString('filmsDictionary');
 }
 
-storeGragHint(bool status) async {
+storeDragHint(bool status) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setBool('dragHintStatus', status);
 }
 
-Future<bool> getGragHint() async {
+Future<bool> getDragHint() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('dragHintStatus')!;
 }

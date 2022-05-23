@@ -16,7 +16,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:confetti/confetti.dart';
 
 class WordsChoice extends StatefulWidget {
   const WordsChoice({
@@ -184,7 +183,7 @@ class _WordsChoiceState extends State<WordsChoice> {
       cardIndex++;
       // print('cardIndex = $cardIndex');
     }
-    await getGragHint().then(
+    await getDragHint().then(
       (value) {
         _hintVisible = value;
       },
@@ -383,8 +382,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                     : setState(() {
                         _returnFlipped = false;
                       });
-                print('Flipped: $_flipped');
-                print('Return Flipped: $_returnFlipped');
+                // print('Flipped: $_flipped');
+                // print('Return Flipped: $_returnFlipped');
               },
               feedback: !_flipped
                   ? SizedBox(
@@ -875,7 +874,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                                     // ],
                                     onChanged: (value) => setState(() {
                                       _hintVisible = value;
-                                      storeGragHint(value);
+                                      storeDragHint(value);
                                     }),
                                     colorBuilder: (value) => value
                                         ? kMainPurple
