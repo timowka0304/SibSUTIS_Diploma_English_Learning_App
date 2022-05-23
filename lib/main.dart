@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
 int? onBoardingScreenIsViewed;
@@ -18,7 +17,15 @@ Future<void> main() async {
   });
 
   await Firebase.initializeApp();
-  await storeGragHint(true);
+  await getGragHint().then(
+    (value) async {
+      if (value) {
+        await storeGragHint(true);
+      } else {
+        await storeGragHint(false);
+      }
+    },
+  );
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {

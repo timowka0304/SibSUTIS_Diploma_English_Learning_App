@@ -44,12 +44,13 @@ class TagWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ShapeDecoration(
+        color: kWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(
-            color: kMainPink,
-            width: 1,
-          ),
+          // side: const BorderSide(
+          //   color: kMainPink,
+          //   width: 1,
+          // ),
         ),
       ),
       child: Padding(
@@ -181,7 +182,7 @@ class _WordsChoiceState extends State<WordsChoice> {
     await getGragHint().then(
       (value) {
         _hintVisible = value;
-        print(value);
+        print('Hint visible = $value');
       },
     );
     // inspect(datas);
@@ -789,7 +790,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

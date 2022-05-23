@@ -38,11 +38,24 @@ class _ResultPageState extends State<ResultPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Карточка "${widget.cardName}" завершена!\nПоздравляем!\n',
+                    '«${widget.cardName}»',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: kMainTextColor,
+                      fontSize: 26.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Карточка завершена!\nПоздравляем!\n',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: kMainTextColor,
                       fontSize: 22.sp,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   ElevatedButton(
@@ -63,6 +76,7 @@ class _ResultPageState extends State<ResultPage> {
                       primary: kMainPurple,
                     ),
                     onPressed: () {
+                      _controller.stop();
                       Navigator.of(context).pushReplacement(
                         PageRouteBuilder(
                             pageBuilder:
@@ -110,6 +124,7 @@ class _ResultPageState extends State<ResultPage> {
                 confettiController: _controller,
                 blastDirection: pi / 2,
                 blastDirectionality: BlastDirectionality.directional,
+                minBlastForce: 2,
               ),
             ),
           ],
