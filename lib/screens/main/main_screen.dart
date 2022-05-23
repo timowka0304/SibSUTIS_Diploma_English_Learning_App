@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/main/bottom_tab_bar.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/categories_page.dart';
@@ -22,6 +24,8 @@ class MainScreenCheck extends StatelessWidget {
             return const CircularProgressIndicator();
           } else {
             if (snapshot.hasData) {
+              final user = FirebaseAuth.instance.currentUser!;
+              uploadingData(user);
               return const MainScreen(
                 pageIndex: 0,
                 isStart: true,

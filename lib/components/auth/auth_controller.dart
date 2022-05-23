@@ -3,6 +3,7 @@ import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 final gooleSignIn = GoogleSignIn();
@@ -19,8 +20,6 @@ Future googleSignIn() async {
         accessToken: googleSignInAuthentication.accessToken);
 
     await auth.signInWithCredential(credential);
-    auth.currentUser;
-
     return Future.value(true);
   }
   return Future.value(false);
@@ -70,4 +69,19 @@ Future signOutUser() async {
   }
   await auth.signOut();
   return Future.value(true);
+}
+
+Future<void> uploadingData(User user) async {
+  await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+    'email': user.email,
+    'username': user.displayName,
+    'uid': user.uid,
+    'profileImg': user.photoURL,
+  });
+  // final dictionaryStatus = await FirebaseFirestore.instance
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('dictionary')
+  //     .snapshots()
+  //     .isEmpty;
 }

@@ -17,15 +17,17 @@ Future<void> main() async {
   });
 
   await Firebase.initializeApp();
-  await getGragHint().then(
-    (value) async {
+  try {
+    await getGragHint().then((value) async {
       if (value) {
         await storeGragHint(true);
       } else {
         await storeGragHint(false);
       }
-    },
-  );
+    });
+  } catch (e) {
+    await storeGragHint(true);
+  }
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {

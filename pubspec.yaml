@@ -39,6 +39,7 @@ dependencies:
   toggle_switch: ^2.0.1
   animated_toggle_switch: ^0.5.2
   confetti: ^0.6.0
+  cloud_firestore: ^3.1.8
 
 dev_dependencies:
   flutter_test:

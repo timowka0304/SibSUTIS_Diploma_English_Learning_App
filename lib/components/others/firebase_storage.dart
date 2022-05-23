@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,4 +37,19 @@ Future getFilmsImage(String filmName) async {
   final storageRef = storage.ref().child('/dictionary/film_pics/$filmName.jpg');
   final String downloadUrl = await storageRef.getDownloadURL();
   return downloadUrl;
+}
+
+Future<void> addWordToDic(User user, String wordEn) async {
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .collection('dictionary')
+      .doc('dictionary')
+      .set(
+          {
+        'data': {wordEn: 0},
+      },
+          SetOptions(
+            merge: true,
+          ));
 }

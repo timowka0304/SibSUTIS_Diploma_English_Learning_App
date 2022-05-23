@@ -3,11 +3,13 @@ import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
+import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/choice_of_word/result_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -159,6 +161,8 @@ class _WordsChoiceState extends State<WordsChoice> {
   late bool _visible = false;
   late bool _hintVisible;
 
+  late User user;
+
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
       word = value;
@@ -173,6 +177,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   Future<void> initial() async {
     bearerToken = await getAuthToken();
+    user = FirebaseAuth.instance.currentUser!;
     for (int i = 0; i < 1; i++) {
       await getFirstWords(i);
       datas.add(word);
@@ -182,13 +187,13 @@ class _WordsChoiceState extends State<WordsChoice> {
     await getGragHint().then(
       (value) {
         _hintVisible = value;
-        print('Hint visible = $value');
       },
     );
     // inspect(datas);
   }
 
-  Future<void> swipe() async {
+  Future<void> swipe(String direction) async {
+    String wordEn = datas[0].wordEn;
     datas.removeAt(0);
     if (cardIndex == widget.wordsList.length) {
       print("Done!");
@@ -219,7 +224,10 @@ class _WordsChoiceState extends State<WordsChoice> {
         ),
       );
     } else {
-      await getWord(widget.wordsList, cardIndex).then((value) => word = value);
+      direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
+      await getWord(widget.wordsList, cardIndex).then(
+        (value) => word = value,
+      );
       datas.add(word);
     }
   }
@@ -309,8 +317,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe();
-                          print('dislike');
+                          dataFuture = swipe('dislike');
+                          // print('dislike');
                         },
                       );
                     },
@@ -341,8 +349,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe();
-                          print('like');
+                          dataFuture = swipe('like');
+                          // print('like');
                         },
                       );
                     },
