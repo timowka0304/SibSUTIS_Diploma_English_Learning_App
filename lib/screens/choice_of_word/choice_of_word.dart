@@ -148,7 +148,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   var datas = <Word>[];
 
-  int cardIndex = 0;
+  int cardIndex = -1;
   Word word = Word(
       wordEn: '', wordRu: '', transcription: '', audioFile: '', example: '');
 
@@ -189,7 +189,7 @@ class _WordsChoiceState extends State<WordsChoice> {
         _hintVisible = value;
       },
     );
-    inspect(widget.wordsList);
+    // inspect(widget.wordsList);
   }
 
   Future<void> swipe(String direction) async {
@@ -328,7 +328,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                   ),
                 ),
                 const Expanded(
-                  flex: 3,
+                  flex: 2,
                   child: SizedBox.shrink(),
                 ),
                 Expanded(

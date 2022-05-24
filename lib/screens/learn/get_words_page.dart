@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/learn_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GetWordsPage extends StatefulWidget {
   const GetWordsPage({Key? key}) : super(key: key);
@@ -37,6 +35,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
 
   Future<void> setWordsInList(Map<String, dynamic> snapshot) async {
     wordsList = [];
+    inspect(snapshot);
     for (var element in snapshot.entries) {
       wordsList.add(element.key);
     }
@@ -83,16 +82,6 @@ class _GetWordsPageState extends State<GetWordsPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           goToNewPage(
               (snapshot.data!.data() as Map<String, dynamic>)['data'], context);
-          // setWordsInList(
-          //     (snapshot.data!.data() as Map<String, dynamic>)['data']);
-          // inspect(wordsList);
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (context) => LearnPage(
-          //       wordsList: List<String>.from(wordsList),
-          //     ),
-          //   ),
-          // );
         }
 
         return const Scaffold(
