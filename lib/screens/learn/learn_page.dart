@@ -1,34 +1,27 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
-import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
-import 'package:easy_peasy/screens/choice_of_word/result_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
-class WordsChoice extends StatefulWidget {
-  const WordsChoice({
-    Key? key,
-    required this.wordsList,
-    required this.cardName,
-  }) : super(key: key);
-
-  final List<String> wordsList;
+class LearnPage extends StatefulWidget {
+  const LearnPage({Key? key, required this.cardName}) : super(key: key);
   final String cardName;
 
   @override
-  State<WordsChoice> createState() => _WordsChoiceState();
+  State<LearnPage> createState() => _LearnPageState();
 }
 
 class TagWidget extends StatelessWidget {
@@ -143,93 +136,61 @@ class LoadingIndicatorDialog {
   }
 }
 
-class _WordsChoiceState extends State<WordsChoice> {
-  late Future<void> dataFuture;
-
+class _LearnPageState extends State<LearnPage> {
+  late User _user;
   var datas = <Word>[];
-
+  late bool _hintVisible;
   int cardIndex = 0;
   Word word = Word(
       wordEn: '', wordRu: '', transcription: '', audioFile: '', example: '');
 
   late Map<String, String> headersTranslate;
   late List<Word> finalWordsList;
+  late List<String> wordsList;
   late http.Response bearerToken;
+  late Map<String, dynamic> data;
+
+  late Future<DocumentSnapshot> _dataStream;
+  late Future<void> _dataFuture;
 
   late bool _flipped = false;
   late bool _returnFlipped = false;
   late bool _visible = false;
-  late bool _hintVisible;
-
-  late User user;
-
-  Future<void> getFirstWords(int index) async {
-    await getWord(widget.wordsList, index).then((value) {
-      word = value;
-    });
-  }
 
   @override
   void initState() {
-    dataFuture = initial();
+    firebaseRequest();
     super.initState();
+  }
+
+  Future<void> firebaseRequest() async {
+    _user = FirebaseAuth.instance.currentUser!;
+    _dataStream = FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user.uid)
+        .collection('dictionary')
+        .doc('dictionary')
+        .get();
   }
 
   Future<void> initial() async {
     bearerToken = await getAuthToken();
-    user = FirebaseAuth.instance.currentUser!;
     for (int i = 0; i < 1; i++) {
       await getFirstWords(i);
       datas.add(word);
       cardIndex++;
-      // print('cardIndex = $cardIndex');
     }
     await getDragHint().then(
       (value) {
         _hintVisible = value;
       },
     );
-    // inspect(datas);
   }
 
-  Future<void> swipe(String direction) async {
-    String wordEn = datas[0].wordEn;
-    datas.removeAt(0);
-    if (cardIndex == widget.wordsList.length) {
-      print("Done!");
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => ResultPage(
-            cardName: widget.cardName,
-          ),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = 0.0;
-            const end = 1.0;
-            const curve = Curves.ease;
-
-            var tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(
-              CurveTween(
-                curve: curve,
-              ),
-            );
-
-            return FadeTransition(
-              opacity: animation.drive(tween),
-              child: child,
-            );
-          },
-        ),
-      );
-    } else {
-      direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
-      await getWord(widget.wordsList, cardIndex).then(
-        (value) => word = value,
-      );
-      datas.add(word);
-    }
+  Future<void> getFirstWords(int index) async {
+    await getWord(wordsList, index).then((value) {
+      word = value;
+    });
   }
 
   Future<http.Response> getAuthToken() async {
@@ -254,11 +215,12 @@ class _WordsChoiceState extends State<WordsChoice> {
       return Word.fromJson(resultWordInfo);
     } else {
       return Word(
-          wordEn: '',
-          wordRu: '',
-          transcription: '',
-          audioFile: '',
-          example: '');
+        wordEn: '',
+        wordRu: '',
+        transcription: '',
+        audioFile: '',
+        example: '',
+      );
     }
   }
 
@@ -287,6 +249,21 @@ class _WordsChoiceState extends State<WordsChoice> {
     LoadingIndicatorDialog().dismiss();
   }
 
+  Future<void> swipe(String direction) async {
+    String wordEn = datas[0].wordEn;
+    datas.removeAt(0);
+    if (cardIndex == wordsList.length) {
+      print("Done!");
+    } else {
+      print(direction);
+      // direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
+      await getWord(wordsList, cardIndex).then(
+        (value) => word = value,
+      );
+      datas.add(word);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     FlipCardController _controller = FlipCardController();
@@ -308,20 +285,15 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: _hintVisible
-                        //     ? kMainPink.withOpacity(0.1)
-                        //     : Colors.transparent,
                       );
                     },
-                    // hitTestBehavior: HitTestBehavior.opaque,
                     onAccept: (_) {
                       setState(
                         () {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe('dislike');
-                          // print('dislike');
+                          _dataFuture = swipe('dislike');
                         },
                       );
                     },
@@ -341,9 +313,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: _hintVisible
-                        //     ? kMainPink.withOpacity(0.1)
-                        //     : Colors.transparent,
                       );
                     },
                     onAccept: (data) {
@@ -352,8 +321,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe('like');
-                          // print('like');
+                          _dataFuture = swipe('like');
                         },
                       );
                     },
@@ -363,12 +331,9 @@ class _WordsChoiceState extends State<WordsChoice> {
             ),
             Draggable(
               childWhenDragging: Container(
-                  // height: 350,
-                  // width: 350,
-                  // color: kSecondBlue,
                   ),
               data: data,
-              onDragStarted: () {
+              onDragStarted: () { // TODO: 
                 setState(() {
                   _visible = true;
                 });
@@ -386,8 +351,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                     : setState(() {
                         _returnFlipped = false;
                       });
-                // print('Flipped: $_flipped');
-                // print('Return Flipped: $_returnFlipped');
               },
               feedback: !_flipped
                   ? SizedBox(
@@ -747,163 +710,192 @@ class _WordsChoiceState extends State<WordsChoice> {
           .toList();
     }
 
-    return FutureBuilder(
-      future: dataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: _dataStream,
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
           return const Scaffold(
             backgroundColor: kSecondBlue,
             body: SafeArea(
               child: Center(
-                child: CircularProgressIndicator(
-                  color: kMainPink,
-                ),
-              ),
-            ),
-          );
-        } else {
-          return Scaffold(
-            backgroundColor: kSecondBlue,
-            body: SafeArea(
-              child: Center(
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                style: ButtonStyle(
-                                  overlayColor:
-                                      MaterialStateProperty.resolveWith<Color>(
-                                          (Set<MaterialState> states) {
-                                    return kMainPurple.withOpacity(0.1);
-                                  }),
-                                ),
-                                child: Text(
-                                  'Назад',
-                                  style: TextStyle(
-                                    color: kMainTextColor,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(
-                                    PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            const MainScreen(
-                                              pageIndex: 1,
-                                              isStart: false,
-                                            ),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          const begin = 0.0;
-                                          const end = 1.0;
-                                          const curve = Curves.ease;
-
-                                          var tween = Tween(
-                                            begin: begin,
-                                            end: end,
-                                          ).chain(
-                                            CurveTween(
-                                              curve: curve,
-                                            ),
-                                          );
-
-                                          return FadeTransition(
-                                            opacity: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        }),
-                                  );
-                                },
-                              ),
-                              Row(
-                                children: [
-                                  AnimatedToggleSwitch<bool>.dual(
-                                    current: _hintVisible,
-                                    first: false,
-                                    second: true,
-                                    dif: 0,
-                                    borderColor: Colors.transparent,
-                                    innerColor: kMainPurple.withOpacity(0.3),
-                                    borderWidth: 0,
-                                    height: 15,
-                                    indicatorSize: const Size(15, 15),
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: kMainTextColor.withOpacity(0.1),
-                                    //     spreadRadius: 1,
-                                    //     blurRadius: 2,
-                                    //     offset: const Offset(0, 3),
-                                    //   ),
-                                    // ],
-                                    onChanged: (value) => setState(() {
-                                      _hintVisible = value;
-                                      storeDragHint(value);
-                                    }),
-                                    colorBuilder: (value) => value
-                                        ? kMainPurple
-                                        : kMainPurple.withOpacity(0.3),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.info,
-                                        color: kMainPurple),
-                                    splashRadius: 15,
-                                    splashColor: kWhite.withOpacity(0.5),
-                                    highlightColor: kWhite.withOpacity(0.5),
-                                    onPressed: () {
-                                      showInfoDialog(context);
-                                    },
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                '$cardIndex / ${widget.wordsList.length}',
-                                style: TextStyle(
-                                  color: kMainTextColor,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              LinearProgressIndicator(
-                                value: cardIndex / widget.wordsList.length,
-                                color: kMainPurple,
-                                backgroundColor: kMainPurple.withOpacity(0.3),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Stack(
-                      children: renderCards(),
-                    ),
-                  ],
+                child: Text(
+                  "Ошибка",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: kMainTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
           );
         }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          data = snapshot.data!.data() as Map<String, dynamic>;
+          data = data['data'];
+          wordsList = [];
+          for (var element in data.entries) {
+            wordsList.add(element.key);
+          }
+
+          inspect(wordsList);
+
+          _dataFuture = initial();
+
+          return FutureBuilder(
+            future: _dataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  backgroundColor: kSecondBlue,
+                  body: SafeArea(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: kMainPink,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Scaffold(
+                  backgroundColor: kSecondBlue,
+                  body: SafeArea(
+                    child: Center(
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        overlayColor: MaterialStateProperty
+                                            .resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                          return kMainPurple.withOpacity(0.1);
+                                        }),
+                                      ),
+                                      child: Text(
+                                        'Назад',
+                                        style: TextStyle(
+                                          color: kMainTextColor,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pushReplacement(
+                                          PageRouteBuilder(
+                                              pageBuilder: (context, animation,
+                                                      secondaryAnimation) =>
+                                                  const MainScreen(
+                                                    pageIndex: 0,
+                                                    isStart: false,
+                                                  ),
+                                              transitionsBuilder: (context,
+                                                  animation,
+                                                  secondaryAnimation,
+                                                  child) {
+                                                const begin = 0.0;
+                                                const end = 1.0;
+                                                const curve = Curves.ease;
+
+                                                var tween = Tween(
+                                                  begin: begin,
+                                                  end: end,
+                                                ).chain(
+                                                  CurveTween(
+                                                    curve: curve,
+                                                  ),
+                                                );
+
+                                                return FadeTransition(
+                                                  opacity:
+                                                      animation.drive(tween),
+                                                  child: child,
+                                                );
+                                              }),
+                                        );
+                                      },
+                                    ),
+                                    Row(
+                                      children: [
+                                        AnimatedToggleSwitch<bool>.dual(
+                                          current: _hintVisible,
+                                          first: false,
+                                          second: true,
+                                          dif: 0,
+                                          borderColor: Colors.transparent,
+                                          innerColor:
+                                              kMainPurple.withOpacity(0.3),
+                                          borderWidth: 0,
+                                          height: 15,
+                                          indicatorSize: const Size(15, 15),
+                                          onChanged: (value) => setState(() {
+                                            _hintVisible = value;
+                                            storeDragHint(value);
+                                          }),
+                                          colorBuilder: (value) => value
+                                              ? kMainPurple
+                                              : kMainPurple.withOpacity(0.3),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.info,
+                                              color: kMainPurple),
+                                          splashRadius: 15,
+                                          splashColor: kWhite.withOpacity(0.5),
+                                          highlightColor:
+                                              kWhite.withOpacity(0.5),
+                                          onPressed: () {
+                                            showInfoDialog(context);
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Stack(
+                            children: renderCards(),
+                            // children: const [
+                            //   Text('1'),
+                            //   Text('2'),
+                            //   Text('3'),
+                            // ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        }
+
+        return const Scaffold(
+          backgroundColor: kSecondBlue,
+          body: SafeArea(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: kMainPink,
+              ),
+            ),
+          ),
+        );
       },
     );
   }

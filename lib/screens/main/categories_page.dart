@@ -2,17 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
-import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/choice_of_word/choice_of_word.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
-import 'package:audioplayers/audioplayers.dart';
-
-import 'dart:developer';
 
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({Key? key}) : super(key: key);
@@ -131,6 +126,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                   Text(
                     "Подождите несколько секунд.\nПолучаем карточки с сервера ...",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: kMainTextColor,
                       fontSize: 18.sp,
