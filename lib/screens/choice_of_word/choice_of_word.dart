@@ -189,7 +189,7 @@ class _WordsChoiceState extends State<WordsChoice> {
         _hintVisible = value;
       },
     );
-    // inspect(datas);
+    inspect(widget.wordsList);
   }
 
   Future<void> swipe(String direction) async {

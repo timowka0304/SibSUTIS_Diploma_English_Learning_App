@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/screens/learn/get_words_page.dart';
 import 'package:easy_peasy/screens/learn/learn_page.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -131,9 +132,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.of(context).pushReplacement(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
-                      LearnPage(
-                    cardName: 'widget.cardName',
-                  ),
+                      const GetWordsPage(),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
                     const begin = 0.0;
