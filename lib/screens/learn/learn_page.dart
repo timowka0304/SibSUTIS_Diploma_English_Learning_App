@@ -3,10 +3,12 @@ import 'dart:developer';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
+import 'package:easy_peasy/screens/learn/get_words_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card.dart';
@@ -19,8 +21,10 @@ class LearnPage extends StatefulWidget {
   const LearnPage({
     Key? key,
     required this.wordsList,
+    required this.user,
   }) : super(key: key);
   final List<String> wordsList;
+  final User user;
 
   @override
   State<LearnPage> createState() => _LearnPageState();
@@ -142,8 +146,6 @@ class LoadingIndicatorDialog {
 
 class _LearnPageState extends State<LearnPage> {
   var datas = <Word>[];
-
-  int cardIndex = -1;
   Word word = Word(
       wordEn: '', wordRu: '', transcription: '', audioFile: '', example: '');
 
@@ -157,6 +159,7 @@ class _LearnPageState extends State<LearnPage> {
   late bool _visible = false;
   late bool _hintVisible;
   late bool _finalVisible = false;
+  late int cardIndex;
 
   @override
   void initState() {
@@ -165,6 +168,7 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Future<void> initial() async {
+    cardIndex = -1;
     bearerToken = await getAuthToken();
     for (int i = 0; i < 1; i++) {
       await getFirstWords(i);
@@ -241,17 +245,97 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Future<void> swipe(String direction) async {
-    // String wordEn = datas[0].wordEn;
+    String wordEn = datas[0].wordEn;
     datas.removeAt(0);
-    if (cardIndex == widget.wordsList.length) {
-      print("Done!");
-      setState(
-        () {
-          _finalVisible = true;
+
+    print(direction);
+    if (direction == 'delete') {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.user.uid)
+          .collection('dictionary')
+          .doc('dictionary')
+          .update(
+        {
+          wordEn: FieldValue.delete(),
         },
       );
+    }
+    if (direction == 'like') {
+      // var snapshot = await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(widget.user.uid)
+      //     .collection('dictionary')
+      //     .where(wordEn, isEqualTo: 1)
+      //     .get();
+      // inspect(snapshot.); TODO If Equel 3
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.user.uid)
+          .collection('dictionary')
+          .doc('dictionary')
+          .update(
+        {
+          wordEn: FieldValue.increment(1),
+        },
+      );
+    }
+    if (direction == 'dislike') {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.user.uid)
+          .collection('dictionary')
+          .doc('dictionary')
+          .update(
+        {
+          wordEn: 0,
+        },
+      );
+    }
+    // if (datas.isEmpty) {
+    //   print("Done!");
+    //   setState(
+    //     () {
+    //       _finalVisible = true;
+    //     },
+    //   );
+    // }
+    if (cardIndex == widget.wordsList.length) {
+      //TODO Infinity list
+      // initState();
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const GetWordsPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = 0.0;
+            const end = 1.0;
+            const curve = Curves.ease;
+
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(
+              CurveTween(
+                curve: curve,
+              ),
+            );
+
+            return FadeTransition(
+              opacity: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+      // print("Done!");
+      // setState(
+      //   () {
+      //     _finalVisible = true;
+      //   },
+      // );
     } else {
-      print(direction);
       // direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
       await getWord(widget.wordsList, cardIndex).then(
         (value) => word = value,
@@ -714,14 +798,14 @@ class _LearnPageState extends State<LearnPage> {
                           Transform.rotate(
                             angle: -0.2,
                             child: const TagWidget(
-                              text: 'Пропустить',
+                              text: 'Не знаю',
                               side: 'left',
                             ),
                           ),
                           Transform.rotate(
                             angle: 0.2,
                             child: const TagWidget(
-                              text: 'Добавить',
+                              text: 'Знаю',
                               side: 'right',
                             ),
                           ),
@@ -875,98 +959,98 @@ class _LearnPageState extends State<LearnPage> {
                       //   Text('3'),
                       // ],
                     ),
-                    AnimatedOpacity(
-                      opacity: _finalVisible ? 1 : 0,
-                      curve: Curves.easeInOut,
-                      duration: const Duration(
-                        milliseconds: 400,
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Все твои слова закончились!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 26.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Добавляй новые слова для изучения\nво вкладке «Категории»\n',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: kMainTextColor,
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(
-                                  ScreenUtil().setWidth(80),
-                                  ScreenUtil().setHeight(40),
-                                ),
-                                maximumSize: Size(
-                                  ScreenUtil().setWidth(100),
-                                  ScreenUtil().setHeight(40),
-                                ),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                primary: kMainPurple,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        const MainScreen(
-                                      pageIndex: 1,
-                                      isStart: false,
-                                    ),
-                                    transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) {
-                                      const begin = 0.0;
-                                      const end = 1.0;
-                                      const curve = Curves.ease;
+                    // AnimatedOpacity(
+                    //   opacity: _finalVisible ? 1 : 0,
+                    //   curve: Curves.easeInOut,
+                    //   duration: const Duration(
+                    //     milliseconds: 400,
+                    //   ),
+                    //   child: Center(
+                    //     child: Column(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Text(
+                    //           'Все твои слова закончились!',
+                    //           textAlign: TextAlign.center,
+                    //           style: TextStyle(
+                    //             color: kMainTextColor,
+                    //             fontSize: 26.sp,
+                    //             fontWeight: FontWeight.w600,
+                    //           ),
+                    //         ),
+                    //         const SizedBox(
+                    //           height: 10,
+                    //         ),
+                    //         Text(
+                    //           'Добавляй новые слова для изучения\nво вкладке «Категории»\n',
+                    //           textAlign: TextAlign.center,
+                    //           style: TextStyle(
+                    //             color: kMainTextColor,
+                    //             fontSize: 22.sp,
+                    //             fontWeight: FontWeight.w400,
+                    //           ),
+                    //         ),
+                    //         ElevatedButton(
+                    //           style: ElevatedButton.styleFrom(
+                    //             minimumSize: Size(
+                    //               ScreenUtil().setWidth(80),
+                    //               ScreenUtil().setHeight(40),
+                    //             ),
+                    //             maximumSize: Size(
+                    //               ScreenUtil().setWidth(100),
+                    //               ScreenUtil().setHeight(40),
+                    //             ),
+                    //             shape: const RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.all(
+                    //                 Radius.circular(10),
+                    //               ),
+                    //             ),
+                    //             primary: kMainPurple,
+                    //           ),
+                    //           onPressed: () {
+                    //             Navigator.of(context).pushReplacement(
+                    //               PageRouteBuilder(
+                    //                 pageBuilder: (context, animation,
+                    //                         secondaryAnimation) =>
+                    //                     const MainScreen(
+                    //                   pageIndex: 1,
+                    //                   isStart: false,
+                    //                 ),
+                    //                 transitionsBuilder: (context, animation,
+                    //                     secondaryAnimation, child) {
+                    //                   const begin = 0.0;
+                    //                   const end = 1.0;
+                    //                   const curve = Curves.ease;
 
-                                      var tween = Tween(
-                                        begin: begin,
-                                        end: end,
-                                      ).chain(
-                                        CurveTween(
-                                          curve: curve,
-                                        ),
-                                      );
+                    //                   var tween = Tween(
+                    //                     begin: begin,
+                    //                     end: end,
+                    //                   ).chain(
+                    //                     CurveTween(
+                    //                       curve: curve,
+                    //                     ),
+                    //                   );
 
-                                      return FadeTransition(
-                                        opacity: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Перейти',
-                                style: TextStyle(
-                                  color: kWhite,
-                                  fontSize: 16.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    //                   return FadeTransition(
+                    //                     opacity: animation.drive(tween),
+                    //                     child: child,
+                    //                   );
+                    //                 },
+                    //               ),
+                    //             );
+                    //           },
+                    //           child: Text(
+                    //             'Перейти',
+                    //             style: TextStyle(
+                    //               color: kWhite,
+                    //               fontSize: 16.sp,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -161,7 +161,7 @@ class _WordsChoiceState extends State<WordsChoice> {
   late bool _visible = false;
   late bool _hintVisible;
 
-  late User user;
+  late User _user;
 
   Future<void> getFirstWords(int index) async {
     await getWord(widget.wordsList, index).then((value) {
@@ -177,7 +177,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   Future<void> initial() async {
     bearerToken = await getAuthToken();
-    user = FirebaseAuth.instance.currentUser!;
+    _user = FirebaseAuth.instance.currentUser!;
     for (int i = 0; i < 1; i++) {
       await getFirstWords(i);
       datas.add(word);
@@ -195,6 +195,9 @@ class _WordsChoiceState extends State<WordsChoice> {
   Future<void> swipe(String direction) async {
     String wordEn = datas[0].wordEn;
     datas.removeAt(0);
+
+    direction == 'like' ? await addWordToDic(_user, wordEn.trim()) : null;
+
     if (cardIndex == widget.wordsList.length) {
       print("Done!");
       Navigator.of(context).pushReplacement(
@@ -224,7 +227,6 @@ class _WordsChoiceState extends State<WordsChoice> {
         ),
       );
     } else {
-      direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
       await getWord(widget.wordsList, cardIndex).then(
         (value) => word = value,
       );
@@ -722,14 +724,14 @@ class _WordsChoiceState extends State<WordsChoice> {
                       Transform.rotate(
                         angle: -0.2,
                         child: const TagWidget(
-                          text: 'Пропустить',
+                          text: 'Не учить',
                           side: 'left',
                         ),
                       ),
                       Transform.rotate(
                         angle: 0.2,
                         child: const TagWidget(
-                          text: 'Добавить',
+                          text: 'Учить',
                           side: 'right',
                         ),
                       ),
@@ -872,7 +874,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                           Column(
                             children: [
                               Text(
-                                '$cardIndex / ${widget.wordsList.length}',
+                                '${cardIndex + 1} / ${widget.wordsList.length}',
                                 style: TextStyle(
                                   color: kMainTextColor,
                                   fontSize: 16.sp,
@@ -882,10 +884,15 @@ class _WordsChoiceState extends State<WordsChoice> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              LinearProgressIndicator(
-                                value: cardIndex / widget.wordsList.length,
-                                color: kMainPurple,
-                                backgroundColor: kMainPurple.withOpacity(0.3),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                child: LinearProgressIndicator(
+                                  value:
+                                      (cardIndex + 1) / widget.wordsList.length,
+                                  color: kMainPurple,
+                                  backgroundColor: kMainPurple.withOpacity(0.3),
+                                ),
                               ),
                               const SizedBox(
                                 height: 30,

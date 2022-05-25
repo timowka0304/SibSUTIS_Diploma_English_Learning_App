@@ -46,7 +46,7 @@ Future<void> addWordToDic(User user, String wordEn) async {
       .doc('dictionary')
       .set(
           {
-        'data': {wordEn: 0},
+        wordEn: 0,
       },
           SetOptions(
             merge: true,
