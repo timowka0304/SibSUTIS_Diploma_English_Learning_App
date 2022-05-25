@@ -17,6 +17,7 @@ class GetWordsPage extends StatefulWidget {
 class _GetWordsPageState extends State<GetWordsPage> {
   late List<String> wordsList;
   late Map<String, dynamic> data;
+  late Map<String, dynamic> fullDataWords;
   late Future<DocumentSnapshot> _dataStream;
   late User _user;
 
@@ -38,11 +39,17 @@ class _GetWordsPageState extends State<GetWordsPage> {
 
   Future<void> setWordsInList(Map<String, dynamic> snapshot) async {
     wordsList = [];
-    // inspect(snapshot);
+    fullDataWords = {};
+
     for (var element in snapshot.entries) {
       wordsList.add(element.key);
     }
-    // inspect(wordsList);
+    wordsList.shuffle();
+
+    for (var element in wordsList) {
+      fullDataWords.addAll({element: snapshot[element]});
+    }
+    inspect(fullDataWords);
   }
 
   Future<void> goToNewPage(
@@ -52,6 +59,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
       MaterialPageRoute(
         builder: (context) => LearnPage(
           wordsList: List<String>.from(wordsList),
+          fullDataWords: fullDataWords,
           user: _user,
         ),
       ),

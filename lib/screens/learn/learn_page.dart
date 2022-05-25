@@ -21,9 +21,11 @@ class LearnPage extends StatefulWidget {
   const LearnPage({
     Key? key,
     required this.wordsList,
+    required this.fullDataWords,
     required this.user,
   }) : super(key: key);
   final List<String> wordsList;
+  final Map<String, dynamic> fullDataWords;
   final User user;
 
   @override
@@ -146,6 +148,7 @@ class LoadingIndicatorDialog {
 
 class _LearnPageState extends State<LearnPage> {
   var datas = <Word>[];
+  late Map<String, dynamic> fullDataWords;
   Word word = Word(
       wordEn: '', wordRu: '', transcription: '', audioFile: '', example: '');
 
@@ -168,6 +171,7 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Future<void> initial() async {
+    fullDataWords = widget.fullDataWords;
     cardIndex = -1;
     bearerToken = await getAuthToken();
     for (int i = 0; i < 1; i++) {
@@ -262,24 +266,29 @@ class _LearnPageState extends State<LearnPage> {
       );
     }
     if (direction == 'like') {
-      // var snapshot = await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(widget.user.uid)
-      //     .collection('dictionary')
-      //     .where(wordEn, isEqualTo: 1)
-      //     .get();
-      // inspect(snapshot.); TODO If Equel 3
-
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.user.uid)
-          .collection('dictionary')
-          .doc('dictionary')
-          .update(
-        {
-          wordEn: FieldValue.increment(1),
-        },
-      );
+      if (fullDataWords[wordEn] == 2) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.user.uid)
+            .collection('dictionary')
+            .doc('dictionary')
+            .update(
+          {
+            wordEn: FieldValue.delete(), //+1к изученному
+          },
+        );
+      } else {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.user.uid)
+            .collection('dictionary')
+            .doc('dictionary')
+            .update(
+          {
+            wordEn: FieldValue.increment(1),
+          },
+        );
+      }
     }
     if (direction == 'dislike') {
       FirebaseFirestore.instance
