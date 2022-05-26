@@ -1,4 +1,5 @@
 import 'package:easy_peasy/components/others/dialogs.dart';
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,16 +73,16 @@ Future signOutUser() async {
 }
 
 Future<void> uploadingData(User user) async {
-  await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-    'email': user.email,
-    'username': user.displayName,
-    'uid': user.uid,
-    'profileImg': user.photoURL,
-  });
-  // final dictionaryStatus = await FirebaseFirestore.instance
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('dictionary')
-  //     .snapshots()
-  //     .isEmpty;
+  await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+    {
+      'email': user.email,
+      'username': user.displayName,
+      'uid': user.uid,
+      'profileImg': user.photoURL,
+      // 'numberOfLearnedWords': 0,
+    },
+    SetOptions(
+      merge: true,
+    ),
+  );
 }

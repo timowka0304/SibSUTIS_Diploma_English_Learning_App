@@ -277,6 +277,15 @@ class _LearnPageState extends State<LearnPage> {
             wordEn: FieldValue.delete(), //+1к изученному
           },
         );
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.user.uid)
+            .update(
+          {
+            'numberOfLearnedWords': FieldValue.increment(1),
+          },
+        );
       } else {
         FirebaseFirestore.instance
             .collection('users')
@@ -302,17 +311,7 @@ class _LearnPageState extends State<LearnPage> {
         },
       );
     }
-    // if (datas.isEmpty) {
-    //   print("Done!");
-    //   setState(
-    //     () {
-    //       _finalVisible = true;
-    //     },
-    //   );
-    // }
     if (cardIndex == widget.wordsList.length) {
-      //TODO Infinity list
-      // initState();
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
@@ -338,14 +337,7 @@ class _LearnPageState extends State<LearnPage> {
           },
         ),
       );
-      // print("Done!");
-      // setState(
-      //   () {
-      //     _finalVisible = true;
-      //   },
-      // );
     } else {
-      // direction == 'like' ? await addWordToDic(user, wordEn.trim()) : null;
       await getWord(widget.wordsList, cardIndex).then(
         (value) => word = value,
       );
@@ -374,7 +366,6 @@ class _LearnPageState extends State<LearnPage> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPink,
                       );
                     },
                     onAccept: (_) {
@@ -402,7 +393,6 @@ class _LearnPageState extends State<LearnPage> {
                         ) {
                           return Container(
                             height: MediaQuery.of(context).size.height / 7,
-                            // color: kMainPurple,
                           );
                         },
                         onAccept: (data) {
@@ -430,7 +420,6 @@ class _LearnPageState extends State<LearnPage> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: kMainPink,
                       );
                     },
                     onAccept: (data) {
@@ -584,7 +573,7 @@ class _LearnPageState extends State<LearnPage> {
                     setState(() {
                       _flipped = !_flipped;
                     });
-                    print('onFlipDone: $_flipped');
+                    // print('onFlipDone: $_flipped');
                   },
                   direction: FlipDirection.HORIZONTAL,
                   front: !_returnFlipped
@@ -653,16 +642,6 @@ class _LearnPageState extends State<LearnPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Text(
-                                //   data.wordEn,
-                                //   style: TextStyle(
-                                //       color: kMainTextColor,
-                                //       fontSize: 26.sp,
-                                //       fontWeight: FontWeight.w600),
-                                // ),
-                                // const SizedBox(
-                                //   height: 20,
-                                // ),
                                 Text(
                                   data.wordRu,
                                   textAlign: TextAlign.center,
@@ -752,16 +731,6 @@ class _LearnPageState extends State<LearnPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Text(
-                                //   data.wordEn,
-                                //   style: TextStyle(
-                                //       color: kMainTextColor,
-                                //       fontSize: 26.sp,
-                                //       fontWeight: FontWeight.w600),
-                                // ),
-                                // const SizedBox(
-                                //   height: 20,
-                                // ),
                                 Text(
                                   data.wordRu,
                                   textAlign: TextAlign.center,
@@ -962,104 +931,7 @@ class _LearnPageState extends State<LearnPage> {
                     ),
                     Stack(
                       children: renderCards(),
-                      // children: const [
-                      //   Text('1'),
-                      //   Text('2'),
-                      //   Text('3'),
-                      // ],
                     ),
-                    // AnimatedOpacity(
-                    //   opacity: _finalVisible ? 1 : 0,
-                    //   curve: Curves.easeInOut,
-                    //   duration: const Duration(
-                    //     milliseconds: 400,
-                    //   ),
-                    //   child: Center(
-                    //     child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Text(
-                    //           'Все твои слова закончились!',
-                    //           textAlign: TextAlign.center,
-                    //           style: TextStyle(
-                    //             color: kMainTextColor,
-                    //             fontSize: 26.sp,
-                    //             fontWeight: FontWeight.w600,
-                    //           ),
-                    //         ),
-                    //         const SizedBox(
-                    //           height: 10,
-                    //         ),
-                    //         Text(
-                    //           'Добавляй новые слова для изучения\nво вкладке «Категории»\n',
-                    //           textAlign: TextAlign.center,
-                    //           style: TextStyle(
-                    //             color: kMainTextColor,
-                    //             fontSize: 22.sp,
-                    //             fontWeight: FontWeight.w400,
-                    //           ),
-                    //         ),
-                    //         ElevatedButton(
-                    //           style: ElevatedButton.styleFrom(
-                    //             minimumSize: Size(
-                    //               ScreenUtil().setWidth(80),
-                    //               ScreenUtil().setHeight(40),
-                    //             ),
-                    //             maximumSize: Size(
-                    //               ScreenUtil().setWidth(100),
-                    //               ScreenUtil().setHeight(40),
-                    //             ),
-                    //             shape: const RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.all(
-                    //                 Radius.circular(10),
-                    //               ),
-                    //             ),
-                    //             primary: kMainPurple,
-                    //           ),
-                    //           onPressed: () {
-                    //             Navigator.of(context).pushReplacement(
-                    //               PageRouteBuilder(
-                    //                 pageBuilder: (context, animation,
-                    //                         secondaryAnimation) =>
-                    //                     const MainScreen(
-                    //                   pageIndex: 1,
-                    //                   isStart: false,
-                    //                 ),
-                    //                 transitionsBuilder: (context, animation,
-                    //                     secondaryAnimation, child) {
-                    //                   const begin = 0.0;
-                    //                   const end = 1.0;
-                    //                   const curve = Curves.ease;
-
-                    //                   var tween = Tween(
-                    //                     begin: begin,
-                    //                     end: end,
-                    //                   ).chain(
-                    //                     CurveTween(
-                    //                       curve: curve,
-                    //                     ),
-                    //                   );
-
-                    //                   return FadeTransition(
-                    //                     opacity: animation.drive(tween),
-                    //                     child: child,
-                    //                   );
-                    //                 },
-                    //               ),
-                    //             );
-                    //           },
-                    //           child: Text(
-                    //             'Перейти',
-                    //             style: TextStyle(
-                    //               color: kWhite,
-                    //               fontSize: 16.sp,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

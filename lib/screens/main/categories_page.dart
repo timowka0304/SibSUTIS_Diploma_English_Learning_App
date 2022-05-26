@@ -322,10 +322,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
         width: ScreenUtil().setWidth(180),
         child: GestureDetector(
           onTap: () async {
-            // print(words);
-            // await getWords(
-            //   List<String>.from(words),
-            // );
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => WordsChoice(
