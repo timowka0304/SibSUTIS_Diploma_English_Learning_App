@@ -83,7 +83,6 @@ Future getMorningAchievement(String user) async {
 Future storeEveningAchievement(bool status, String user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setBool('eveningAchievement ' + user, status);
-  // await prefs.clear();
 }
 
 Future getEveningAchievement(String user) async {

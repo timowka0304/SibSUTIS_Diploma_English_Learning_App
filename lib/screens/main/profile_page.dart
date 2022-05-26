@@ -69,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          inspect(snapshot.data!.data() as Map<String, dynamic>);
+          // inspect(snapshot.data!.data() as Map<String, dynamic>);
 
           return Scaffold(
             backgroundColor: kSecondBlue,
