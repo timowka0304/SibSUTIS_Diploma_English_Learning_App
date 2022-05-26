@@ -41,7 +41,7 @@ class _SignInState extends State<SignUp> {
         await signUp(_userEmail.trim(), _password.trim(), _userName, context)
             .then((value) {
           if (value != null) {
-            storeProfileUid(value!.uid);
+            // storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => const MainScreenCheck()));

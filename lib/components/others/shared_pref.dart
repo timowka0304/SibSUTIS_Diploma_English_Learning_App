@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-storeProfileUid(String uid) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('uid', uid);
-}
+// storeProfileUid(String uid) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   await prefs.setString('uid', uid);
+// }
 
-Future<String> getProfileUid() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('uid')!;
-}
+// Future<String> getProfileUid() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   return prefs.getString('uid')!;
+// }
 
 storeOnboardInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -60,7 +60,7 @@ Future getFilmsDict() async {
   return prefs.getString('filmsDictionary');
 }
 
-storeDragHint(bool status) async {
+Future storeDragHint(bool status) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setBool('dragHintStatus', status);
 }
@@ -68,4 +68,25 @@ storeDragHint(bool status) async {
 Future<bool> getDragHint() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('dragHintStatus')!;
+}
+
+Future storeMorningAchievement(bool status, String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('morningAchievement ' + user, status);
+}
+
+Future getMorningAchievement(String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('morningAchievement ' + user);
+}
+
+Future storeEveningAchievement(bool status, String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('eveningAchievement ' + user, status);
+  // await prefs.clear();
+}
+
+Future getEveningAchievement(String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('eveningAchievement ' + user);
 }

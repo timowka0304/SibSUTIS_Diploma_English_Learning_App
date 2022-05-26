@@ -16,11 +16,20 @@ Future googleSignIn() async {
     GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
+    // print('1');
+
     AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
+    // print('2');
 
-    await auth.signInWithCredential(credential);
+    try {
+      await auth.signInWithCredential(credential);
+    } catch (e) {
+      print(e.hashCode);
+    }
+
+    // print('3');
     return Future.value(true);
   }
   return Future.value(false);
@@ -79,7 +88,6 @@ Future<void> uploadingData(User user) async {
       'username': user.displayName,
       'uid': user.uid,
       'profileImg': user.photoURL,
-      // 'numberOfLearnedWords': 0,
     },
     SetOptions(
       merge: true,

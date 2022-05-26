@@ -45,10 +45,11 @@ Future<void> addWordToDic(User user, String wordEn) async {
       .collection('dictionary')
       .doc('dictionary')
       .set(
-          {
-        wordEn: 0,
-      },
-          SetOptions(
-            merge: true,
-          ));
+    {
+      wordEn: 0,
+    },
+    SetOptions(
+      merge: true,
+    ),
+  );
 }

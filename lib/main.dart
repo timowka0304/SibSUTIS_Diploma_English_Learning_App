@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
@@ -12,7 +14,7 @@ int? onBoardingScreenIsViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  getOnboardInfo().then((gettedInfo) {
+  await getOnboardInfo().then((gettedInfo) {
     onBoardingScreenIsViewed = gettedInfo;
   });
 
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // inspect(onBoardingScreenIsViewed);
+
     return ScreenUtilInit(
       designSize: const Size(414, 896),
       minTextAdapt: true,

@@ -1,12 +1,15 @@
+import 'dart:developer';
 import 'dart:ui';
 
+import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/get_words_page.dart';
-import 'package:easy_peasy/screens/learn/learn_page.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:achievement_view/achievement_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static String routeName = "/home";
@@ -18,6 +21,133 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<bool> checkMorningTime() async {
+    if (DateTime.now().hour >= 4 && DateTime.now().hour <= 6) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> checkEveningTime() async {
+    if (DateTime.now().hour >= 0 && DateTime.now().hour < 4) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> timeAchievement() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.clear();
+
+    String user = FirebaseAuth.instance.currentUser!.toString();
+    bool _morningTime = false;
+    bool _eveningTime = false;
+
+    late bool _morningTimeAchievement;
+    late bool _eveningTimeAchievement;
+
+    await getMorningAchievement(user).then((value) async {
+      if (value != null) {
+        _morningTimeAchievement = value;
+        _morningTime = await checkMorningTime();
+      } else {
+        _morningTimeAchievement = false;
+        _morningTime = await checkMorningTime();
+        _morningTime
+            ? {
+                showAchievementView(context, 'morning1'),
+                _morningTimeAchievement = true,
+                await storeMorningAchievement(true, user),
+              }
+            : {
+                _morningTimeAchievement = false,
+                await storeMorningAchievement(false, user)
+              };
+      }
+
+      // inspect(_morningTimeAchievement);
+    });
+
+    await getEveningAchievement(user).then((value) async {
+      if (value != null) {
+        _eveningTimeAchievement = value;
+        _eveningTime = await checkEveningTime();
+      } else {
+        _eveningTimeAchievement = false;
+        _eveningTime = await checkEveningTime();
+        // inspect(_eveningTime && !_eveningTimeAchievement);
+        _eveningTime
+            ? {
+                showAchievementView(context, 'evening1'),
+                _eveningTimeAchievement = true,
+                await storeEveningAchievement(true, user)
+              }
+            : {
+                _eveningTimeAchievement = false,
+                await storeEveningAchievement(false, user)
+              };
+      }
+
+      // inspect(_eveningTimeAchievement);
+    });
+
+    _morningTimeAchievement ? null : _morningTime = await checkMorningTime();
+
+    (_morningTime && !_morningTimeAchievement)
+        ? {
+            showAchievementView(context, 'morning1'),
+            await storeMorningAchievement(true, user)
+          }
+        : null;
+
+    _eveningTimeAchievement ? null : _eveningTime = await checkEveningTime();
+
+    // inspect(_eveningTime && !_eveningTimeAchievement);
+    (_eveningTime && !_eveningTimeAchievement)
+        ? {
+            showAchievementView(context, 'evening2'),
+            await storeEveningAchievement(true, user)
+          }
+        : null;
+
+    print('_morningTime = ' + _morningTime.toString());
+    print('_eveningTime = ' + _eveningTime.toString());
+    print('_morningTimeAchievement = ' + _morningTimeAchievement.toString());
+    print('_eveningTimeAchievement = ' + _eveningTimeAchievement.toString());
+  }
+
+  void showAchievementView(BuildContext context, String text) {
+    AchievementView(context,
+        title: text,
+        subTitle: "Training completed successfully",
+        //onTab: _onTabAchievement,
+        //icon: Icon(Icons.insert_emoticon, color: Colors.white,),
+        //typeAnimationContent: AnimationTypeAchievement.fadeSlideToUp,
+        //borderRadius: 5.0,
+        color: kMainPurple,
+        //textStyleTitle: TextStyle(),
+        //textStyleSubTitle: TextStyle(),
+        //alignment: Alignment.topCenter,
+        //duration: Duration(seconds: 3),
+        //isCircle: false,
+        listener: (status) {
+      print(status);
+      //AchievementState.opening
+      //AchievementState.open
+      //AchievementState.closing
+      //AchievementState.closed
+    })
+      ..show();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    timeAchievement();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

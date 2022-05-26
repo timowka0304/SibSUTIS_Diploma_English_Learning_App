@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
@@ -18,121 +21,227 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late var user = FirebaseAuth.instance.currentUser!;
-  late var userImg = user.photoURL!;
+  late Future<DocumentSnapshot> _dataStream;
+  late User _user;
+  late String _userImg = _user.photoURL!;
   late String uid;
+
+  @override
+  void initState() {
+    firebaseRequest();
+    super.initState();
+  }
+
+  Future<void> firebaseRequest() async {
+    _user = FirebaseAuth.instance.currentUser!;
+    _dataStream =
+        FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
+  }
 
   @override
   Widget build(BuildContext context) {
     // SizeConfig().init(context);
 
-    getProfileUid().then((gettedUid) {
-      uid = gettedUid;
-    });
+    // getProfileUid().then((gettedUid) {
+    //   uid = gettedUid;
+    // });
 
-    return Scaffold(
-      backgroundColor: kSecondBlue,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: ScreenUtil().setHeight(30),
-              ),
-              Stack(children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(
-                    ScreenUtil().setWidth(30),
-                    ScreenUtil().setHeight(30),
-                    ScreenUtil().setWidth(30),
-                    ScreenUtil().setHeight(0),
-                  ),
-                  height: ScreenUtil().setHeight(220),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(ScreenUtil().setWidth(15)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.05),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(
-                          ScreenUtil().setWidth(0),
-                          ScreenUtil().setHeight(5),
-                        ), // changes position of shadow
-                      ),
-                    ],
+    return FutureBuilder<DocumentSnapshot>(
+      future: _dataStream,
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Scaffold(
+            backgroundColor: kSecondBlue,
+            body: SafeArea(
+              child: Center(
+                child: Text(
+                  "Ошибка",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: kMainTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
+              ),
+            ),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          inspect(snapshot.data!.data() as Map<String, dynamic>);
+
+          return Scaffold(
+            backgroundColor: kSecondBlue,
+            resizeToAvoidBottomInset: false,
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: ScreenUtil().setHeight(30),
+                    ),
+                    Stack(children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(30),
+                          ScreenUtil().setHeight(30),
+                          ScreenUtil().setWidth(30),
+                          ScreenUtil().setHeight(0),
+                        ),
+                        height: ScreenUtil().setHeight(220),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(ScreenUtil().setWidth(15)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.05),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(
+                                ScreenUtil().setWidth(0),
+                                ScreenUtil().setHeight(5),
+                              ), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.topCenter,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                child: CircleAvatar(
+                                  radius: ScreenUtil().setWidth(40),
+                                  backgroundColor: kWhite,
+                                  child: CircleAvatar(
+                                      radius: ScreenUtil().setWidth(37),
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(_userImg),
+                                      backgroundColor: kMainPink,
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: ScreenUtil().setWidth(12),
+                                            child: MaterialButton(
+                                              onPressed: () => updateImg(_user)
+                                                  .then((downloadUrl) {
+                                                _user.updatePhotoURL(
+                                                    downloadUrl);
+
+                                                setState(() {
+                                                  _user.updatePhotoURL(
+                                                      downloadUrl);
+                                                  _userImg = downloadUrl;
+                                                });
+                                              }),
+                                              elevation: 0,
+                                              focusElevation: 0,
+                                              hoverElevation: 0,
+                                              highlightElevation: 0,
+                                              color: kMainPurple,
+                                              child: Icon(
+                                                Icons.camera_alt,
+                                                color: kWhite,
+                                                size: ScreenUtil().setWidth(15),
+                                              ),
+                                              padding: EdgeInsets.all(
+                                                ScreenUtil().setWidth(5),
+                                              ),
+                                              shape: const CircleBorder(),
+                                            )),
+                                      )),
+                                ),
+                              ),
+                              SizedBox(
+                                height: ScreenUtil().setHeight(20),
+                              ),
+                              Text(
+                                (snapshot.data!.data()
+                                    as Map<String, dynamic>)['username'],
+                                // user.displayName!,
+                                style: TextStyle(
+                                  color: kMainTextColor,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: ScreenUtil().setHeight(10),
+                              ),
+                              Text(
+                                (snapshot.data!.data()
+                                    as Map<String, dynamic>)['email'],
+                                // user.email!,
+                                style: TextStyle(
+                                  color: kMainTextColor,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(
+                                height: ScreenUtil().setHeight(20),
+                              ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    height: ScreenUtil().setHeight(30),
+                                    width: ScreenUtil().setWidth(150),
+                                    decoration: BoxDecoration(
+                                      color: kMainPink,
+                                      borderRadius: BorderRadius.circular(
+                                        ScreenUtil().setWidth(5),
+                                      ),
+                                    ),
+                                    child: Center(
+                                        child: RichText(
+                                            text: TextSpan(
+                                                text: "Слов выучено: ",
+                                                style: TextStyle(
+                                                  color: kWhite,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16.sp,
+                                                ),
+                                                children: [
+                                          TextSpan(
+                                            text: (snapshot.data!.data() as Map<
+                                                                String,
+                                                                dynamic>)[
+                                                            'numberOfLearnedWords']
+                                                        .toString() ==
+                                                    'null'
+                                                ? '0'
+                                                : (snapshot.data!.data() as Map<
+                                                            String, dynamic>)[
+                                                        'numberOfLearnedWords']
+                                                    .toString(),
+                                            style: TextStyle(
+                                              color: kWhite,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 16.sp,
+                                            ),
+                                          )
+                                        ]))),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )),
+                    ]),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          child: CircleAvatar(
-                            radius: ScreenUtil().setWidth(40),
-                            backgroundColor: kWhite,
-                            child: CircleAvatar(
-                                radius: ScreenUtil().setWidth(37),
-                                backgroundImage:
-                                    CachedNetworkImageProvider(userImg),
-                                backgroundColor: kMainPink,
-                                child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: ScreenUtil().setWidth(12),
-                                      child: MaterialButton(
-                                        onPressed: () =>
-                                            updateImg(user).then((downloadUrl) {
-                                          user.updatePhotoURL(downloadUrl);
-
-                                          setState(() {
-                                            user.updatePhotoURL(downloadUrl);
-                                            userImg = downloadUrl;
-                                          });
-                                        }),
-                                        elevation: 0,
-                                        focusElevation: 0,
-                                        hoverElevation: 0,
-                                        highlightElevation: 0,
-                                        color: kMainPurple,
-                                        child: Icon(
-                                          Icons.camera_alt,
-                                          color: kWhite,
-                                          size: ScreenUtil().setWidth(15),
-                                        ),
-                                        padding: EdgeInsets.all(
-                                          ScreenUtil().setWidth(5),
-                                        ),
-                                        shape: const CircleBorder(),
-                                      )),
-                                )),
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(20),
+                          height: ScreenUtil().setHeight(30),
                         ),
                         Text(
-                          user.displayName!,
+                          "Достижения",
                           style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(
-                          height: ScreenUtil().setHeight(10),
-                        ),
-                        Text(
-                          user.email!,
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+                              color: kMainTextColor,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                           height: ScreenUtil().setHeight(20),
@@ -140,356 +249,309 @@ class _ProfilePageState extends State<ProfilePage> {
                         Stack(
                           children: [
                             Container(
-                              height: ScreenUtil().setHeight(30),
-                              width: ScreenUtil().setWidth(150),
+                              margin: EdgeInsets.fromLTRB(
+                                ScreenUtil().setWidth(30),
+                                ScreenUtil().setHeight(0),
+                                ScreenUtil().setWidth(30),
+                                ScreenUtil().setHeight(30),
+                              ),
+                              height: ScreenUtil().setHeight(150),
                               decoration: BoxDecoration(
-                                color: kMainPink,
-                                borderRadius: BorderRadius.circular(
-                                  ScreenUtil().setWidth(5),
-                                ),
-                              ),
-                              child: Center(
-                                  child: RichText(
-                                      text: TextSpan(
-                                          text: "Дней подряд: ",
-                                          style: TextStyle(
-                                            color: kWhite,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16.sp,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      ScreenUtil().setWidth(15)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.05),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(
+                                        ScreenUtil().setWidth(0),
+                                        ScreenUtil().setHeight(5),
+                                      ), // changes position of shadow
+                                    ),
+                                  ]),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () => showAchivementsDialog(
+                                          context,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 1)
+                                              .title,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 1)
+                                              .text,
+                                        ),
+                                        style: ButtonStyle(
+                                          textStyle: MaterialStateProperty
+                                              .resolveWith<TextStyle>(
+                                                  (Set<MaterialState> states) {
+                                            return TextStyle(
+                                              color: kMainTextColor,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
+                                            );
+                                          }),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
                                           ),
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                            return kMainPink.withOpacity(0.1);
+                                          }),
+                                        ),
+                                        child: Column(
                                           children: [
-                                    TextSpan(
-                                      text: "2",
-                                      style: TextStyle(
-                                        color: kWhite,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 16.sp,
+                                            AchivementsModel.list
+                                                .firstWhere((e) => e.num == 1)
+                                                .icon,
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(15),
+                                            ),
+                                            Text(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 1)
+                                                  .title,
+                                              style: TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    )
-                                  ]))),
-                            ),
-                          ],
-                        )
-                      ],
-                    )),
-              ]),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: ScreenUtil().setHeight(30),
-                  ),
-                  Text(
-                    "Достижения",
-                    style: TextStyle(
-                        color: kMainTextColor,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(20),
-                  ),
-                  Stack(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(
-                          ScreenUtil().setWidth(30),
-                          ScreenUtil().setHeight(0),
-                          ScreenUtil().setWidth(30),
-                          ScreenUtil().setHeight(30),
-                        ),
-                        height: ScreenUtil().setHeight(150),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                                ScreenUtil().setWidth(15)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.05),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(
-                                  ScreenUtil().setWidth(0),
-                                  ScreenUtil().setHeight(5),
-                                ), // changes position of shadow
+                                      TextButton(
+                                        onPressed: () => showAchivementsDialog(
+                                          context,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 2)
+                                              .title,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 2)
+                                              .text,
+                                        ),
+                                        style: ButtonStyle(
+                                          textStyle: MaterialStateProperty
+                                              .resolveWith<TextStyle>(
+                                                  (Set<MaterialState> states) {
+                                            return TextStyle(
+                                              color: kMainTextColor,
+                                              fontSize: 18.sp,
+                                              fontWeight: FontWeight.w400,
+                                            );
+                                          }),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                            return kMainPink.withOpacity(0.1);
+                                          }),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            AchivementsModel.list
+                                                .firstWhere((e) => e.num == 2)
+                                                .icon,
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(15),
+                                            ),
+                                            Text(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 2)
+                                                  .title,
+                                              style: TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => showAchivementsDialog(
+                                          context,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 3)
+                                              .title,
+                                          AchivementsModel.list
+                                              .firstWhere((e) => e.num == 3)
+                                              .text,
+                                        ),
+                                        style: ButtonStyle(
+                                          textStyle: MaterialStateProperty
+                                              .resolveWith<TextStyle>(
+                                                  (Set<MaterialState> states) {
+                                            return TextStyle(
+                                              color: kMainTextColor,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
+                                            );
+                                          }),
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                            return kMainPink.withOpacity(0.1);
+                                          }),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            AchivementsModel.list
+                                                .firstWhere((e) => e.num == 3)
+                                                .icon,
+                                            SizedBox(
+                                              height:
+                                                  ScreenUtil().setHeight(15),
+                                            ),
+                                            Text(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 3)
+                                                  .title,
+                                              style: TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                TextButton(
-                                  onPressed: () => showAchivementsDialog(
-                                    context,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 1)
-                                        .title,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 1)
-                                        .text,
-                                  ),
-                                  style: ButtonStyle(
-                                    textStyle: MaterialStateProperty
-                                        .resolveWith<TextStyle>(
-                                            (Set<MaterialState> states) {
-                                      return TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w400,
-                                      );
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                    ),
-                                    overlayColor:
-                                        MaterialStateProperty.resolveWith<
-                                            Color>((Set<MaterialState> states) {
-                                      return kMainPink.withOpacity(0.1);
-                                    }),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      AchivementsModel.list
-                                          .firstWhere((e) => e.num == 1)
-                                          .icon,
-                                      SizedBox(
-                                        height: ScreenUtil().setHeight(15),
-                                      ),
-                                      Text(
-                                        AchivementsModel.list
-                                            .firstWhere((e) => e.num == 1)
-                                            .title,
-                                        style: TextStyle(
-                                          color: kMainTextColor,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => showAchivementsDialog(
-                                    context,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 2)
-                                        .title,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 2)
-                                        .text,
-                                  ),
-                                  style: ButtonStyle(
-                                    textStyle: MaterialStateProperty
-                                        .resolveWith<TextStyle>(
-                                            (Set<MaterialState> states) {
-                                      return TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w400,
-                                      );
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                    ),
-                                    overlayColor:
-                                        MaterialStateProperty.resolveWith<
-                                            Color>((Set<MaterialState> states) {
-                                      return kMainPink.withOpacity(0.1);
-                                    }),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      AchivementsModel.list
-                                          .firstWhere((e) => e.num == 2)
-                                          .icon,
-                                      SizedBox(
-                                        height: ScreenUtil().setHeight(15),
-                                      ),
-                                      Text(
-                                        AchivementsModel.list
-                                            .firstWhere((e) => e.num == 2)
-                                            .title,
-                                        style: TextStyle(
-                                          color: kMainTextColor,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => showAchivementsDialog(
-                                    context,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 3)
-                                        .title,
-                                    AchivementsModel.list
-                                        .firstWhere((e) => e.num == 3)
-                                        .text,
-                                  ),
-                                  style: ButtonStyle(
-                                    textStyle: MaterialStateProperty
-                                        .resolveWith<TextStyle>(
-                                            (Set<MaterialState> states) {
-                                      return TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w400,
-                                      );
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                    ),
-                                    overlayColor:
-                                        MaterialStateProperty.resolveWith<
-                                            Color>((Set<MaterialState> states) {
-                                      return kMainPink.withOpacity(0.1);
-                                    }),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      AchivementsModel.list
-                                          .firstWhere((e) => e.num == 3)
-                                          .icon,
-                                      SizedBox(
-                                        height: ScreenUtil().setHeight(15),
-                                      ),
-                                      Text(
-                                        AchivementsModel.list
-                                            .firstWhere((e) => e.num == 3)
-                                            .title,
-                                        style: TextStyle(
-                                          color: kMainTextColor,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(20),
-                  ),
-                  Column(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          "Настройка уведомлений",
-                          style: TextStyle(
-                            color: kMainTextColor.withOpacity(0.8),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(10),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          "Часто задаваемые вопросы",
-                          style: TextStyle(
-                            color: kMainTextColor.withOpacity(0.8),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(10),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          "Политика конфиденциальности",
-                          style: TextStyle(
-                            color: kMainTextColor.withOpacity(0.8),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(30),
-                      ),
-                    ],
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(
-                        ScreenUtil().setWidth(135),
-                        ScreenUtil().setHeight(50),
-                      ),
-                      maximumSize: Size(
-                        ScreenUtil().setWidth(185),
-                        ScreenUtil().setHeight(50),
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      primary: kMainPink,
-                    ),
-                    onPressed: () => signOutUser().then(
-                      (value) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const SignIn()));
-                      },
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.exit_to_app,
-                          color: kWhite,
                         ),
                         SizedBox(
-                          width: ScreenUtil().setWidth(10),
+                          height: ScreenUtil().setHeight(20),
                         ),
-                        Text(
-                          "Выйти",
-                          style: TextStyle(
-                              color: kWhite,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600),
-                        )
+                        Column(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                "Часто задаваемые вопросы",
+                                style: TextStyle(
+                                  color: kMainTextColor.withOpacity(0.8),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Text(
+                                "Политика конфиденциальности",
+                                style: TextStyle(
+                                  color: kMainTextColor.withOpacity(0.8),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(30),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(
+                              ScreenUtil().setWidth(135),
+                              ScreenUtil().setHeight(50),
+                            ),
+                            maximumSize: Size(
+                              ScreenUtil().setWidth(185),
+                              ScreenUtil().setHeight(50),
+                            ),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            primary: kMainPink,
+                          ),
+                          onPressed: () => signOutUser().then(
+                            (value) {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => const SignIn()));
+                            },
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.exit_to_app,
+                                color: kWhite,
+                              ),
+                              SizedBox(
+                                width: ScreenUtil().setWidth(10),
+                              ),
+                              Text(
+                                "Выйти",
+                                style: TextStyle(
+                                    color: kWhite,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                ],
-              )
-            ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return const Scaffold(
+          backgroundColor: kSecondBlue,
+          body: SafeArea(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: kMainPink,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
