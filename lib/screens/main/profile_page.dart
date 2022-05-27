@@ -29,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     firebaseRequest();
+    getAchievementsInfo();
     super.initState();
   }
 
@@ -38,14 +39,37 @@ class _ProfilePageState extends State<ProfilePage> {
         FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
   }
 
+  Future<void> getAchievementsInfo() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (value) async {
+        try {
+          AchivementsModel.list[0].status =
+              await value.get('morningTimeAchievement');
+        } catch (e) {
+          AchivementsModel.list[0].status = false;
+        }
+        try {
+          AchivementsModel.list[1].status =
+              await value.get('learn100WordsAchievement');
+        } catch (e) {
+          AchivementsModel.list[1].status = false;
+        }
+        try {
+          AchivementsModel.list[2].status =
+              await value.get('eveningTimeAchievement');
+        } catch (e) {
+          AchivementsModel.list[2].status = false;
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // SizeConfig().init(context);
-
-    // getProfileUid().then((gettedUid) {
-    //   uid = gettedUid;
-    // });
-
     return FutureBuilder<DocumentSnapshot>(
       future: _dataStream,
       builder:
@@ -314,9 +338,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         child: Column(
                                           children: [
-                                            AchivementsModel.list
-                                                .firstWhere((e) => e.num == 1)
-                                                .icon,
+                                            Icon(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 1)
+                                                  .icon
+                                                  .icon,
+                                              color: AchivementsModel.list
+                                                      .firstWhere(
+                                                          (e) => e.num == 1)
+                                                      .status
+                                                  ? kMainPurple
+                                                  : kMainPurple
+                                                      .withOpacity(0.3),
+                                            ),
                                             SizedBox(
                                               height:
                                                   ScreenUtil().setHeight(15),
@@ -370,9 +404,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         child: Column(
                                           children: [
-                                            AchivementsModel.list
-                                                .firstWhere((e) => e.num == 2)
-                                                .icon,
+                                            Icon(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 2)
+                                                  .icon
+                                                  .icon,
+                                              color: AchivementsModel.list
+                                                      .firstWhere(
+                                                          (e) => e.num == 2)
+                                                      .status
+                                                  ? kMainPurple
+                                                  : kMainPurple
+                                                      .withOpacity(0.3),
+                                            ),
                                             SizedBox(
                                               height:
                                                   ScreenUtil().setHeight(15),
@@ -426,9 +470,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         child: Column(
                                           children: [
-                                            AchivementsModel.list
-                                                .firstWhere((e) => e.num == 3)
-                                                .icon,
+                                            Icon(
+                                              AchivementsModel.list
+                                                  .firstWhere((e) => e.num == 3)
+                                                  .icon
+                                                  .icon,
+                                              color: AchivementsModel.list
+                                                      .firstWhere(
+                                                          (e) => e.num == 3)
+                                                      .status
+                                                  ? kMainPurple
+                                                  : kMainPurple
+                                                      .withOpacity(0.3),
+                                            ),
                                             SizedBox(
                                               height:
                                                   ScreenUtil().setHeight(15),

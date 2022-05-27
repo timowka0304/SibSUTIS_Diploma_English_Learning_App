@@ -1,15 +1,12 @@
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:easy_peasy/components/others/achievements_controll.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/get_words_page.dart';
 import 'package:easy_peasy/size_config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:achievement_view/achievement_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static String routeName = "/home";
@@ -21,132 +18,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<bool> checkMorningTime() async {
-    if (DateTime.now().hour >= 4 && DateTime.now().hour <= 6) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future<bool> checkEveningTime() async {
-    if (DateTime.now().hour >= 0 && DateTime.now().hour < 4) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   Future<void> initial() async {
-    await timeAchievement();
-  }
-
-  Future<void> timeAchievement() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.clear();
-
-    String user = FirebaseAuth.instance.currentUser!.uid.toString();
-    print('user = ' + user);
-
-    late bool _morningTime;
-    late bool _eveningTime;
-
-    late bool _morningTimeAchievement;
-    late bool _eveningTimeAchievement;
-
-    await getMorningAchievement(user).then((value) async {
-      if (value != null) {
-        print('not first');
-        _morningTimeAchievement = value;
-        inspect(_morningTimeAchievement);
-        _morningTime = await checkMorningTime();
-      } else {
-        print('value = ' + value.toString());
-        // _morningTimeAchievement = false;
-        _morningTime = await checkMorningTime();
-        if (_morningTime) {
-          showAchievementView(context, 'morning1');
-          _morningTimeAchievement = true;
-          await storeMorningAchievement(_morningTimeAchievement, user);
-        } else {
-          _morningTimeAchievement = false;
-          await storeMorningAchievement(_morningTimeAchievement, user);
-        }
-      }
-
-      // inspect(_morningTimeAchievement);
-    });
-
-    await getEveningAchievement(user).then((data) async {
-      if (data != null) {
-        print('not first');
-        _eveningTimeAchievement = data;
-        inspect(_eveningTimeAchievement);
-        _eveningTime = await checkEveningTime();
-      } else {
-        print('data = ' + data.toString());
-        // _eveningTimeAchievement = false;
-        _eveningTime = await checkEveningTime();
-        // inspect(_eveningTime && !_eveningTimeAchievement);
-        if (_eveningTime) {
-          showAchievementView(context, 'evening1');
-          _eveningTimeAchievement = true;
-          await storeEveningAchievement(_eveningTimeAchievement, user);
-        } else {
-          _eveningTimeAchievement = false;
-          await storeEveningAchievement(_eveningTimeAchievement, user);
-        }
-      }
-
-      // inspect(_eveningTimeAchievement);
-    });
-
-    // _morningTimeAchievement ? null : _morningTime = await checkMorningTime();
-
-    if (_morningTime && !_morningTimeAchievement) {
-      showAchievementView(context, 'morning2');
-      _morningTimeAchievement = true;
-      await storeMorningAchievement(_morningTimeAchievement, user);
-    }
-
-    // _eveningTimeAchievement ? null : _eveningTime = await checkEveningTime();
-
-    // inspect(_eveningTime && !_eveningTimeAchievement);
-    if (_eveningTime && !_eveningTimeAchievement) {
-      showAchievementView(context, 'evening2');
-      _eveningTimeAchievement = true;
-      await storeEveningAchievement(_eveningTimeAchievement, user);
-    }
-
-    print('_morningTime = ' + _morningTime.toString());
-    print('_eveningTime = ' + _eveningTime.toString());
-    print('_morningTimeAchievement = ' + _morningTimeAchievement.toString());
-    print('_eveningTimeAchievement = ' + _eveningTimeAchievement.toString());
-  }
-
-  void showAchievementView(BuildContext context, String text) {
-    AchievementView(
-      context,
-      title: text,
-      subTitle: "Training completed successfully",
-      //onTab: _onTabAchievement,
-      //icon: Icon(Icons.insert_emoticon, color: Colors.white,),
-      //typeAnimationContent: AnimationTypeAchievement.fadeSlideToUp,
-      //borderRadius: 5.0,
-      color: kMainPurple,
-      //textStyleTitle: TextStyle(),
-      //textStyleSubTitle: TextStyle(),
-      //alignment: Alignment.topCenter,
-      //duration: Duration(seconds: 3),
-      //isCircle: false,
-      //     listener: (status) {
-      //   print(status);
-      //   //AchievementState.opening
-      //   //AchievementState.open
-      //   //AchievementState.closing
-      //   //AchievementState.closed
-      // }
-    ).show();
+    // showAchievementView(context, AchivementsModel.list[0]);
+    await firebaseRequest(context);
+    // await timeAchievement(context);
   }
 
   @override

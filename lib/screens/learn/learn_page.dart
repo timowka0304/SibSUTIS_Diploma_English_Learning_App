@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_peasy/components/others/achievements_controll.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
@@ -286,6 +287,7 @@ class _LearnPageState extends State<LearnPage> {
             'numberOfLearnedWords': FieldValue.increment(1),
           },
         );
+        await checkNumOfLearnedWords(context);
       } else {
         FirebaseFirestore.instance
             .collection('users')

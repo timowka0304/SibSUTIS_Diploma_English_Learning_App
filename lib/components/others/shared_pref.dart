@@ -89,3 +89,13 @@ Future getEveningAchievement(String user) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('eveningAchievement ' + user);
 }
+
+Future storeNumWordsAchievement(bool status, String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('learn100WordsAchievement ' + user, status);
+}
+
+Future getNumWordsAchievement(String user) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('learn100WordsAchievement ' + user);
+}

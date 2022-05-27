@@ -8,37 +8,35 @@ class AchivementsModel {
   String title;
   String text;
 
-  AchivementsModel(
-      {required this.num,
-      required this.status,
-      required this.icon,
-      required this.title,
-      required this.text});
+  AchivementsModel({
+    required this.num,
+    required this.status,
+    required this.icon,
+    required this.title,
+    required this.text,
+  });
   static List<AchivementsModel> list = [
     AchivementsModel(
         num: 1,
         status: false,
-        icon: Icon(
+        icon: const Icon(
           Icons.light_mode,
-          color: kMainPurple.withOpacity(0.3),
         ),
         title: "Не рано",
         text: "Воспользуйся приложением в период с 4 до 6 часов утра"),
     AchivementsModel(
         num: 2,
         status: false,
-        icon: Icon(
-          Icons.watch_later,
-          color: kMainPurple.withOpacity(1),
+        icon: const Icon(
+          Icons.school_rounded,
         ),
-        title: "Привычка",
-        text: "Заходи в приложение в течение 21 дня"),
+        title: "Полиглот",
+        text: "Выучи 100 слов"),
     AchivementsModel(
         num: 3,
         status: false,
-        icon: Icon(
+        icon: const Icon(
           Icons.dark_mode,
-          color: kMainPurple.withOpacity(0.3),
         ),
         title: "Не поздно",
         text: "Воспользуйся приложением в период с 0 до 4 часов ночи"),
