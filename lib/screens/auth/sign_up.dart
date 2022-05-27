@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUp extends StatefulWidget {
-  static String routeName = "/signup";
+  // static String routeName = "/signup";
 
   const SignUp({Key? key}) : super(key: key);
 
@@ -43,8 +43,37 @@ class _SignInState extends State<SignUp> {
           if (value != null) {
             // storeProfileUid(value!.uid);
             Navigator.of(context, rootNavigator: true).pop();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const MainScreenCheck()));
+            Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const MainScreenCheck(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const begin = 0.0;
+                  const end = 1.0;
+                  const curve = Curves.ease;
+
+                  var tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(
+                    CurveTween(
+                      curve: curve,
+                    ),
+                  );
+
+                  return FadeTransition(
+                    opacity: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              ),
+            );
+            // Navigator.of(context).pushReplacement(
+            //   MaterialPageRoute(
+            //     builder: (context) => const MainScreenCheck(),
+            //   ),
+            // );
           }
         });
       }
@@ -59,7 +88,7 @@ class _SignInState extends State<SignUp> {
           // theme: ThemeData(
           //   textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
           // ),
-          routes: routes,
+          // routes: routes,
           home: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: kMainPurple,
@@ -144,9 +173,7 @@ class _SignInState extends State<SignUp> {
                                     ),
                                     primary: kWhite,
                                   ),
-                                  onPressed: () =>
-                                      Navigator.pushReplacementNamed(
-                                          context, SignIn.routeName),
+                                  onPressed: () => Navigator.pop(context),
                                   child: Text(
                                     'Назад',
                                     style: TextStyle(

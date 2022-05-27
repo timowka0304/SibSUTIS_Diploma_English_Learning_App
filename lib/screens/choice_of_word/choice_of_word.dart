@@ -199,7 +199,6 @@ class _WordsChoiceState extends State<WordsChoice> {
     direction == 'like' ? await addWordToDic(_user, wordEn.trim()) : null;
 
     if (cardIndex == widget.wordsList.length) {
-      print("Done!");
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => ResultPage(

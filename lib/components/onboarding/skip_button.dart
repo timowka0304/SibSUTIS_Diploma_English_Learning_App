@@ -17,6 +17,8 @@ class SkipButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           InkWell(
+              highlightColor: kMainPurple.withOpacity(0.1),
+              splashColor: kMainPurple.withOpacity(0.1),
               onTap: () {
                 _controller.animateToPage(2,
                     duration: const Duration(milliseconds: 500),

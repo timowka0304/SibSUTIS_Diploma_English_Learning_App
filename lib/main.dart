@@ -61,9 +61,6 @@ class MyApp extends StatelessWidget {
           );
         },
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData(
-        //   textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
-        // ),
         initialRoute: onBoardingScreenIsViewed != null
             ? MainScreenCheck.routeName
             : OnboardingScreen.routeName,

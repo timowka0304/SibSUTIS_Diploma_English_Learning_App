@@ -9,6 +9,7 @@ import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
+import 'package:easy_peasy/screens/help/help_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -258,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          height: ScreenUtil().setHeight(30),
+                          height: ScreenUtil().setHeight(50),
                         ),
                         Text(
                           "Достижения",
@@ -510,82 +511,114 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: ScreenUtil().setHeight(20),
                         ),
-                        Column(
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              child: Text(
-                                "Часто задаваемые вопросы",
-                                style: TextStyle(
-                                  color: kMainTextColor.withOpacity(0.8),
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(10),
-                            ),
-                            InkWell(
-                              onTap: () {},
-                              child: Text(
-                                "Политика конфиденциальности",
-                                style: TextStyle(
-                                  color: kMainTextColor.withOpacity(0.8),
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(30),
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(
-                              ScreenUtil().setWidth(135),
-                              ScreenUtil().setHeight(50),
-                            ),
-                            maximumSize: Size(
-                              ScreenUtil().setWidth(185),
-                              ScreenUtil().setHeight(50),
-                            ),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            primary: kMainPink,
-                          ),
-                          onPressed: () => signOutUser().then(
-                            (value) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => const SignIn()));
-                            },
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: Column(
                             children: [
-                              const Icon(
-                                Icons.exit_to_app,
-                                color: kWhite,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const HelpPage(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = 0.0;
+                                        const end = 1.0;
+                                        const curve = Curves.ease;
+
+                                        var tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(
+                                          CurveTween(
+                                            curve: curve,
+                                          ),
+                                        );
+
+                                        return FadeTransition(
+                                          opacity: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Помощь по приложению",
+                                  style: TextStyle(
+                                    color: kMainTextColor.withOpacity(0.8),
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
                               ),
+                              // SizedBox(
+                              //   height: ScreenUtil().setHeight(10),
+                              // ),
+                              // InkWell(
+                              //   onTap: () {},
+                              //   child: Text(
+                              //     "Политика конфиденциальности",
+                              //     style: TextStyle(
+                              //       color: kMainTextColor.withOpacity(0.8),
+                              //       fontSize: 16.sp,
+                              //       fontWeight: FontWeight.w400,
+                              //     ),
+                              //   ),
+                              // ),
                               SizedBox(
-                                width: ScreenUtil().setWidth(10),
+                                height: ScreenUtil().setHeight(30),
                               ),
-                              Text(
-                                "Выйти",
-                                style: TextStyle(
-                                    color: kWhite,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600),
-                              )
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(
+                                    ScreenUtil().setWidth(135),
+                                    ScreenUtil().setHeight(50),
+                                  ),
+                                  maximumSize: Size(
+                                    ScreenUtil().setWidth(185),
+                                    ScreenUtil().setHeight(50),
+                                  ),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  primary: kMainPink,
+                                ),
+                                onPressed: () => signOutUser().then(
+                                  (value) {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignIn()));
+                                  },
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.exit_to_app,
+                                      color: kWhite,
+                                    ),
+                                    SizedBox(
+                                      width: ScreenUtil().setWidth(10),
+                                    ),
+                                    Text(
+                                      "Выйти",
+                                      style: TextStyle(
+                                          color: kWhite,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        ),
+                        )
                       ],
                     )
                   ],

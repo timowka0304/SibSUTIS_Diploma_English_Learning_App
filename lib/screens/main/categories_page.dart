@@ -125,7 +125,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     height: ScreenUtil().setHeight(20),
                   ),
                   Text(
-                    "Подождите несколько секунд.\nПолучаем карточки с сервера ...",
+                    "Подождите несколько секунд.\nПервый раз получаем карточки с сервера ...",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: kMainTextColor,
@@ -322,12 +322,33 @@ class _CategoriesPageState extends State<CategoriesPage> {
         width: ScreenUtil().setWidth(180),
         child: GestureDetector(
           onTap: () async {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => WordsChoice(
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    WordsChoice(
                   wordsList: List<String>.from(words),
                   cardName: name,
                 ),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const begin = 0.0;
+                  const end = 1.0;
+                  const curve = Curves.ease;
+
+                  var tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(
+                    CurveTween(
+                      curve: curve,
+                    ),
+                  );
+
+                  return FadeTransition(
+                    opacity: animation.drive(tween),
+                    child: child,
+                  );
+                },
               ),
             );
           },

@@ -55,13 +55,33 @@ class _GetWordsPageState extends State<GetWordsPage> {
   Future<void> goToNewPage(
       Map<String, dynamic> snapshot, BuildContext context) async {
     await setWordsInList(snapshot);
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => LearnPage(
+    Navigator.pop(context);
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => LearnPage(
           wordsList: List<String>.from(wordsList),
           fullDataWords: fullDataWords,
           user: _user,
         ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.ease;
+
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(
+            CurveTween(
+              curve: curve,
+            ),
+          );
+
+          return FadeTransition(
+            opacity: animation.drive(tween),
+            child: child,
+          );
+        },
       ),
     );
   }

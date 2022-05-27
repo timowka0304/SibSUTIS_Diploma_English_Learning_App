@@ -164,7 +164,33 @@ class _SignInState extends State<SignIn> {
             .then((value) async {
           if (value != null) {
             // await storeProfileUid(value!.uid);
-            Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
+            Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const MainScreenCheck(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const begin = 0.0;
+                  const end = 1.0;
+                  const curve = Curves.ease;
+
+                  var tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(
+                    CurveTween(
+                      curve: curve,
+                    ),
+                  );
+
+                  return FadeTransition(
+                    opacity: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              ),
+            );
+            // Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
             Navigator.of(context, rootNavigator: true).pop();
           }
         });
@@ -199,7 +225,11 @@ class _SignInState extends State<SignIn> {
                         height: ScreenUtil().setHeight(100),
                       ),
                       Column(
-                        children: [Center(child: GoogleButton())],
+                        children: [
+                          Center(
+                            child: GoogleButton(),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: ScreenUtil().setHeight(30),
@@ -290,8 +320,38 @@ class _SignInState extends State<SignIn> {
                                     fontSize: 16.sp,
                                   ),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () => Navigator.pushNamed(
-                                        context, SignUp.routeName),
+                                    ..onTap = () =>
+                                        // Navigator.pushNamed(
+                                        //     context, SignUp.routeName),
+                                        Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                const SignUp(),
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              const begin = 0.0;
+                                              const end = 1.0;
+                                              const curve = Curves.ease;
+
+                                              var tween = Tween(
+                                                begin: begin,
+                                                end: end,
+                                              ).chain(
+                                                CurveTween(
+                                                  curve: curve,
+                                                ),
+                                              );
+
+                                              return FadeTransition(
+                                                opacity: animation.drive(tween),
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        ),
                                 )
                               ])),
                           SizedBox(

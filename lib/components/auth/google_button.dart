@@ -1,5 +1,4 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
-import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,23 +15,27 @@ class _GoogleButtonState extends State<GoogleButton> {
   @override
   Widget build(BuildContext context) {
     void _trySignIn() async {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          });
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return const Center(
+      //         child: CircularProgressIndicator(),
+      //       );
+      //     });
       googleSignIn().then((value) async {
-        if (value != false) {
-          User? user = FirebaseAuth.instance.currentUser;
+        if (value) {
+          try {
+            FirebaseAuth.instance.currentUser;
+          } catch (e) {
+            print(e);
+          }
           // await storeProfileUid(user!.uid);
           Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
-          Navigator.of(context, rootNavigator: true).pop();
+          // Navigator.of(context, rootNavigator: true).pop();
         }
-        if (value == false) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
+        // if (value == false) {
+        //   Navigator.of(context, rootNavigator: true).pop();
+        // }
       });
     }
 

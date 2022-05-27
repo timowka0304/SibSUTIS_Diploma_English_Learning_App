@@ -41,6 +41,9 @@ class _StepsContainerState extends State<StepsContainer> {
           ),
           Center(
             child: InkWell(
+              borderRadius: BorderRadius.circular(50),
+              highlightColor: kMainPurple.withOpacity(0.4),
+              splashColor: kMainPurple.withOpacity(0.5),
               onTap: () async {
                 if (widget.page < widget._list.length &&
                     widget.page != widget._list.length - 1) {
@@ -49,8 +52,34 @@ class _StepsContainerState extends State<StepsContainer> {
                       curve: Curves.easeInOutCirc);
                 } else {
                   await storeOnboardInfo();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      SignIn.routeName, (route) => false);
+                  Navigator.of(context).pushReplacement(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const SignIn(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = 0.0;
+                        const end = 1.0;
+                        const curve = Curves.ease;
+
+                        var tween = Tween(
+                          begin: begin,
+                          end: end,
+                        ).chain(
+                          CurveTween(
+                            curve: curve,
+                          ),
+                        );
+
+                        return FadeTransition(
+                          opacity: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                  // Navigator.of(context).pushNamedAndRemoveUntil(
+                  //     SignIn.routeName, (route) => false);
                 }
               },
               child: Container(

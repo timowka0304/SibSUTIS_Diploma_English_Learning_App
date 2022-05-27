@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               primary: kMainPink,
             ),
             onPressed: () {
-              Navigator.of(context).pushReplacement(
+              Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       const GetWordsPage(),
