@@ -26,7 +26,7 @@ Future googleSignIn() async {
     try {
       await auth.signInWithCredential(credential);
     } catch (e) {
-      print(e.hashCode);
+      // print(e.hashCode);
     }
 
     // print('3');
@@ -93,4 +93,14 @@ Future<void> uploadingData(User user) async {
       merge: true,
     ),
   );
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .collection('dictionary')
+      .doc('dictionary')
+      .set(
+          {},
+          SetOptions(
+            merge: true,
+          ));
 }

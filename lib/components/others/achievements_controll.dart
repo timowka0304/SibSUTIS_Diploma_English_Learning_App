@@ -14,7 +14,7 @@ Future<void> checkNumOfLearnedWords(BuildContext context) async {
       .get()
       .then(
     (value) async {
-      if (value.get('numberOfLearnedWords') == 1) {
+      if (value.get('numberOfLearnedWords') == 100) {
         await getNumWordsAchievement(FirebaseAuth.instance.currentUser!.uid)
             .then(
           (value) async {
@@ -29,7 +29,9 @@ Future<void> checkNumOfLearnedWords(BuildContext context) async {
                 },
               );
               await storeNumWordsAchievement(
-                  true, FirebaseAuth.instance.currentUser!.uid);
+                true,
+                FirebaseAuth.instance.currentUser!.uid,
+              );
             }
           },
         );
@@ -39,7 +41,7 @@ Future<void> checkNumOfLearnedWords(BuildContext context) async {
 }
 
 Future<bool> checkMorningTime() async {
-  if (DateTime.now().hour >= 4 && DateTime.now().hour <= 6) {
+  if (DateTime.now().hour >= 4 && DateTime.now().hour < 6) {
     return true;
   } else {
     return false;

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_peasy/components/others/firebase_storage.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/learn_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
@@ -29,12 +30,14 @@ class _GetWordsPageState extends State<GetWordsPage> {
 
   Future<void> firebaseRequest() async {
     _user = FirebaseAuth.instance.currentUser!;
+
     _dataStream = FirebaseFirestore.instance
         .collection('users')
         .doc(_user.uid)
         .collection('dictionary')
         .doc('dictionary')
         .get();
+    // _dataStream.then((value) => print(value.data()));
   }
 
   Future<void> setWordsInList(Map<String, dynamic> snapshot) async {
@@ -53,7 +56,9 @@ class _GetWordsPageState extends State<GetWordsPage> {
   }
 
   Future<void> goToNewPage(
-      Map<String, dynamic> snapshot, BuildContext context) async {
+    Map<String, dynamic> snapshot,
+    BuildContext context,
+  ) async {
     await setWordsInList(snapshot);
     Navigator.pop(context);
     Navigator.of(context).push(
@@ -112,6 +117,11 @@ class _GetWordsPageState extends State<GetWordsPage> {
         }
 
         try {
+          // if (snapshot.data!.data() == null) {
+          //   print('go');
+          //   setState(() {
+          //   });
+          // }
           if ((snapshot.data!.data() as Map<String, dynamic>).isEmpty) {
             return Scaffold(
               backgroundColor: kSecondBlue,
