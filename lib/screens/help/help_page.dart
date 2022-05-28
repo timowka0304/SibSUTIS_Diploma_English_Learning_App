@@ -1,4 +1,5 @@
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/models/help_model.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,7 @@ class HelpPage extends StatelessWidget {
       backgroundColor: kSecondBlue,
       body: SafeArea(
         child: Center(
-          child: Stack(
+          child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -74,6 +75,32 @@ class HelpPage extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+              Expanded(
+                child: ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: HelpModel.list.length,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: ScreenUtil().setHeight(20),
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return ExpansionTile(
+                      textColor: kMainPurple,
+                      iconColor: kMainPurple,
+                      title: Text(HelpModel.list[index].title),
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            HelpModel.list[index].text,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ],
           ),
