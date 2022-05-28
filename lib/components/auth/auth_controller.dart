@@ -23,7 +23,7 @@ Future googleSignIn() async {
     try {
       await auth.signInWithCredential(credential);
     } catch (e) {
-      showToastMsg('Ошибка: ' + e.hashCode.toString());
+      showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
     }
 
     return Future.value(true);
@@ -103,6 +103,6 @@ Future<void> uploadingData(User user) async {
       ),
     );
   } catch (e) {
-    showToastMsg('Ошибка: ' + e.hashCode.toString());
+    showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
   }
 }

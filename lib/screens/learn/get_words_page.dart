@@ -97,7 +97,10 @@ class _GetWordsPageState extends State<GetWordsPage> {
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          showToastMsg('Ошибка: ' + snapshot.hasError.hashCode.toString());
+          showToastMsg('Ошибка: ' +
+              snapshot.hasError.hashCode.toString() +
+              '\n' +
+              snapshot.error.toString());
         }
 
         if ((snapshot.data!.data() as Map<String, dynamic>).isEmpty) {

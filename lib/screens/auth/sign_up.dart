@@ -72,7 +72,7 @@ class _SignInState extends State<SignUp> {
             },
           );
         } catch (e) {
-          showToastMsg('Ошибка: ' + e.hashCode.toString());
+          showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
         }
       }
     }

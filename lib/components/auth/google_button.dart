@@ -22,7 +22,7 @@ class _GoogleButtonState extends State<GoogleButton> {
           try {
             FirebaseAuth.instance.currentUser;
           } catch (e) {
-            showToastMsg('Ошибка: ' + e.hashCode.toString());
+            showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
           }
           Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
         }
