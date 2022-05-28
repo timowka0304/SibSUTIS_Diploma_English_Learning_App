@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
+import 'package:easy_peasy/components/others/loading_indicator.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:easy_peasy/components/others/tag_widget.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/choice_of_word/result_page.dart';
@@ -29,118 +30,6 @@ class WordsChoice extends StatefulWidget {
 
   @override
   State<WordsChoice> createState() => _WordsChoiceState();
-}
-
-class TagWidget extends StatelessWidget {
-  const TagWidget({
-    Key? key,
-    required this.text,
-    required this.side,
-  }) : super(key: key);
-
-  final String text;
-  final String side;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: ShapeDecoration(
-        color: kWhite,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          // side: const BorderSide(
-          //   color: kMainPink,
-          //   width: 1,
-          // ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 5,
-        ),
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: kMainTextColor,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-          ),
-          child: Row(
-            children: [
-              side == 'left'
-                  ? const Icon(
-                      Icons.arrow_back_rounded,
-                      color: kMainTextColor,
-                      size: 12,
-                    )
-                  : Text(text),
-              const SizedBox(
-                width: 5,
-              ),
-              side == 'left'
-                  ? Text(text)
-                  : const Icon(
-                      Icons.arrow_forward_rounded,
-                      color: kMainTextColor,
-                      size: 12,
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoadingIndicatorDialog {
-  static final LoadingIndicatorDialog _singleton =
-      LoadingIndicatorDialog._internal();
-  late BuildContext _context;
-  bool isDisplayed = false;
-
-  factory LoadingIndicatorDialog() {
-    return _singleton;
-  }
-
-  LoadingIndicatorDialog._internal();
-
-  show(BuildContext context) {
-    if (isDisplayed) {
-      return;
-    }
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: kSecondBlue.withOpacity(0.2),
-      builder: (BuildContext context) {
-        _context = context;
-        isDisplayed = true;
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(left: 16, top: 16, right: 16),
-                  child: CircularProgressIndicator(
-                    color: kMainPink,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  dismiss() {
-    if (isDisplayed) {
-      Navigator.of(_context).pop();
-      isDisplayed = false;
-    }
-  }
 }
 
 class _WordsChoiceState extends State<WordsChoice> {
@@ -505,7 +394,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                     setState(() {
                       _flipped = !_flipped;
                     });
-                    print('onFlipDone: $_flipped');
                   },
                   direction: FlipDirection.HORIZONTAL,
                   front: !_returnFlipped
@@ -711,6 +599,7 @@ class _WordsChoiceState extends State<WordsChoice> {
             ),
             Positioned(
               top: 120,
+              // ignore: sized_box_for_whitespace
               child: Container(
                 width: 320,
                 child: AnimatedOpacity(

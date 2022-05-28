@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -17,6 +16,8 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:easy_peasy/components/others/tag_widget.dart';
+import 'package:easy_peasy/components/others/loading_indicator.dart';
 
 class LearnPage extends StatefulWidget {
   const LearnPage({
@@ -31,120 +32,6 @@ class LearnPage extends StatefulWidget {
 
   @override
   State<LearnPage> createState() => _LearnPageState();
-}
-
-class TagWidget extends StatelessWidget {
-  const TagWidget({
-    Key? key,
-    required this.text,
-    required this.side,
-  }) : super(key: key);
-
-  final String text;
-  final String side;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: ShapeDecoration(
-        color: kWhite,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 5,
-        ),
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: kMainTextColor,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-          ),
-          child: Row(
-            children: [
-              side == 'left'
-                  ? const Icon(
-                      Icons.arrow_back_rounded,
-                      color: kMainTextColor,
-                      size: 12,
-                    )
-                  : Text(text),
-              const SizedBox(
-                width: 5,
-              ),
-              side == 'left'
-                  ? Text(text)
-                  : side == 'delete'
-                      ? const Icon(
-                          Icons.cancel_outlined,
-                          color: kMainTextColor,
-                          size: 12,
-                        )
-                      : const Icon(
-                          Icons.arrow_forward_rounded,
-                          color: kMainTextColor,
-                          size: 12,
-                        ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoadingIndicatorDialog {
-  static final LoadingIndicatorDialog _singleton =
-      LoadingIndicatorDialog._internal();
-  late BuildContext _context;
-  bool isDisplayed = false;
-
-  factory LoadingIndicatorDialog() {
-    return _singleton;
-  }
-
-  LoadingIndicatorDialog._internal();
-
-  show(BuildContext context) {
-    if (isDisplayed) {
-      return;
-    }
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: kSecondBlue.withOpacity(0.2),
-      builder: (BuildContext context) {
-        _context = context;
-        isDisplayed = true;
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(left: 16, top: 16, right: 16),
-                  child: CircularProgressIndicator(
-                    color: kMainPink,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  dismiss() {
-    if (isDisplayed) {
-      Navigator.of(_context).pop();
-      isDisplayed = false;
-    }
-  }
 }
 
 class _LearnPageState extends State<LearnPage> {
@@ -162,7 +49,6 @@ class _LearnPageState extends State<LearnPage> {
   late bool _returnFlipped = false;
   late bool _visible = false;
   late bool _hintVisible;
-  late bool _finalVisible = false;
   late int cardIndex;
 
   @override
@@ -253,7 +139,6 @@ class _LearnPageState extends State<LearnPage> {
     String wordEn = datas[0].wordEn;
     datas.removeAt(0);
 
-    print(direction);
     if (direction == 'delete') {
       FirebaseFirestore.instance
           .collection('users')
@@ -275,7 +160,7 @@ class _LearnPageState extends State<LearnPage> {
             .doc('dictionary')
             .update(
           {
-            wordEn: FieldValue.delete(), //+1к изученному
+            wordEn: FieldValue.delete(),
           },
         );
 
@@ -287,7 +172,9 @@ class _LearnPageState extends State<LearnPage> {
             'numberOfLearnedWords': FieldValue.increment(1),
           },
         );
+
         await checkNumOfLearnedWords(context);
+
       } else {
         FirebaseFirestore.instance
             .collection('users')

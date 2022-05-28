@@ -16,20 +16,16 @@ Future googleSignIn() async {
     GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
-    // print('1');
-
     AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
-    // print('2');
 
     try {
       await auth.signInWithCredential(credential);
     } catch (e) {
-      // print(e.hashCode);
+      showToastMsg('Ошибка: ' + e.hashCode.toString());
     }
 
-    // print('3');
     return Future.value(true);
   }
   return Future.value(false);
@@ -82,25 +78,31 @@ Future signOutUser() async {
 }
 
 Future<void> uploadingData(User user) async {
-  await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
-    {
-      'email': user.email,
-      'username': user.displayName,
-      'uid': user.uid,
-      'profileImg': user.photoURL,
-    },
-    SetOptions(
-      merge: true,
-    ),
-  );
-  await FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .collection('dictionary')
-      .doc('dictionary')
-      .set(
-          {},
-          SetOptions(
-            merge: true,
-          ));
+  try {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+      {
+        'email': user.email,
+        'username': user.displayName,
+        'uid': user.uid,
+        'profileImg': user.photoURL,
+      },
+      SetOptions(
+        merge: true,
+      ),
+    );
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('dictionary')
+        .doc('dictionary')
+        .set(
+      {},
+      SetOptions(
+        merge: true,
+      ),
+    );
+  } catch (e) {
+    showToastMsg('Ошибка: ' + e.hashCode.toString());
+  }
 }

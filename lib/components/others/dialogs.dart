@@ -1,6 +1,7 @@
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 showErrDialog(BuildContext context, String err, int flag) {
   return showDialog(
@@ -93,5 +94,16 @@ showInfoDialog(BuildContext context) {
         ),
       ],
     ),
+  );
+}
+
+showToastMsg(String text) {
+  Fluttertoast.showToast(
+    msg: text,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: kMainPink,
+    textColor: kWhite,
+    fontSize: 16.0,
   );
 }

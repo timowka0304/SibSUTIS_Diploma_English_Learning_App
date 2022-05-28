@@ -61,25 +61,38 @@ Future<void> firebaseRequest(BuildContext context) async {
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .get()
-      .then((value) async {
-    try {
-      bool _morningTimeAchievement = value.get('morningTimeAchievement');
-      bool _eveningTimeAchievement = value.get('eveningTimeAchievement');
-      await storeMorningAchievement(
-          _morningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
-      await storeEveningAchievement(
-          _eveningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
-    } catch (e) {
-      // print(e);
-      await timeAchievement(context);
-    }
-  });
+      .then(
+    (value) async {
+      try {
+        bool _morningTimeAchievement = value.get('morningTimeAchievement');
+        await storeMorningAchievement(
+            _morningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
+      } catch (_) {
+        await timeAchievement(context);
+      }
+
+      try {
+        bool _eveningTimeAchievement = value.get('eveningTimeAchievement');
+        await storeEveningAchievement(
+            _eveningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
+      } catch (_) {
+        await timeAchievement(context);
+      }
+
+      try {
+        bool _learn100WordsAchievement = value.get('learn100WordsAchievement');
+        await storeNumWordsAchievement(
+          _learn100WordsAchievement,
+          FirebaseAuth.instance.currentUser!.uid,
+        );
+      } catch (_) {
+        await checkNumOfLearnedWords(context);
+      }
+    },
+  );
 }
 
 Future<void> timeAchievement(BuildContext context) async {
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // await prefs.clear();
-
   String user = FirebaseAuth.instance.currentUser!.uid.toString();
 
   late bool _morningTime;

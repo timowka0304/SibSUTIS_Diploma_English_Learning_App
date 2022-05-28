@@ -1,4 +1,5 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GoogleButton extends StatefulWidget {
-  GoogleButton({Key? key}) : super(key: key);
+  const GoogleButton({Key? key}) : super(key: key);
 
+  @override
   State<GoogleButton> createState() => _GoogleButtonState();
 }
 
@@ -15,27 +17,15 @@ class _GoogleButtonState extends State<GoogleButton> {
   @override
   Widget build(BuildContext context) {
     void _trySignIn() async {
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return const Center(
-      //         child: CircularProgressIndicator(),
-      //       );
-      //     });
       googleSignIn().then((value) async {
         if (value) {
           try {
             FirebaseAuth.instance.currentUser;
           } catch (e) {
-            print(e);
+            showToastMsg('Ошибка: ' + e.hashCode.toString());
           }
-          // await storeProfileUid(user!.uid);
           Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
-          // Navigator.of(context, rootNavigator: true).pop();
         }
-        // if (value == false) {
-        //   Navigator.of(context, rootNavigator: true).pop();
-        // }
       });
     }
 

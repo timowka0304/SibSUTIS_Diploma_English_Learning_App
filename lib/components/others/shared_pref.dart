@@ -2,24 +2,14 @@ import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-// storeProfileUid(String uid) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   await prefs.setString('uid', uid);
-// }
-
-// Future<String> getProfileUid() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString('uid')!;
-// }
-
 storeOnboardInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setInt('onBoardingScreen', 1);
+  await prefs.setBool('onBoardingScreen', true);
 }
 
 Future getOnboardInfo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('onBoardingScreen');
+  return prefs.getBool('onBoardingScreen');
 }
 
 storeCategoriesInfo(String wordsImage, String beginers, String intermediate,

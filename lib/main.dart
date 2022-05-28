@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
@@ -9,25 +7,27 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
-int? onBoardingScreenIsViewed;
+late bool onBoardingScreenIsViewed;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await getOnboardInfo().then((gettedInfo) {
-    onBoardingScreenIsViewed = gettedInfo;
-  });
+  try {
+    await getOnboardInfo().then(
+      (value) {
+        onBoardingScreenIsViewed = value;
+      },
+    );
+  } catch (_) {
+    onBoardingScreenIsViewed = false;
+  }
 
   await Firebase.initializeApp();
   try {
     await getDragHint().then((value) async {
-      if (value) {
-        await storeDragHint(true);
-      } else {
-        await storeDragHint(false);
-      }
+      value ? await storeDragHint(true) : await storeDragHint(false);
     });
-  } catch (e) {
+  } catch (_) {
     await storeDragHint(true);
   }
 
@@ -46,8 +46,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // inspect(onBoardingScreenIsViewed);
-
     return ScreenUtilInit(
       designSize: const Size(414, 896),
       minTextAdapt: true,
@@ -61,7 +59,7 @@ class MyApp extends StatelessWidget {
           );
         },
         debugShowCheckedModeBanner: false,
-        initialRoute: onBoardingScreenIsViewed != null
+        initialRoute: onBoardingScreenIsViewed
             ? MainScreenCheck.routeName
             : OnboardingScreen.routeName,
         routes: routes,

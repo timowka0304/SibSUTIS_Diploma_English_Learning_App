@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/components/others/firebase_storage.dart';
-import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
@@ -50,19 +47,19 @@ class _ProfilePageState extends State<ProfilePage> {
         try {
           AchivementsModel.list[0].status =
               await value.get('morningTimeAchievement');
-        } catch (e) {
+        } catch (_) {
           AchivementsModel.list[0].status = false;
         }
         try {
           AchivementsModel.list[1].status =
               await value.get('learn100WordsAchievement');
-        } catch (e) {
+        } catch (_) {
           AchivementsModel.list[1].status = false;
         }
         try {
           AchivementsModel.list[2].status =
               await value.get('eveningTimeAchievement');
-        } catch (e) {
+        } catch (_) {
           AchivementsModel.list[2].status = false;
         }
       },
@@ -94,8 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          // inspect(snapshot.data!.data() as Map<String, dynamic>);
-
           return Scaffold(
             backgroundColor: kSecondBlue,
             resizeToAvoidBottomInset: false,
@@ -221,34 +216,38 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ),
                                     child: Center(
-                                        child: RichText(
-                                            text: TextSpan(
-                                                text: "Слов выучено: ",
-                                                style: TextStyle(
-                                                  color: kWhite,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 16.sp,
-                                                ),
-                                                children: [
-                                          TextSpan(
-                                            text: (snapshot.data!.data() as Map<
-                                                                String,
-                                                                dynamic>)[
-                                                            'numberOfLearnedWords']
-                                                        .toString() ==
-                                                    'null'
-                                                ? '0'
-                                                : (snapshot.data!.data() as Map<
-                                                            String, dynamic>)[
-                                                        'numberOfLearnedWords']
-                                                    .toString(),
-                                            style: TextStyle(
-                                              color: kWhite,
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 16.sp,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: "Слов выучено: ",
+                                          style: TextStyle(
+                                            color: kWhite,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16.sp,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: (snapshot.data!.data()
+                                                                  as Map<String,
+                                                                      dynamic>)[
+                                                              'numberOfLearnedWords']
+                                                          .toString() ==
+                                                      'null'
+                                                  ? '0'
+                                                  : (snapshot.data!.data()
+                                                              as Map<String,
+                                                                  dynamic>)[
+                                                          'numberOfLearnedWords']
+                                                      .toString(),
+                                              style: TextStyle(
+                                                color: kWhite,
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 16.sp,
+                                              ),
                                             ),
-                                          )
-                                        ]))),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               )
@@ -264,9 +263,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         Text(
                           "Достижения",
                           style: TextStyle(
-                              color: kMainTextColor,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600),
+                            color: kMainTextColor,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         SizedBox(
                           height: ScreenUtil().setHeight(20),
@@ -284,7 +284,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(
-                                      ScreenUtil().setWidth(15)),
+                                    ScreenUtil().setWidth(15),
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.05),
@@ -554,20 +555,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                               ),
-                              // SizedBox(
-                              //   height: ScreenUtil().setHeight(10),
-                              // ),
-                              // InkWell(
-                              //   onTap: () {},
-                              //   child: Text(
-                              //     "Политика конфиденциальности",
-                              //     style: TextStyle(
-                              //       color: kMainTextColor.withOpacity(0.8),
-                              //       fontSize: 16.sp,
-                              //       fontWeight: FontWeight.w400,
-                              //     ),
-                              //   ),
-                              // ),
                               SizedBox(
                                 height: ScreenUtil().setHeight(30),
                               ),
@@ -618,9 +605,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

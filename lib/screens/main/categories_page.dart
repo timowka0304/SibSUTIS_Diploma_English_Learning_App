@@ -154,9 +154,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         child: Text(
                           "Начальный уровень:",
                           style: TextStyle(
-                              color: kMainTextColor,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w600),
+                            color: kMainTextColor,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -183,7 +184,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   );
                                 },
                                 itemBuilder: (context, index) {
-                                  return categoryCard("Beginer", index);
+                                  return categoryCard(
+                                    "Beginer",
+                                    index,
+                                  );
                                 },
                               ),
                             ),
@@ -200,9 +204,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         child: Text(
                           "Средний уровень:",
                           style: TextStyle(
-                              color: kMainTextColor,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w600),
+                            color: kMainTextColor,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -229,7 +234,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   );
                                 },
                                 itemBuilder: (context, index) {
-                                  return categoryCard("Intermediate", index);
+                                  return categoryCard(
+                                    "Intermediate",
+                                    index,
+                                  );
                                 },
                               ),
                             ),
@@ -246,9 +254,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         child: Text(
                           "По сериалам и фильмам:",
                           style: TextStyle(
-                              color: kMainTextColor,
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w600),
+                            color: kMainTextColor,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -275,7 +284,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   );
                                 },
                                 itemBuilder: (context, index) {
-                                  return categoryCard("Films", index);
+                                  return categoryCard(
+                                    "Films",
+                                    index,
+                                  );
                                 },
                               ),
                             ),
@@ -324,13 +336,21 @@ class _CategoriesPageState extends State<CategoriesPage> {
           onTap: () async {
             Navigator.of(context).push(
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
+                pageBuilder: (
+                  context,
+                  animation,
+                  secondaryAnimation,
+                ) =>
                     WordsChoice(
                   wordsList: List<String>.from(words),
                   cardName: name,
                 ),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (
+                  context,
+                  animation,
+                  secondaryAnimation,
+                  child,
+                ) {
                   const begin = 0.0;
                   const end = 1.0;
                   const curve = Curves.ease;
@@ -373,14 +393,22 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         width: ScreenUtil().setWidth(180),
                         fit: BoxFit.cover,
                         imageUrl: img,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                LinearProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        kMainPink.withOpacity(0.3)),
-                                    backgroundColor: kWhite,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
+                        progressIndicatorBuilder: (
+                          context,
+                          url,
+                          downloadProgress,
+                        ) =>
+                            LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  kMainPink.withOpacity(0.3),
+                                ),
+                                backgroundColor: kWhite,
+                                value: downloadProgress.progress),
+                        errorWidget: (
+                          context,
+                          url,
+                          error,
+                        ) =>
                             const Icon(Icons.error),
                       ),
                     ),

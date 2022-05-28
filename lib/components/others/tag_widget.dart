@@ -1,0 +1,64 @@
+import 'package:easy_peasy/constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class TagWidget extends StatelessWidget {
+  const TagWidget({
+    Key? key,
+    required this.text,
+    required this.side,
+  }) : super(key: key);
+
+  final String text;
+  final String side;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: ShapeDecoration(
+        color: kWhite,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          // side: const BorderSide(
+          //   color: kMainPink,
+          //   width: 1,
+          // ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: kMainTextColor,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400,
+          ),
+          child: Row(
+            children: [
+              side == 'left'
+                  ? const Icon(
+                      Icons.arrow_back_rounded,
+                      color: kMainTextColor,
+                      size: 12,
+                    )
+                  : Text(text),
+              const SizedBox(
+                width: 5,
+              ),
+              side == 'left'
+                  ? Text(text)
+                  : const Icon(
+                      Icons.arrow_forward_rounded,
+                      color: kMainTextColor,
+                      size: 12,
+                    ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

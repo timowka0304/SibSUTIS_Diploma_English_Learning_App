@@ -1,7 +1,6 @@
 import 'package:easy_peasy/components/auth/google_button.dart';
 import 'package:easy_peasy/components/auth/auth_controller.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
-import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/auth/sign_up.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
@@ -225,7 +224,7 @@ class _SignInState extends State<SignIn> {
                         height: ScreenUtil().setHeight(100),
                       ),
                       Column(
-                        children: [
+                        children: const [
                           Center(
                             child: GoogleButton(),
                           ),

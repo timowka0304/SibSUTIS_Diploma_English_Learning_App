@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BottomTabBar extends StatefulWidget {
-  BottomTabBar({Key? key, required this.index, required this.onChangedTab})
+  const BottomTabBar({Key? key, required this.index, required this.onChangedTab})
       : super(key: key);
   final int index;
   final ValueChanged<int> onChangedTab;

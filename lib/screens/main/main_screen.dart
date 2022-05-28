@@ -17,23 +17,24 @@ class MainScreenCheck extends StatelessWidget {
     Firebase.initializeApp();
 
     return StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          if (snapshot.hasData) {
+            final user = FirebaseAuth.instance.currentUser!;
+            uploadingData(user);
+            return const MainScreen(
+              pageIndex: 0,
+              isStart: true,
+            );
           } else {
-            if (snapshot.hasData) {
-              final user = FirebaseAuth.instance.currentUser!;
-              uploadingData(user);
-              return const MainScreen(
-                pageIndex: 0,
-                isStart: true,
-              );
-            } else {
-              return const SignIn();
-            }
+            return const SignIn();
           }
-        });
+        }
+      },
+    );
   }
 }
 
@@ -80,9 +81,11 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void onChangeTab(int index) {
-    setState(() {
-      page = index;
-      _done = true;
-    });
+    setState(
+      () {
+        page = index;
+        _done = true;
+      },
+    );
   }
 }

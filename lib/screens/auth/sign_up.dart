@@ -1,7 +1,6 @@
 import 'package:easy_peasy/components/auth/auth_controller.dart';
-import 'package:easy_peasy/components/others/shared_pref.dart';
+import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
-import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
@@ -9,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUp extends StatefulWidget {
-  // static String routeName = "/signup";
-
   const SignUp({Key? key}) : super(key: key);
 
   @override
@@ -32,50 +29,51 @@ class _SignInState extends State<SignUp> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
-        await signUp(_userEmail.trim(), _password.trim(), _userName, context)
-            .then((value) {
-          if (value != null) {
-            // storeProfileUid(value!.uid);
-            Navigator.of(context, rootNavigator: true).pop();
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const MainScreenCheck(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = 0.0;
-                  const end = 1.0;
-                  const curve = Curves.ease;
-
-                  var tween = Tween(
-                    begin: begin,
-                    end: end,
-                  ).chain(
-                    CurveTween(
-                      curve: curve,
-                    ),
-                  );
-
-                  return FadeTransition(
-                    opacity: animation.drive(tween),
-                    child: child,
-                  );
-                },
-              ),
+          context: context,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-            // Navigator.of(context).pushReplacement(
-            //   MaterialPageRoute(
-            //     builder: (context) => const MainScreenCheck(),
-            //   ),
-            // );
-          }
-        });
+          },
+        );
+        try {
+          await signUp(_userEmail.trim(), _password.trim(), _userName, context)
+              .then(
+            (value) {
+              if (value != null) {
+                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.of(context).pushReplacement(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const MainScreenCheck(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      const begin = 0.0;
+                      const end = 1.0;
+                      const curve = Curves.ease;
+
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(
+                        CurveTween(
+                          curve: curve,
+                        ),
+                      );
+
+                      return FadeTransition(
+                        opacity: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          );
+        } catch (e) {
+          showToastMsg('Ошибка: ' + e.hashCode.toString());
+        }
       }
     }
 
@@ -83,117 +81,140 @@ class _SignInState extends State<SignUp> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          // theme: ThemeData(
-          //   textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme),
-          // ),
-          // routes: routes,
-          home: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: kMainPurple,
-              body: SafeArea(
-                child: Center(
-                  child: Form(
-                    key: _formKey,
-                    child: SingleChildScrollView(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: kMainPurple,
+        body: SafeArea(
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: ScreenUtil().setHeight(90),
+                    ),
+                    Image.asset(
+                      kLogoWhitePath,
+                      height: ScreenUtil().setHeight(135),
+                      width: ScreenUtil().setWidth(180),
+                    ),
+                    SizedBox(
+                      height: ScreenUtil().setHeight(60),
+                    ),
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
                         children: [
+                          emeilFiled(),
                           SizedBox(
-                            height: ScreenUtil().setHeight(90),
+                            height: ScreenUtil().setHeight(20),
                           ),
-                          Image.asset(
-                            kLogoWhitePath,
-                            height: ScreenUtil().setHeight(135),
-                            width: ScreenUtil().setWidth(180),
+                          passwordField(),
+                          SizedBox(
+                            height: ScreenUtil().setHeight(20),
                           ),
+                          nameFiled(),
                           SizedBox(
                             height: ScreenUtil().setHeight(60),
                           ),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Column(
-                              children: [
-                                emeilFiled(),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(20),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(
+                                ScreenUtil().setWidth(180),
+                                ScreenUtil().setHeight(50),
+                              ),
+                              maximumSize: Size(
+                                ScreenUtil().setWidth(230),
+                                ScreenUtil().setHeight(50),
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
                                 ),
-                                passwordField(),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(20),
-                                ),
-                                nameFiled(),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(60),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(
-                                      ScreenUtil().setWidth(180),
-                                      ScreenUtil().setHeight(50),
-                                    ),
-                                    maximumSize: Size(
-                                      ScreenUtil().setWidth(230),
-                                      ScreenUtil().setHeight(50),
-                                    ),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    primary: kWhite,
-                                  ),
-                                  onPressed: _trySubmitForm,
-                                  child: Text(
-                                    'Зарегистрироваться',
-                                    style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(50),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(
-                                      ScreenUtil().setWidth(80),
-                                      ScreenUtil().setHeight(40),
-                                    ),
-                                    maximumSize: Size(
-                                      ScreenUtil().setWidth(100),
-                                      ScreenUtil().setHeight(40),
-                                    ),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                    ),
-                                    primary: kWhite,
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text(
-                                    'Назад',
-                                    style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setHeight(50),
-                                ),
-                              ],
+                              ),
+                              primary: kWhite,
                             ),
+                            onPressed: _trySubmitForm,
+                            child: Text(
+                              'Зарегистрироваться',
+                              style: TextStyle(
+                                color: kMainTextColor,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil().setHeight(50),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(
+                                ScreenUtil().setWidth(80),
+                                ScreenUtil().setHeight(40),
+                              ),
+                              maximumSize: Size(
+                                ScreenUtil().setWidth(100),
+                                ScreenUtil().setHeight(40),
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              primary: kWhite,
+                            ),
+                            onPressed: () => {
+                              Navigator.of(context).pushReplacement(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const SignIn(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = 0.0;
+                                    const end = 1.0;
+                                    const curve = Curves.ease;
+
+                                    var tween = Tween(
+                                      begin: begin,
+                                      end: end,
+                                    ).chain(
+                                      CurveTween(
+                                        curve: curve,
+                                      ),
+                                    );
+
+                                    return FadeTransition(
+                                      opacity: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              ),
+                            },
+                            child: Text(
+                              'Назад',
+                              style: TextStyle(
+                                color: kMainTextColor,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil().setHeight(50),
                           ),
                         ],
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ))),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -206,7 +227,10 @@ class _SignInState extends State<SignUp> {
       child: TextFormField(
         obscureText: _isObscure,
         style: TextStyle(
-            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+          color: kWhite,
+          fontWeight: FontWeight.w200,
+          fontSize: 16.sp,
+        ),
         onChanged: (value) => _password = value,
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
