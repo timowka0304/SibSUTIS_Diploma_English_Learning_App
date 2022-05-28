@@ -20,7 +20,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
   late List<String> wordsList;
   late Map<String, dynamic> data;
   late Map<String, dynamic> fullDataWords;
-  late Future<DocumentSnapshot> _dataStream;
+  late Future<DocumentSnapshot> _dataFuture;
   late User _user;
 
   @override
@@ -32,7 +32,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
   Future<void> firebaseRequest() async {
     _user = FirebaseAuth.instance.currentUser!;
 
-    _dataStream = FirebaseFirestore.instance
+    _dataFuture = FirebaseFirestore.instance
         .collection('users')
         .doc(_user.uid)
         .collection('dictionary')
@@ -93,16 +93,42 @@ class _GetWordsPageState extends State<GetWordsPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: _dataStream,
+      future: _dataFuture,
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          showToastMsg('Ошибка: ' +
-              snapshot.hasError.hashCode.toString() +
-              '\n' +
-              snapshot.error.toString());
+          return Scaffold(
+            backgroundColor: kSecondBlue,
+            body: SafeArea(
+              child: Center(
+                child: Text(
+                  "Ошибка " +
+                      snapshot.hasError.hashCode.toString() +
+                      '\n' +
+                      snapshot.error.toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: kMainTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          );
         }
-
+        if (snapshot.data == null) {
+          return const Scaffold(
+            backgroundColor: kSecondBlue,
+            // body: SafeArea(
+            //   child: Center(
+            //     child: CircularProgressIndicator(
+            //       color: kMainPink,
+            //     ),
+            //   ),
+            // ),
+          );
+        }
         if ((snapshot.data!.data() as Map<String, dynamic>).isEmpty) {
           return Scaffold(
             backgroundColor: kSecondBlue,
