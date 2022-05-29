@@ -10,10 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
   provider: ^6.0.2
-  google_fonts: ^3.0.1
-  flutter_svg: ^1.0.3
   shared_preferences: ^2.0.12
   firebase_auth:
   firebase_core: ^1.12.0
@@ -26,14 +23,10 @@ dependencies:
   firebase_auth_platform_interface: ^6.2.7
   firebase_database_platform_interface: ^0.2.1+7
   image_picker: ^0.8.4+11
-  flutter_easyloading: ^3.0.3
-  flutter_screenutil: ^5.3.1
   firebase_storage: ^10.2.7
-  translator: ^0.1.7
   cached_network_image: ^3.2.0
   flutter_cache_manager: ^3.3.0
   flip_card: ^0.6.0
-  swipe: ^0.0.1
   audioplayers: ^0.20.1
   animated_toggle_switch: ^0.5.2
   confetti: ^0.6.0
@@ -47,7 +40,6 @@ dev_dependencies:
 
   flutter_lints: ^1.0.0
   flutter_launcher_icons:
-  dependency_validator: ^3.0.0
 
 flutter_icons:
   android: true
