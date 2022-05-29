@@ -35,10 +35,10 @@ class TagWidget extends StatelessWidget {
           child: Row(
             children: [
               side == 'left'
-                  ? const Icon(
+                  ? Icon(
                       Icons.arrow_back_rounded,
                       color: kMainTextColor,
-                      size: 12,
+                      size: getProportionateScreenWidth(14),
                     )
                   : Text(text),
               const SizedBox(
@@ -46,11 +46,17 @@ class TagWidget extends StatelessWidget {
               ),
               side == 'left'
                   ? Text(text)
-                  : const Icon(
-                      Icons.arrow_forward_rounded,
-                      color: kMainTextColor,
-                      size: 12,
-                    ),
+                  : side == 'delete'
+                      ? Icon(
+                          Icons.cancel_outlined,
+                          color: kMainTextColor,
+                          size: getProportionateScreenWidth(14),
+                        )
+                      : Icon(
+                          Icons.arrow_forward_rounded,
+                          color: kMainTextColor,
+                          size: getProportionateScreenWidth(14),
+                        ),
             ],
           ),
         ),

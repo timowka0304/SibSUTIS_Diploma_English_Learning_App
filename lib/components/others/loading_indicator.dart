@@ -33,9 +33,10 @@ class LoadingIndicatorDialog {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      left: getProportionateScreenWidth(16),
-                      top: getProportionateScreenHeight(16),
-                      right: getProportionateScreenWidth(16)),
+                    left: getProportionateScreenWidth(16),
+                    top: getProportionateScreenHeight(16),
+                    right: getProportionateScreenWidth(16),
+                  ),
                   child: const CircularProgressIndicator(
                     color: kMainPink,
                   ),

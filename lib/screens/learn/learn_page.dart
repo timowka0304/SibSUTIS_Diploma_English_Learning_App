@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/components/others/achievements_controll.dart';
 import 'package:easy_peasy/components/others/dialogs.dart';
+import 'package:easy_peasy/components/others/play_sound.dart';
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
@@ -17,7 +17,6 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/components/others/tag_widget.dart';
-import 'package:easy_peasy/components/others/loading_indicator.dart';
 
 class LearnPage extends StatefulWidget {
   const LearnPage({
@@ -108,31 +107,6 @@ class _LearnPageState extends State<LearnPage> {
         example: '',
       );
     }
-  }
-
-  Future<void> playSound(
-    String soundName,
-    Map<String, String> headersTranslate,
-    BuildContext context,
-  ) async {
-    LoadingIndicatorDialog().show(context);
-
-    final urlSound = Uri.parse(
-        'https://developers.lingvolive.com/api/v1/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName=$soundName');
-    final resultSound = await jsonDecode((await http.get(
-      urlSound,
-      headers: headersTranslate,
-    ))
-        .body);
-
-    final player = AudioPlayer();
-    await player.playBytes(
-      base64Decode(
-        resultSound,
-      ),
-    );
-
-    LoadingIndicatorDialog().dismiss();
   }
 
   Future<void> swipe(String direction) async {

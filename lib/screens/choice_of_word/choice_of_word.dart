@@ -161,18 +161,22 @@ class _WordsChoiceState extends State<WordsChoice> {
 
     final urlSound = Uri.parse(
         'https://developers.lingvolive.com/api/v1/Sound?dictionaryName=LingvoUniversal (En-Ru)&fileName=$soundName');
-    final resultSound = await jsonDecode((await http.get(
-      urlSound,
-      headers: headersTranslate,
-    ))
-        .body);
+    try {
+      final resultSound = await jsonDecode((await http.get(
+        urlSound,
+        headers: headersTranslate,
+      ))
+          .body);
 
-    final player = AudioPlayer();
-    await player.playBytes(
-      base64Decode(
-        resultSound,
-      ),
-    );
+      final player = AudioPlayer();
+      await player.playBytes(
+        base64Decode(
+          resultSound,
+        ),
+      );
+    } catch (e) {
+      showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
+    }
 
     LoadingIndicatorDialog().dismiss();
   }
