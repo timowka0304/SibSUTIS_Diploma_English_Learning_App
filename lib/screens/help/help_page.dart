@@ -2,7 +2,7 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/help_model.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class HelpPage extends StatelessWidget {
   const HelpPage({Key? key}) : super(key: key);
@@ -22,7 +22,12 @@ class HelpPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
+                        padding: EdgeInsets.fromLTRB(
+                          getProportionateScreenWidth(15),
+                          getProportionateScreenHeight(25),
+                          getProportionateScreenWidth(15),
+                          getProportionateScreenHeight(30),
+                        ),
                         child: TextButton(
                           style: ButtonStyle(
                             overlayColor:
@@ -35,7 +40,7 @@ class HelpPage extends StatelessWidget {
                             'Назад',
                             style: TextStyle(
                               color: kMainTextColor,
-                              fontSize: 18.sp,
+                              fontSize: getProportionateScreenWidth(16),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -83,7 +88,7 @@ class HelpPage extends StatelessWidget {
                   itemCount: HelpModel.list.length,
                   separatorBuilder: (context, index) {
                     return SizedBox(
-                      height: ScreenUtil().setHeight(20),
+                      height: getProportionateScreenHeight(20),
                     );
                   },
                   itemBuilder: (context, index) {

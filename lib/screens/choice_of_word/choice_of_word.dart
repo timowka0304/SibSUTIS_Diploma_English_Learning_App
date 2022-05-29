@@ -13,10 +13,10 @@ import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class WordsChoice extends StatefulWidget {
   const WordsChoice({
@@ -52,12 +52,6 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   late User _user;
 
-  Future<void> getFirstWords(int index) async {
-    await getWord(widget.wordsList, index).then((value) {
-      word = value;
-    });
-  }
-
   @override
   void initState() {
     dataFuture = initial();
@@ -71,14 +65,20 @@ class _WordsChoiceState extends State<WordsChoice> {
       await getFirstWords(i);
       datas.add(word);
       cardIndex++;
-      // print('cardIndex = $cardIndex');
     }
     await getDragHint().then(
       (value) {
         _hintVisible = value;
       },
     );
-    // inspect(widget.wordsList);
+  }
+
+  Future<void> getFirstWords(int index) async {
+    await getWord(widget.wordsList, index).then(
+      (value) {
+        word = value;
+      },
+    );
   }
 
   Future<void> swipe(String direction) async {
@@ -198,12 +198,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: _hintVisible
-                        //     ? kMainPink.withOpacity(0.1)
-                        //     : Colors.transparent,
                       );
                     },
-                    // hitTestBehavior: HitTestBehavior.opaque,
                     onAccept: (_) {
                       setState(
                         () {
@@ -211,7 +207,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _returnFlipped = false;
                           cardIndex++;
                           dataFuture = swipe('dislike');
-                          // print('dislike');
                         },
                       );
                     },
@@ -231,9 +226,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                     ) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        // color: _hintVisible
-                        //     ? kMainPink.withOpacity(0.1)
-                        //     : Colors.transparent,
                       );
                     },
                     onAccept: (data) {
@@ -243,7 +235,6 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _returnFlipped = false;
                           cardIndex++;
                           dataFuture = swipe('like');
-                          // print('like');
                         },
                       );
                     },
@@ -252,11 +243,7 @@ class _WordsChoiceState extends State<WordsChoice> {
               ],
             ),
             Draggable(
-              childWhenDragging: Container(
-                  // height: 350,
-                  // width: 350,
-                  // color: kSecondBlue,
-                  ),
+              childWhenDragging: Container(),
               data: data,
               onDragStarted: () {
                 setState(() {
@@ -276,13 +263,11 @@ class _WordsChoiceState extends State<WordsChoice> {
                     : setState(() {
                         _returnFlipped = false;
                       });
-                // print('Flipped: $_flipped');
-                // print('Return Flipped: $_returnFlipped');
               },
               feedback: !_flipped
                   ? SizedBox(
-                      height: 350,
-                      width: 350,
+                      height: getProportionateScreenHeight(350),
+                      width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
                           Card(
@@ -299,12 +284,13 @@ class _WordsChoiceState extends State<WordsChoice> {
                                   Text(
                                     data.wordEn,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.w600),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(26),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 20,
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(20),
                                   ),
                                   data.audioFile == ''
                                       ? Container()
@@ -320,13 +306,17 @@ class _WordsChoiceState extends State<WordsChoice> {
                                               Text(
                                                 data.transcription,
                                                 style: TextStyle(
-                                                  fontSize: 20.sp,
+                                                  fontSize:
+                                                      getProportionateScreenWidth(
+                                                          22),
                                                   color: kMainPurple,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                width: 10,
+                                              SizedBox(
+                                                width:
+                                                    getProportionateScreenWidth(
+                                                        10),
                                               ),
                                               const Icon(
                                                 Icons.volume_up_rounded,
@@ -343,8 +333,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                       ),
                     )
                   : SizedBox(
-                      height: 350,
-                      width: 350,
+                      height: getProportionateScreenHeight(350),
+                      width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
                           Card(
@@ -362,20 +352,22 @@ class _WordsChoiceState extends State<WordsChoice> {
                                     data.wordRu,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.w600),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(26),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 10,
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
                                   ),
                                   Text(
                                     data.example,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w400),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(22),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -385,8 +377,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                       ),
                     ),
               child: SizedBox(
-                height: 350,
-                width: 350,
+                height: getProportionateScreenHeight(350),
+                width: getProportionateScreenWidth(350),
                 child: FlipCard(
                   controller: _controller,
                   speed: 1000,
@@ -411,12 +403,13 @@ class _WordsChoiceState extends State<WordsChoice> {
                                 Text(
                                   data.wordEn,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(20),
                                 ),
                                 data.audioFile == ''
                                     ? Container()
@@ -432,13 +425,17 @@ class _WordsChoiceState extends State<WordsChoice> {
                                             Text(
                                               data.transcription,
                                               style: TextStyle(
-                                                fontSize: 20.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        22),
                                                 color: kMainPurple,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                            SizedBox(
+                                              width:
+                                                  getProportionateScreenWidth(
+                                                      10),
                                             ),
                                             const Icon(
                                               Icons.volume_up_rounded,
@@ -462,34 +459,26 @@ class _WordsChoiceState extends State<WordsChoice> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Text(
-                                //   data.wordEn,
-                                //   style: TextStyle(
-                                //       color: kMainTextColor,
-                                //       fontSize: 26.sp,
-                                //       fontWeight: FontWeight.w600),
-                                // ),
-                                // const SizedBox(
-                                //   height: 20,
-                                // ),
                                 Text(
                                   data.wordRu,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(10),
                                 ),
                                 Text(
                                   data.example,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w400),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(22),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -510,12 +499,13 @@ class _WordsChoiceState extends State<WordsChoice> {
                                 Text(
                                   data.wordEn,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(20),
                                 ),
                                 data.audioFile == ''
                                     ? Container()
@@ -531,13 +521,17 @@ class _WordsChoiceState extends State<WordsChoice> {
                                             Text(
                                               data.transcription,
                                               style: TextStyle(
-                                                fontSize: 20.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        22),
                                                 color: kMainPurple,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                            SizedBox(
+                                              width:
+                                                  getProportionateScreenWidth(
+                                                      10),
                                             ),
                                             const Icon(
                                               Icons.volume_up_rounded,
@@ -561,34 +555,26 @@ class _WordsChoiceState extends State<WordsChoice> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Text(
-                                //   data.wordEn,
-                                //   style: TextStyle(
-                                //       color: kMainTextColor,
-                                //       fontSize: 26.sp,
-                                //       fontWeight: FontWeight.w600),
-                                // ),
-                                // const SizedBox(
-                                //   height: 20,
-                                // ),
                                 Text(
                                   data.wordRu,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(10),
                                 ),
                                 Text(
                                   data.example,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w400),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(22),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -598,14 +584,14 @@ class _WordsChoiceState extends State<WordsChoice> {
               ),
             ),
             Positioned(
-              top: 120,
+              top: getProportionateScreenHeight(120),
               // ignore: sized_box_for_whitespace
               child: Container(
-                width: 320,
+                width: getProportionateScreenWidth(320),
                 child: AnimatedOpacity(
                   opacity: _visible && _hintVisible ? 1 : 0,
                   curve: Curves.easeInOut,
-                  duration: const Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 400,),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -659,7 +645,12 @@ class _WordsChoiceState extends State<WordsChoice> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(25),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(30),
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -670,47 +661,49 @@ class _WordsChoiceState extends State<WordsChoice> {
                                 style: ButtonStyle(
                                   overlayColor:
                                       MaterialStateProperty.resolveWith<Color>(
-                                          (Set<MaterialState> states) {
-                                    return kMainPurple.withOpacity(0.1);
-                                  }),
+                                    (Set<MaterialState> states) {
+                                      return kMainPurple.withOpacity(0.1);
+                                    },
+                                  ),
                                 ),
                                 child: Text(
                                   'Назад',
                                   style: TextStyle(
                                     color: kMainTextColor,
-                                    fontSize: 18.sp,
+                                    fontSize: getProportionateScreenWidth(16),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            const MainScreen(
-                                              pageIndex: 1,
-                                              isStart: false,
-                                            ),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          const begin = 0.0;
-                                          const end = 1.0;
-                                          const curve = Curves.ease;
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const MainScreen(
+                                        pageIndex: 1,
+                                        isStart: false,
+                                      ),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = 0.0;
+                                        const end = 1.0;
+                                        const curve = Curves.ease;
 
-                                          var tween = Tween(
-                                            begin: begin,
-                                            end: end,
-                                          ).chain(
-                                            CurveTween(
-                                              curve: curve,
-                                            ),
-                                          );
+                                        var tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(
+                                          CurveTween(
+                                            curve: curve,
+                                          ),
+                                        );
 
-                                          return FadeTransition(
-                                            opacity: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        }),
+                                        return FadeTransition(
+                                          opacity: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -724,26 +717,23 @@ class _WordsChoiceState extends State<WordsChoice> {
                                     borderColor: Colors.transparent,
                                     innerColor: kMainPurple.withOpacity(0.3),
                                     borderWidth: 0,
-                                    height: 15,
-                                    indicatorSize: const Size(15, 15),
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: kMainTextColor.withOpacity(0.1),
-                                    //     spreadRadius: 1,
-                                    //     blurRadius: 2,
-                                    //     offset: const Offset(0, 3),
-                                    //   ),
-                                    // ],
-                                    onChanged: (value) => setState(() {
-                                      _hintVisible = value;
-                                      storeDragHint(value);
-                                    }),
+                                    height: getProportionateScreenWidth(15),
+                                    indicatorSize: Size(
+                                      getProportionateScreenWidth(15),
+                                      getProportionateScreenWidth(15),
+                                    ),
+                                    onChanged: (value) => setState(
+                                      () {
+                                        _hintVisible = value;
+                                        storeDragHint(value);
+                                      },
+                                    ),
                                     colorBuilder: (value) => value
                                         ? kMainPurple
                                         : kMainPurple.withOpacity(0.3),
                                   ),
-                                  const SizedBox(
-                                    width: 10,
+                                  SizedBox(
+                                    width: getProportionateScreenWidth(10),
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.info,
@@ -756,7 +746,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                                     },
                                   ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                           Column(
@@ -765,16 +755,20 @@ class _WordsChoiceState extends State<WordsChoice> {
                                 '${cardIndex + 1} / ${widget.wordsList.length}',
                                 style: TextStyle(
                                   color: kMainTextColor,
-                                  fontSize: 16.sp,
+                                  fontSize: getProportionateScreenWidth(16),
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10,
+                              SizedBox(
+                                height: getProportionateScreenHeight(10),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                padding: EdgeInsets.fromLTRB(
+                                  getProportionateScreenWidth(15),
+                                  getProportionateScreenHeight(0),
+                                  getProportionateScreenWidth(15),
+                                  getProportionateScreenHeight(0),
+                                ),
                                 child: LinearProgressIndicator(
                                   value:
                                       (cardIndex + 1) / widget.wordsList.length,
@@ -782,8 +776,8 @@ class _WordsChoiceState extends State<WordsChoice> {
                                   backgroundColor: kMainPurple.withOpacity(0.3),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 30,
+                              SizedBox(
+                                height: getProportionateScreenHeight(30),
                               ),
                             ],
                           ),

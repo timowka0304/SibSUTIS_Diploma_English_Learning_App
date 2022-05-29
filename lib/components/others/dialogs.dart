@@ -1,6 +1,6 @@
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 showErrDialog(BuildContext context, String err, int flag) {
@@ -10,10 +10,15 @@ showErrDialog(BuildContext context, String err, int flag) {
       title: Text(
         "Ошибка",
         style: TextStyle(
-          fontSize: 28.sp,
+          fontSize: getProportionateScreenWidth(20),
         ),
       ),
-      content: Text(err),
+      content: Text(
+        err,
+        style: TextStyle(
+          fontSize: getProportionateScreenWidth(16),
+        ),
+      ),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
         ElevatedButton(
@@ -21,15 +26,17 @@ showErrDialog(BuildContext context, String err, int flag) {
             Navigator.of(context).pop();
             flag == 2 ? Navigator.of(context).pop() : null;
           },
-          style: ButtonStyle(backgroundColor:
-              MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-            return kMainPurple;
-          })),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                return kMainPurple;
+              },
+            ),
+          ),
           child: Text(
             "Ок",
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: getProportionateScreenWidth(16),
             ),
           ),
         ),
@@ -42,7 +49,12 @@ showAchivementsDialog(BuildContext context, String title, String text) {
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: getProportionateScreenWidth(20),
+        ),
+      ),
       content: Text(text),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
@@ -50,15 +62,17 @@ showAchivementsDialog(BuildContext context, String title, String text) {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          style: ButtonStyle(backgroundColor:
-              MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-            return kMainPurple;
-          })),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                return kMainPurple;
+              },
+            ),
+          ),
           child: Text(
             "Ок",
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: getProportionateScreenWidth(16),
             ),
           ),
         ),
@@ -71,24 +85,35 @@ showInfoDialog(BuildContext context) {
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Справка'),
-      content: const Text(
-          'Переключатель включает и отключает подсказку при перетаскивании карты.\n\nПопробуй!'),
+      title: Text(
+        'Справка',
+        style: TextStyle(
+          fontSize: getProportionateScreenWidth(20),
+        ),
+      ),
+      content: Text(
+        'Переключатель включает и отключает подсказку при перетаскивании карты.\n\nПопробуй!',
+        style: TextStyle(
+          fontSize: getProportionateScreenWidth(16),
+        ),
+      ),
       actionsAlignment: MainAxisAlignment.center,
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          style: ButtonStyle(backgroundColor:
-              MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-            return kMainPurple;
-          })),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                return kMainPurple;
+              },
+            ),
+          ),
           child: Text(
             "Ок",
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: getProportionateScreenWidth(16),
             ),
           ),
         ),
@@ -104,6 +129,6 @@ showToastMsg(String text) {
     gravity: ToastGravity.BOTTOM,
     backgroundColor: kMainPink,
     textColor: kWhite,
-    fontSize: 16.0,
+    fontSize: getProportionateScreenWidth(16),
   );
 }

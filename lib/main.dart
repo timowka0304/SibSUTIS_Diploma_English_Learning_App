@@ -1,10 +1,10 @@
 import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/routes.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 
 late bool onBoardingScreenIsViewed;
@@ -32,13 +32,17 @@ Future<void> main() async {
   }
 
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(const MaterialApp(
-      title: "Easy Peasy",
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
-    ));
-  });
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then(
+    (_) {
+      runApp(
+        const MaterialApp(
+          title: "Easy Peasy",
+          debugShowCheckedModeBanner: false,
+          home: MyApp(),
+        ),
+      );
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,24 +50,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(414, 896),
-      minTextAdapt: true,
-      builder: () => MaterialApp(
-        title: "Easy Peasy",
-        builder: (context, widget) {
-          ScreenUtil.setContext(context);
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: widget!,
-          );
-        },
-        debugShowCheckedModeBanner: false,
-        initialRoute: onBoardingScreenIsViewed
-            ? MainScreenCheck.routeName
-            : OnboardingScreen.routeName,
-        routes: routes,
-      ),
+    SizeConfig().init(context);
+    return MaterialApp(
+      title: "Easy Peasy",
+      builder: (context, widget) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: widget!,
+        );
+      },
+      debugShowCheckedModeBanner: false,
+      initialRoute: onBoardingScreenIsViewed
+          ? MainScreenCheck.routeName
+          : OnboardingScreen.routeName,
+      routes: routes,
     );
   }
 }

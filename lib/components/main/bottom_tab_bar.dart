@@ -1,9 +1,10 @@
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class BottomTabBar extends StatefulWidget {
-  const BottomTabBar({Key? key, required this.index, required this.onChangedTab})
+  const BottomTabBar(
+      {Key? key, required this.index, required this.onChangedTab})
       : super(key: key);
   final int index;
   final ValueChanged<int> onChangedTab;
@@ -27,21 +28,21 @@ class _BottomTabBarState extends State<BottomTabBar> {
               0,
               Icon(
                 Icons.book,
-                size: ScreenUtil().setWidth(25),
+                size: getProportionateScreenWidth(25),
               ),
             ),
             buildTabItem(
               1,
               Icon(
                 Icons.apps,
-                size: ScreenUtil().setWidth(25),
+                size: getProportionateScreenWidth(25),
               ),
             ),
             buildTabItem(
               2,
               Icon(
                 Icons.person,
-                size: ScreenUtil().setWidth(25),
+                size: getProportionateScreenWidth(25),
               ),
             ),
           ],
@@ -54,7 +55,8 @@ class _BottomTabBarState extends State<BottomTabBar> {
     final isSelected = index == widget.index;
     return IconTheme(
       data: IconThemeData(
-          color: isSelected ? kMainPink : kMainPurple.withOpacity(0.5)),
+        color: isSelected ? kMainPink : kMainPurple.withOpacity(0.5),
+      ),
       child: IconButton(
         icon: icon,
         highlightColor: Colors.transparent,

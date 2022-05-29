@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_peasy/components/others/dialogs.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/learn_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GetWordsPage extends StatefulWidget {
   const GetWordsPage({Key? key}) : super(key: key);
@@ -107,9 +104,9 @@ class _GetWordsPageState extends State<GetWordsPage> {
                       '\n' +
                       snapshot.error.toString(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: kMainTextColor,
-                    fontSize: 18,
+                    fontSize: getProportionateScreenWidth(18),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -120,13 +117,6 @@ class _GetWordsPageState extends State<GetWordsPage> {
         if (snapshot.data == null) {
           return const Scaffold(
             backgroundColor: kSecondBlue,
-            // body: SafeArea(
-            //   child: Center(
-            //     child: CircularProgressIndicator(
-            //       color: kMainPink,
-            //     ),
-            //   ),
-            // ),
           );
         }
         if ((snapshot.data!.data() as Map<String, dynamic>).isEmpty) {
@@ -142,31 +132,31 @@ class _GetWordsPageState extends State<GetWordsPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: kMainTextColor,
-                        fontSize: 26.sp,
+                        fontSize: getProportionateScreenWidth(24),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: getProportionateScreenHeight(10),
                     ),
                     Text(
                       'Добавляй новые слова для изучения\nво вкладке «Категории»\n',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: kMainTextColor,
-                        fontSize: 22.sp,
+                        fontSize: getProportionateScreenWidth(20),
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(
-                          ScreenUtil().setWidth(135),
-                          ScreenUtil().setHeight(50),
+                          getProportionateScreenWidth(110),
+                          getProportionateScreenHeight(50),
                         ),
                         maximumSize: Size(
-                          ScreenUtil().setWidth(185),
-                          ScreenUtil().setHeight(50),
+                          getProportionateScreenWidth(160),
+                          getProportionateScreenHeight(50),
                         ),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
@@ -211,7 +201,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
                         'Перейти',
                         style: TextStyle(
                           color: kWhite,
-                          fontSize: 16.sp,
+                          fontSize: getProportionateScreenWidth(16),
                         ),
                       ),
                     ),
@@ -221,12 +211,12 @@ class _GetWordsPageState extends State<GetWordsPage> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(
-                          ScreenUtil().setWidth(135),
-                          ScreenUtil().setHeight(50),
+                          getProportionateScreenWidth(110),
+                          getProportionateScreenHeight(50),
                         ),
                         maximumSize: Size(
-                          ScreenUtil().setWidth(185),
-                          ScreenUtil().setHeight(50),
+                          getProportionateScreenWidth(160),
+                          getProportionateScreenHeight(50),
                         ),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
@@ -271,7 +261,7 @@ class _GetWordsPageState extends State<GetWordsPage> {
                         'На главную',
                         style: TextStyle(
                           color: kWhite,
-                          fontSize: 16.sp,
+                          fontSize: getProportionateScreenWidth(16),
                         ),
                       ),
                     ),

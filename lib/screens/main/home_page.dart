@@ -5,11 +5,8 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/get_words_page.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
-  static String routeName = "/home";
-
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -40,8 +37,8 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 300,
-                width: 300,
+                height: getProportionateScreenWidth(300),
+                width: getProportionateScreenWidth(300),
                 child: Stack(
                   children: [
                     Card(
@@ -64,12 +61,12 @@ class _HomePageState extends State<HomePage> {
                                 'english word',
                                 style: TextStyle(
                                   color: kMainTextColor,
-                                  fontSize: 26.sp,
+                                  fontSize: getProportionateScreenWidth(26),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(
-                                height: 20,
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -77,13 +74,13 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     'transcription',
                                     style: TextStyle(
-                                      fontSize: 20.sp,
+                                      fontSize: getProportionateScreenWidth(22),
                                       color: kMainPurple,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 10,
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
                                   ),
                                   const Icon(
                                     Icons.volume_up_rounded,
@@ -99,42 +96,42 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 100,
+              SizedBox(
+                height: getProportionateScreenHeight(100),
               ),
               Text(
                 'Начнем учить слова?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kMainTextColor,
-                  fontSize: 20.sp,
+                  fontSize: getProportionateScreenWidth(18),
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(
-                height: 5,
+              SizedBox(
+                height: getProportionateScreenHeight(5),
               ),
               Text(
                 'Жми на кнопку!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kMainTextColor,
-                  fontSize: 20.sp,
+                  fontSize: getProportionateScreenWidth(18),
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: getProportionateScreenHeight(40),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(
-                    ScreenUtil().setWidth(135),
-                    ScreenUtil().setHeight(50),
+                    getProportionateScreenWidth(110),
+                    getProportionateScreenHeight(50),
                   ),
                   maximumSize: Size(
-                    ScreenUtil().setWidth(185),
-                    ScreenUtil().setHeight(50),
+                    getProportionateScreenWidth(160),
+                    getProportionateScreenHeight(50),
                   ),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
@@ -179,13 +176,13 @@ class _HomePageState extends State<HomePage> {
                       color: kWhite,
                     ),
                     SizedBox(
-                      width: ScreenUtil().setWidth(10),
+                      width: getProportionateScreenWidth(10),
                     ),
                     Text(
                       "Начать",
                       style: TextStyle(
                         color: kWhite,
-                        fontSize: 18.sp,
+                        fontSize: getProportionateScreenWidth(16),
                         fontWeight: FontWeight.w600,
                       ),
                     )

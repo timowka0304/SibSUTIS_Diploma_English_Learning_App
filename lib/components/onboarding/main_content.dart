@@ -30,18 +30,24 @@ class MainContent extends StatelessWidget {
         SizedBox(
           height: getProportionateScreenHeight(80),
         ),
-        Text(_list[index].title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: kMainTextColor,
-                fontWeight: FontWeight.w600,
-                fontSize: getProportionateScreenWidth(20))),
-        Text(_list[index].text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: kMainTextColor,
-                fontWeight: FontWeight.w300,
-                fontSize: getProportionateScreenWidth(20))),
+        Text(
+          _list[index].title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: kMainTextColor,
+            fontWeight: FontWeight.w600,
+            fontSize: getProportionateScreenWidth(20),
+          ),
+        ),
+        Text(
+          _list[index].text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: kMainTextColor,
+            fontWeight: FontWeight.w400,
+            fontSize: getProportionateScreenWidth(20),
+          ),
+        ),
       ],
     );
   }

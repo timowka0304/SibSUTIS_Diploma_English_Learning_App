@@ -5,7 +5,6 @@ import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -72,7 +71,8 @@ class _SignInState extends State<SignUp> {
             },
           );
         } catch (e) {
-          showToastMsg('Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
+          showToastMsg(
+              'Ошибка: ' + e.hashCode.toString() + '\n' + e.toString());
         }
       }
     }
@@ -93,15 +93,15 @@ class _SignInState extends State<SignUp> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: ScreenUtil().setHeight(90),
+                      height: getProportionateScreenHeight(90),
                     ),
                     Image.asset(
                       kLogoWhitePath,
-                      height: ScreenUtil().setHeight(135),
-                      width: ScreenUtil().setWidth(180),
+                      height: getProportionateScreenHeight(135),
+                      width: getProportionateScreenWidth(180),
                     ),
                     SizedBox(
-                      height: ScreenUtil().setHeight(60),
+                      height: getProportionateScreenHeight(60),
                     ),
                     Flexible(
                       fit: FlexFit.loose,
@@ -109,25 +109,25 @@ class _SignInState extends State<SignUp> {
                         children: [
                           emeilFiled(),
                           SizedBox(
-                            height: ScreenUtil().setHeight(20),
+                            height: getProportionateScreenHeight(20),
                           ),
                           passwordField(),
                           SizedBox(
-                            height: ScreenUtil().setHeight(20),
+                            height: getProportionateScreenHeight(20),
                           ),
                           nameFiled(),
                           SizedBox(
-                            height: ScreenUtil().setHeight(60),
+                            height: getProportionateScreenHeight(60),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(
-                                ScreenUtil().setWidth(180),
-                                ScreenUtil().setHeight(50),
+                                getProportionateScreenWidth(180),
+                                getProportionateScreenHeight(50),
                               ),
                               maximumSize: Size(
-                                ScreenUtil().setWidth(230),
-                                ScreenUtil().setHeight(50),
+                                getProportionateScreenWidth(230),
+                                getProportionateScreenHeight(50),
                               ),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
@@ -141,22 +141,22 @@ class _SignInState extends State<SignUp> {
                               'Зарегистрироваться',
                               style: TextStyle(
                                 color: kMainTextColor,
-                                fontSize: 16.sp,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: ScreenUtil().setHeight(50),
+                            height: getProportionateScreenHeight(50),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(
-                                ScreenUtil().setWidth(80),
-                                ScreenUtil().setHeight(40),
+                                getProportionateScreenWidth(80),
+                                getProportionateScreenHeight(40),
                               ),
                               maximumSize: Size(
-                                ScreenUtil().setWidth(100),
-                                ScreenUtil().setHeight(40),
+                                getProportionateScreenWidth(100),
+                                getProportionateScreenHeight(40),
                               ),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
@@ -198,12 +198,12 @@ class _SignInState extends State<SignUp> {
                               'Назад',
                               style: TextStyle(
                                 color: kMainTextColor,
-                                fontSize: 16.sp,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: ScreenUtil().setHeight(50),
+                            height: getProportionateScreenHeight(50),
                           ),
                         ],
                       ),
@@ -220,7 +220,7 @@ class _SignInState extends State<SignUp> {
 
   Container passwordField() {
     return Container(
-      width: ScreenUtil().setWidth(280),
+      width: getProportionateScreenWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
@@ -228,8 +228,8 @@ class _SignInState extends State<SignUp> {
         obscureText: _isObscure,
         style: TextStyle(
           color: kWhite,
-          fontWeight: FontWeight.w200,
-          fontSize: 16.sp,
+          fontWeight: FontWeight.w300,
+          fontSize: getProportionateScreenWidth(16),
         ),
         onChanged: (value) => _password = value,
         validator: (value) {
@@ -242,14 +242,21 @@ class _SignInState extends State<SignUp> {
           return null;
         },
         decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock, color: kWhite),
+            prefixIcon: const Icon(
+              Icons.lock,
+              color: kWhite,
+            ),
             hintStyle: TextStyle(
-                color: kWhite.withOpacity(0.5),
-                fontWeight: FontWeight.w200,
-                fontSize: 16.sp),
+              color: kWhite.withOpacity(0.5),
+              fontWeight: FontWeight.w300,
+              fontSize: getProportionateScreenWidth(16),
+            ),
             labelText: "Пароль",
             labelStyle: TextStyle(
-                color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+              color: kWhite,
+              fontWeight: FontWeight.w300,
+              fontSize: getProportionateScreenWidth(16),
+            ),
             hintText: 'qwerty123',
             isDense: true,
             focusedErrorBorder: OutlineInputBorder(
@@ -267,7 +274,9 @@ class _SignInState extends State<SignUp> {
               ),
             ),
             errorStyle: TextStyle(
-                color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
+                color: kWhite,
+                fontWeight: FontWeight.w300,
+                fontSize: getProportionateScreenWidth(14)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -301,14 +310,17 @@ class _SignInState extends State<SignUp> {
 
   Container emeilFiled() {
     return Container(
-      width: ScreenUtil().setWidth(280),
+      width: getProportionateScreenWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
       child: TextFormField(
         onChanged: (value) => _userEmail = value,
         style: TextStyle(
-            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+          color: kWhite,
+          fontWeight: FontWeight.w300,
+          fontSize: getProportionateScreenWidth(16),
+        ),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return "Введите почту";
@@ -319,14 +331,21 @@ class _SignInState extends State<SignUp> {
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.mail, color: kWhite),
+          prefixIcon: const Icon(
+            Icons.mail,
+            color: kWhite,
+          ),
           hintStyle: TextStyle(
-              color: kWhite.withOpacity(0.5),
-              fontWeight: FontWeight.w200,
-              fontSize: 16.sp),
+            color: kWhite.withOpacity(0.5),
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
           labelText: "Почта",
           labelStyle: TextStyle(
-              color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
           hintText: 'example@gmail.com',
           isDense: true,
           focusedErrorBorder: OutlineInputBorder(
@@ -344,7 +363,10 @@ class _SignInState extends State<SignUp> {
             ),
           ),
           errorStyle: TextStyle(
-              color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(14),
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
@@ -366,14 +388,17 @@ class _SignInState extends State<SignUp> {
 
   Container nameFiled() {
     return Container(
-      width: ScreenUtil().setWidth(280),
+      width: getProportionateScreenWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
       child: TextFormField(
         onChanged: (value) => _userName = value,
         style: TextStyle(
-            color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+          color: kWhite,
+          fontWeight: FontWeight.w300,
+          fontSize: getProportionateScreenWidth(16),
+        ),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return "Введите имя";
@@ -381,14 +406,21 @@ class _SignInState extends State<SignUp> {
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.person, color: kWhite),
+          prefixIcon: const Icon(
+            Icons.person,
+            color: kWhite,
+          ),
           hintStyle: TextStyle(
-              color: kWhite.withOpacity(0.5),
-              fontWeight: FontWeight.w200,
-              fontSize: 16.sp),
+            color: kWhite.withOpacity(0.5),
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
           labelText: "Имя",
           labelStyle: TextStyle(
-              color: kWhite, fontWeight: FontWeight.w200, fontSize: 16.sp),
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
           hintText: 'Иван1982',
           isDense: true,
           focusedErrorBorder: OutlineInputBorder(
@@ -406,7 +438,10 @@ class _SignInState extends State<SignUp> {
             ),
           ),
           errorStyle: TextStyle(
-              color: kWhite, fontWeight: FontWeight.w200, fontSize: 14.sp),
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(14),
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(

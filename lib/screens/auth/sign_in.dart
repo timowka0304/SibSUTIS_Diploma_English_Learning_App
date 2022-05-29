@@ -8,7 +8,6 @@ import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignIn extends StatefulWidget {
   static String routeName = "/signin";
@@ -23,142 +22,146 @@ class _SignInState extends State<SignIn> {
   bool _isObscure = true;
   String _userEmail = '';
   String _password = '';
+  // ignore: unused_field
   late String _userEmailForgot;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _textFieldController = TextEditingController();
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Введите почту',
-              style: TextStyle(
-                fontSize: 28.sp,
-              ),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Введите почту',
+            style: TextStyle(
+              fontSize: getProportionateScreenWidth(20),
             ),
-            content: TextFormField(
-              onChanged: (value) {
+          ),
+          content: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                _userEmailForgot = value.trim();
+              });
+            },
+            controller: _textFieldController,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: <Widget>[
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return kMainPurple;
+                  },
+                ),
+              ),
+              child: Text(
+                'Отмена',
+                style: TextStyle(
+                  fontSize: getProportionateScreenWidth(16),
+                ),
+              ),
+              onPressed: () {
                 setState(() {
-                  _userEmailForgot = value.trim();
+                  _textFieldController.text = "";
+                  _userEmailForgot = "";
+                  Navigator.pop(context);
                 });
               },
-              controller: _textFieldController,
             ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: <Widget>[
-              ElevatedButton(
-                style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                  return kMainPurple;
-                })),
-                child: Text(
-                  'Отмена',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                  ),
+            ElevatedButton(
+              style: ButtonStyle(backgroundColor:
+                  MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                return kMainPink;
+              })),
+              child: Text(
+                'Ок',
+                style: TextStyle(
+                  fontSize: getProportionateScreenWidth(16),
                 ),
-                onPressed: () {
+              ),
+              onPressed: () async {
+                try {
+                  await auth.sendPasswordResetEmail(
+                    email: _textFieldController.text.trim(),
+                  );
+                  Navigator.pop(context);
                   setState(() {
                     _textFieldController.text = "";
                     _userEmailForgot = "";
-                    Navigator.pop(context);
                   });
-                },
-              ),
-              ElevatedButton(
-                style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                  return kMainPink;
-                })),
-                child: Text(
-                  'Ок',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                  ),
-                ),
-                onPressed: () async {
-                  try {
-                    await auth.sendPasswordResetEmail(
-                        email: _textFieldController.text.trim());
-                    Navigator.pop(context);
-                    setState(() {
-                      _textFieldController.text = "";
-                      _userEmailForgot = "";
-                    });
-                    return showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(
-                          "Успешно",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                          ),
+                  return showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(
+                        "Успешно",
+                        style: TextStyle(
+                          fontSize: getProportionateScreenWidth(16),
                         ),
-                        content: Text(
-                          "Письмо для сброса пароля отправлено на указанную почту",
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                          ),
+                      ),
+                      content: Text(
+                        "Письмо для сброса пароля отправлено на указанную почту",
+                        style: TextStyle(
+                          fontSize: getProportionateScreenWidth(16),
                         ),
-                        actionsAlignment: MainAxisAlignment.center,
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ButtonStyle(backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                                    (Set<MaterialState> states) {
-                              return kMainPurple;
-                            })),
-                            child: Text(
-                              "Ок",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                              ),
+                      ),
+                      actionsAlignment: MainAxisAlignment.center,
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(backgroundColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                            return kMainPurple;
+                          })),
+                          child: Text(
+                            "Ок",
+                            style: TextStyle(
+                              fontSize: getProportionateScreenWidth(16),
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  } on FirebaseAuthException catch (e) {
-                    switch (e.code) {
-                      case "unknown":
-                        showErrDialog(context, "Пустое поле", 1);
-                        break;
-                      case "invalid-email":
-                        showErrDialog(context, "Неверный формат", 1);
-                        break;
-                      case "user-not-found":
-                        showErrDialog(context, "Пользователь не найден", 1);
-                        break;
-                    }
+                        ),
+                      ],
+                    ),
+                  );
+                } on FirebaseAuthException catch (e) {
+                  switch (e.code) {
+                    case "unknown":
+                      showErrDialog(context, "Пустое поле", 1);
+                      break;
+                    case "invalid-email":
+                      showErrDialog(context, "Неверный формат", 1);
+                      break;
+                    case "user-not-found":
+                      showErrDialog(context, "Пользователь не найден", 1);
+                      break;
                   }
-                },
-              ),
-            ],
-          );
-        });
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-
     void _trySubmitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
+          context: context,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
         await signIn(_userEmail.trim(), _password.trim(), context)
             .then((value) async {
           if (value != null) {
@@ -189,7 +192,6 @@ class _SignInState extends State<SignIn> {
                 },
               ),
             );
-            // Navigator.pushReplacementNamed(context, MainScreenCheck.routeName);
             Navigator.of(context, rootNavigator: true).pop();
           }
         });
@@ -213,15 +215,15 @@ class _SignInState extends State<SignIn> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        height: ScreenUtil().setHeight(50),
+                        height: getProportionateScreenHeight(50),
                       ),
                       Image.asset(
                         kLogoWhitePath,
-                        height: ScreenUtil().setHeight(135),
-                        width: ScreenUtil().setWidth(180),
+                        height: getProportionateScreenHeight(135),
+                        width: getProportionateScreenWidth(180),
                       ),
                       SizedBox(
-                        height: ScreenUtil().setHeight(100),
+                        height: getProportionateScreenHeight(100),
                       ),
                       Column(
                         children: const [
@@ -231,7 +233,7 @@ class _SignInState extends State<SignIn> {
                         ],
                       ),
                       SizedBox(
-                        height: ScreenUtil().setHeight(30),
+                        height: getProportionateScreenHeight(30),
                       ),
                       Flexible(
                         child: Column(
@@ -240,28 +242,22 @@ class _SignInState extends State<SignIn> {
                               "или",
                               style: TextStyle(
                                 color: kWhite,
-                                fontSize: 16.sp,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: getProportionateScreenHeight(20),
                             ),
                             emeilFiled(),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: getProportionateScreenHeight(20),
                             ),
                             passwordField(),
                             SizedBox(
-                              height: ScreenUtil().setHeight(30),
+                              height: getProportionateScreenHeight(30),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                // minimumSize: Size(
-                                //     getProportionateScreenWidth(120),
-                                //     getProportionateScreenHeight(50)),
-                                // maximumSize: Size(
-                                //     getProportionateScreenWidth(120),
-                                //     getProportionateScreenHeight(50)),
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
@@ -274,12 +270,12 @@ class _SignInState extends State<SignIn> {
                                 'Войти',
                                 style: TextStyle(
                                   color: kMainTextColor,
-                                  fontSize: 16.sp,
+                                  fontSize: getProportionateScreenWidth(16),
                                 ),
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: getProportionateScreenHeight(60),
                             ),
                           ],
                         ),
@@ -295,12 +291,12 @@ class _SignInState extends State<SignIn> {
                               style: TextStyle(
                                 color: kWhite,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16.sp,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: ScreenUtil().setHeight(40),
+                            height: getProportionateScreenHeight(20),
                           ),
                           RichText(
                               text: TextSpan(
@@ -308,7 +304,7 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                     color: kWhite,
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 16.sp,
+                                    fontSize: getProportionateScreenWidth(16),
                                   ),
                                   children: [
                                 TextSpan(
@@ -316,7 +312,7 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                     color: kWhite,
                                     fontWeight: FontWeight.w800,
-                                    fontSize: 16.sp,
+                                    fontSize: getProportionateScreenWidth(16),
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () =>
@@ -354,7 +350,7 @@ class _SignInState extends State<SignIn> {
                                 )
                               ])),
                           SizedBox(
-                            height: ScreenUtil().setHeight(30),
+                            height: getProportionateScreenHeight(30),
                           ),
                         ],
                       ),
@@ -369,7 +365,7 @@ class _SignInState extends State<SignIn> {
 
   Container passwordField() {
     return Container(
-      width: ScreenUtil().setWidth(280),
+      width: getProportionateScreenWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
@@ -378,7 +374,7 @@ class _SignInState extends State<SignIn> {
         style: TextStyle(
           color: kWhite,
           fontWeight: FontWeight.w200,
-          fontSize: 16.sp,
+          fontSize: getProportionateScreenWidth(16),
         ),
         onChanged: (value) => _password = value,
         validator: (value) {
@@ -391,17 +387,20 @@ class _SignInState extends State<SignIn> {
           return null;
         },
         decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock, color: kWhite),
+            prefixIcon: const Icon(
+              Icons.lock,
+              color: kWhite,
+            ),
             hintStyle: TextStyle(
               color: kWhite.withOpacity(0.5),
-              fontWeight: FontWeight.w200,
-              fontSize: 16.sp,
+              fontWeight: FontWeight.w300,
+              fontSize: getProportionateScreenWidth(16),
             ),
             labelText: "Пароль",
             labelStyle: TextStyle(
               color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: 16.sp,
+              fontWeight: FontWeight.w300,
+              fontSize: getProportionateScreenWidth(16),
             ),
             hintText: 'qwerty123',
             isDense: true,
@@ -421,8 +420,8 @@ class _SignInState extends State<SignIn> {
             ),
             errorStyle: TextStyle(
               color: kWhite,
-              fontWeight: FontWeight.w200,
-              fontSize: 14.sp,
+              fontWeight: FontWeight.w300,
+              fontSize: getProportionateScreenWidth(14),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -457,7 +456,7 @@ class _SignInState extends State<SignIn> {
 
   Container emeilFiled() {
     return Container(
-      width: ScreenUtil().setWidth(280),
+      width: getProportionateScreenWidth(280),
       decoration: const BoxDecoration(
         color: kMainPurple,
       ),
@@ -465,8 +464,8 @@ class _SignInState extends State<SignIn> {
         onChanged: (value) => _userEmail = value,
         style: TextStyle(
           color: kWhite,
-          fontWeight: FontWeight.w200,
-          fontSize: 16.sp,
+          fontWeight: FontWeight.w300,
+          fontSize: getProportionateScreenWidth(16),
         ),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
@@ -478,17 +477,20 @@ class _SignInState extends State<SignIn> {
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.mail, color: kWhite),
+          prefixIcon: const Icon(
+            Icons.mail,
+            color: kWhite,
+          ),
           hintStyle: TextStyle(
             color: kWhite.withOpacity(0.5),
-            fontWeight: FontWeight.w200,
-            fontSize: 16.sp,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
           ),
           labelText: "Почта",
           labelStyle: TextStyle(
             color: kWhite,
-            fontWeight: FontWeight.w200,
-            fontSize: 16.sp,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
           ),
           hintText: 'example@gmail.com',
           isDense: true,
@@ -508,8 +510,8 @@ class _SignInState extends State<SignIn> {
           ),
           errorStyle: TextStyle(
             color: kWhite,
-            fontWeight: FontWeight.w200,
-            fontSize: 14.sp,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(14),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

@@ -1,4 +1,5 @@
 import 'package:easy_peasy/constants.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:flutter/material.dart';
 
 class LoadingIndicatorDialog {
@@ -29,10 +30,13 @@ class LoadingIndicatorDialog {
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 16, top: 16, right: 16),
-                  child: CircularProgressIndicator(
+                  padding: EdgeInsets.only(
+                      left: getProportionateScreenWidth(16),
+                      top: getProportionateScreenHeight(16),
+                      right: getProportionateScreenWidth(16)),
+                  child: const CircularProgressIndicator(
                     color: kMainPink,
                   ),
                 ),

@@ -10,11 +10,11 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/word_model.dart';
 import 'package:easy_peasy/screens/learn/get_words_page.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/components/others/tag_widget.dart';
 import 'package:easy_peasy/components/others/loading_indicator.dart';
@@ -174,7 +174,6 @@ class _LearnPageState extends State<LearnPage> {
         );
 
         await checkNumOfLearnedWords(context);
-
       } else {
         FirebaseFirestore.instance
             .collection('users')
@@ -291,7 +290,6 @@ class _LearnPageState extends State<LearnPage> {
                               _returnFlipped = false;
                               cardIndex++;
                               _dataFuture = swipe('delete');
-                              // print('like');
                             },
                           );
                         },
@@ -349,8 +347,8 @@ class _LearnPageState extends State<LearnPage> {
               },
               feedback: !_flipped
                   ? SizedBox(
-                      height: 350,
-                      width: 350,
+                      height: getProportionateScreenHeight(350),
+                      width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
                           Card(
@@ -367,12 +365,13 @@ class _LearnPageState extends State<LearnPage> {
                                   Text(
                                     data.wordEn,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.w600),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(26),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 20,
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(20),
                                   ),
                                   data.audioFile == ''
                                       ? Container()
@@ -388,13 +387,17 @@ class _LearnPageState extends State<LearnPage> {
                                               Text(
                                                 data.transcription,
                                                 style: TextStyle(
-                                                  fontSize: 20.sp,
+                                                  fontSize:
+                                                      getProportionateScreenWidth(
+                                                          22),
                                                   color: kMainPurple,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                width: 10,
+                                              SizedBox(
+                                                width:
+                                                    getProportionateScreenWidth(
+                                                        10),
                                               ),
                                               const Icon(
                                                 Icons.volume_up_rounded,
@@ -411,8 +414,8 @@ class _LearnPageState extends State<LearnPage> {
                       ),
                     )
                   : SizedBox(
-                      height: 350,
-                      width: 350,
+                      height: getProportionateScreenHeight(350),
+                      width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
                           Card(
@@ -430,20 +433,22 @@ class _LearnPageState extends State<LearnPage> {
                                     data.wordRu,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.w600),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(26),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 10,
+                                  SizedBox(
+                                    height: getProportionateScreenHeight(10),
                                   ),
                                   Text(
                                     data.example,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: kMainTextColor,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w400),
+                                      color: kMainTextColor,
+                                      fontSize: getProportionateScreenWidth(22),
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -453,8 +458,8 @@ class _LearnPageState extends State<LearnPage> {
                       ),
                     ),
               child: SizedBox(
-                height: 350,
-                width: 350,
+                height: getProportionateScreenHeight(350),
+                width: getProportionateScreenWidth(350),
                 child: FlipCard(
                   controller: _controller,
                   speed: 1000,
@@ -462,7 +467,6 @@ class _LearnPageState extends State<LearnPage> {
                     setState(() {
                       _flipped = !_flipped;
                     });
-                    // print('onFlipDone: $_flipped');
                   },
                   direction: FlipDirection.HORIZONTAL,
                   front: !_returnFlipped
@@ -480,12 +484,13 @@ class _LearnPageState extends State<LearnPage> {
                                 Text(
                                   data.wordEn,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(20),
                                 ),
                                 data.audioFile == ''
                                     ? Container()
@@ -501,13 +506,17 @@ class _LearnPageState extends State<LearnPage> {
                                             Text(
                                               data.transcription,
                                               style: TextStyle(
-                                                fontSize: 20.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        22),
                                                 color: kMainPurple,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                            SizedBox(
+                                              width:
+                                                  getProportionateScreenWidth(
+                                                      10),
                                             ),
                                             const Icon(
                                               Icons.volume_up_rounded,
@@ -535,20 +544,22 @@ class _LearnPageState extends State<LearnPage> {
                                   data.wordRu,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(10),
                                 ),
                                 Text(
                                   data.example,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w400),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(22),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -569,12 +580,13 @@ class _LearnPageState extends State<LearnPage> {
                                 Text(
                                   data.wordEn,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(20),
                                 ),
                                 data.audioFile == ''
                                     ? Container()
@@ -590,13 +602,17 @@ class _LearnPageState extends State<LearnPage> {
                                             Text(
                                               data.transcription,
                                               style: TextStyle(
-                                                fontSize: 20.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        22),
                                                 color: kMainPurple,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                            SizedBox(
+                                              width:
+                                                  getProportionateScreenWidth(
+                                                      10),
                                             ),
                                             const Icon(
                                               Icons.volume_up_rounded,
@@ -624,20 +640,22 @@ class _LearnPageState extends State<LearnPage> {
                                   data.wordRu,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w600),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(26),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
+                                SizedBox(
+                                  height: getProportionateScreenHeight(10),
                                 ),
                                 Text(
                                   data.example,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: kMainTextColor,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w400),
+                                    color: kMainTextColor,
+                                    fontSize: getProportionateScreenWidth(22),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -647,9 +665,14 @@ class _LearnPageState extends State<LearnPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 120.0, 0.0, 100.0),
+              padding: EdgeInsets.fromLTRB(
+                getProportionateScreenWidth(0),
+                getProportionateScreenHeight(120),
+                getProportionateScreenWidth(0),
+                getProportionateScreenHeight(100),
+              ),
               child: SizedBox(
-                width: 320,
+                width: getProportionateScreenWidth(320),
                 child: AnimatedOpacity(
                   opacity: _visible && _hintVisible ? 1 : 0,
                   curve: Curves.easeInOut,
@@ -723,7 +746,12 @@ class _LearnPageState extends State<LearnPage> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 25, 15, 30),
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(25),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(30),
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -742,39 +770,40 @@ class _LearnPageState extends State<LearnPage> {
                                   'Назад',
                                   style: TextStyle(
                                     color: kMainTextColor,
-                                    fontSize: 18.sp,
+                                    fontSize: getProportionateScreenWidth(16),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            const MainScreen(
-                                              pageIndex: 0,
-                                              isStart: false,
-                                            ),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          const begin = 0.0;
-                                          const end = 1.0;
-                                          const curve = Curves.ease;
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const MainScreen(
+                                        pageIndex: 0,
+                                        isStart: false,
+                                      ),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = 0.0;
+                                        const end = 1.0;
+                                        const curve = Curves.ease;
 
-                                          var tween = Tween(
-                                            begin: begin,
-                                            end: end,
-                                          ).chain(
-                                            CurveTween(
-                                              curve: curve,
-                                            ),
-                                          );
+                                        var tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(
+                                          CurveTween(
+                                            curve: curve,
+                                          ),
+                                        );
 
-                                          return FadeTransition(
-                                            opacity: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        }),
+                                        return FadeTransition(
+                                          opacity: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
                                   );
                                 },
                               ),
@@ -788,8 +817,11 @@ class _LearnPageState extends State<LearnPage> {
                                     borderColor: Colors.transparent,
                                     innerColor: kMainPurple.withOpacity(0.3),
                                     borderWidth: 0,
-                                    height: 15,
-                                    indicatorSize: const Size(15, 15),
+                                    height: getProportionateScreenWidth(15),
+                                    indicatorSize: Size(
+                                      getProportionateScreenWidth(15),
+                                      getProportionateScreenWidth(15),
+                                    ),
                                     onChanged: (value) => setState(() {
                                       _hintVisible = value;
                                       storeDragHint(value);

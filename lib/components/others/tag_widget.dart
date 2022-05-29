@@ -1,6 +1,6 @@
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class TagWidget extends StatelessWidget {
   const TagWidget({
@@ -19,10 +19,6 @@ class TagWidget extends StatelessWidget {
         color: kWhite,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          // side: const BorderSide(
-          //   color: kMainPink,
-          //   width: 1,
-          // ),
         ),
       ),
       child: Padding(
@@ -33,7 +29,7 @@ class TagWidget extends StatelessWidget {
         child: DefaultTextStyle(
           style: TextStyle(
             color: kMainTextColor,
-            fontSize: 16.sp,
+            fontSize: getProportionateScreenWidth(16),
             fontWeight: FontWeight.w400,
           ),
           child: Row(

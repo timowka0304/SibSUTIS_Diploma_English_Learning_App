@@ -9,7 +9,7 @@ import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/help/help_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          return const Scaffold(
+          return Scaffold(
             backgroundColor: kSecondBlue,
             body: SafeArea(
               child: Center(
@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: kMainTextColor,
-                    fontSize: 18,
+                    fontSize: getProportionateScreenWidth(18),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -99,120 +99,123 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: ScreenUtil().setHeight(30),
+                      height: getProportionateScreenHeight(30),
                     ),
-                    Stack(children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(
-                          ScreenUtil().setWidth(30),
-                          ScreenUtil().setHeight(30),
-                          ScreenUtil().setWidth(30),
-                          ScreenUtil().setHeight(0),
+                    Stack(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.fromLTRB(
+                            getProportionateScreenWidth(30),
+                            getProportionateScreenHeight(30),
+                            getProportionateScreenWidth(30),
+                            getProportionateScreenHeight(0),
+                          ),
+                          height: getProportionateScreenHeight(220),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                getProportionateScreenWidth(15),),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.05),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(
+                                  getProportionateScreenWidth(0),
+                                  getProportionateScreenHeight(5),
+                                ), // changes position of shadow
+                              ),
+                            ],
+                          ),
                         ),
-                        height: ScreenUtil().setHeight(220),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(ScreenUtil().setWidth(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.05),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(
-                                ScreenUtil().setWidth(0),
-                                ScreenUtil().setHeight(5),
-                              ), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                      ),
-                      Align(
+                        Align(
                           alignment: Alignment.topCenter,
                           child: Column(
                             children: [
                               SizedBox(
                                 child: CircleAvatar(
-                                  radius: ScreenUtil().setWidth(40),
+                                  radius: getProportionateScreenWidth(40),
                                   backgroundColor: kWhite,
                                   child: CircleAvatar(
-                                      radius: ScreenUtil().setWidth(37),
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(_userImg),
-                                      backgroundColor: kMainPink,
-                                      child: Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: ScreenUtil().setWidth(12),
-                                            child: MaterialButton(
-                                              onPressed: () => updateImg(_user)
-                                                  .then((downloadUrl) {
+                                    radius: getProportionateScreenWidth(37),
+                                    backgroundImage:
+                                        CachedNetworkImageProvider(_userImg),
+                                    backgroundColor: kMainPink,
+                                    child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: getProportionateScreenWidth(12),
+                                        child: MaterialButton(
+                                          onPressed: () =>
+                                              updateImg(_user).then(
+                                            (downloadUrl) {
+                                              _user.updatePhotoURL(downloadUrl);
+
+                                              setState(() {
                                                 _user.updatePhotoURL(
                                                     downloadUrl);
-
-                                                setState(() {
-                                                  _user.updatePhotoURL(
-                                                      downloadUrl);
-                                                  _userImg = downloadUrl;
-                                                });
-                                              }),
-                                              elevation: 0,
-                                              focusElevation: 0,
-                                              hoverElevation: 0,
-                                              highlightElevation: 0,
-                                              color: kMainPurple,
-                                              child: Icon(
-                                                Icons.camera_alt,
-                                                color: kWhite,
-                                                size: ScreenUtil().setWidth(15),
-                                              ),
-                                              padding: EdgeInsets.all(
-                                                ScreenUtil().setWidth(5),
-                                              ),
-                                              shape: const CircleBorder(),
-                                            )),
-                                      )),
+                                                _userImg = downloadUrl;
+                                              });
+                                            },
+                                          ),
+                                          elevation: 0,
+                                          focusElevation: 0,
+                                          hoverElevation: 0,
+                                          highlightElevation: 0,
+                                          color: kMainPurple,
+                                          child: Icon(
+                                            Icons.camera_alt,
+                                            color: kWhite,
+                                            size:
+                                                getProportionateScreenWidth(14),
+                                          ),
+                                          padding: EdgeInsets.all(
+                                            getProportionateScreenWidth(5),
+                                          ),
+                                          shape: const CircleBorder(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height: ScreenUtil().setHeight(20),
+                                height: getProportionateScreenHeight(20),
                               ),
                               Text(
                                 (snapshot.data!.data()
                                     as Map<String, dynamic>)['username'],
-                                // user.displayName!,
                                 style: TextStyle(
                                   color: kMainTextColor,
-                                  fontSize: 16.sp,
+                                  fontSize: getProportionateScreenWidth(18),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               SizedBox(
-                                height: ScreenUtil().setHeight(10),
+                                height: getProportionateScreenHeight(10),
                               ),
                               Text(
                                 (snapshot.data!.data()
                                     as Map<String, dynamic>)['email'],
-                                // user.email!,
                                 style: TextStyle(
                                   color: kMainTextColor,
-                                  fontSize: 16.sp,
+                                  fontSize: getProportionateScreenWidth(18),
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                               SizedBox(
-                                height: ScreenUtil().setHeight(20),
+                                height: getProportionateScreenHeight(20),
                               ),
                               Stack(
                                 children: [
                                   Container(
-                                    height: ScreenUtil().setHeight(30),
-                                    width: ScreenUtil().setWidth(150),
+                                    height: getProportionateScreenHeight(30),
+                                    width: getProportionateScreenWidth(150),
                                     decoration: BoxDecoration(
                                       color: kMainPink,
                                       borderRadius: BorderRadius.circular(
-                                        ScreenUtil().setWidth(5),
+                                        getProportionateScreenWidth(5),
                                       ),
                                     ),
                                     child: Center(
@@ -222,7 +225,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                           style: TextStyle(
                                             color: kWhite,
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 16.sp,
+                                            fontSize:
+                                                getProportionateScreenWidth(16),
                                           ),
                                           children: [
                                             TextSpan(
@@ -241,7 +245,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                               style: TextStyle(
                                                 color: kWhite,
                                                 fontWeight: FontWeight.w800,
-                                                fontSize: 16.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
                                               ),
                                             ),
                                           ],
@@ -252,51 +258,54 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               )
                             ],
-                          )),
-                    ]),
+                          ),
+                        ),
+                      ],
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          height: ScreenUtil().setHeight(50),
+                          height: getProportionateScreenHeight(50),
                         ),
                         Text(
                           "Достижения",
                           style: TextStyle(
                             color: kMainTextColor,
-                            fontSize: 18.sp,
+                            fontSize: getProportionateScreenWidth(18),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(
-                          height: ScreenUtil().setHeight(20),
+                          height: getProportionateScreenHeight(20),
                         ),
                         Stack(
                           children: [
                             Container(
                               margin: EdgeInsets.fromLTRB(
-                                ScreenUtil().setWidth(30),
-                                ScreenUtil().setHeight(0),
-                                ScreenUtil().setWidth(30),
-                                ScreenUtil().setHeight(30),
+                                getProportionateScreenWidth(30),
+                                getProportionateScreenHeight(0),
+                                getProportionateScreenWidth(30),
+                                getProportionateScreenHeight(30),
                               ),
-                              height: ScreenUtil().setHeight(150),
+                              height: getProportionateScreenHeight(150),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(
-                                    ScreenUtil().setWidth(15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.05),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                        ScreenUtil().setWidth(0),
-                                        ScreenUtil().setHeight(5),
-                                      ), // changes position of shadow
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                  getProportionateScreenWidth(15),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.05),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                      getProportionateScreenWidth(0),
+                                      getProportionateScreenHeight(5),
                                     ),
-                                  ]),
+                                  ),
+                                ],
+                              ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -317,13 +326,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: ButtonStyle(
                                           textStyle: MaterialStateProperty
                                               .resolveWith<TextStyle>(
-                                                  (Set<MaterialState> states) {
-                                            return TextStyle(
-                                              color: kMainTextColor,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w400,
-                                            );
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
+                                                fontWeight: FontWeight.w400,
+                                              );
+                                            },
+                                          ),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             const RoundedRectangleBorder(
@@ -334,9 +346,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                            return kMainPink.withOpacity(0.1);
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return kMainPink.withOpacity(0.1);
+                                            },
+                                          ),
                                         ),
                                         child: Column(
                                           children: [
@@ -355,7 +368,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                             SizedBox(
                                               height:
-                                                  ScreenUtil().setHeight(15),
+                                                  getProportionateScreenHeight(
+                                                      16),
                                             ),
                                             Text(
                                               AchivementsModel.list
@@ -363,7 +377,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   .title,
                                               style: TextStyle(
                                                 color: kMainTextColor,
-                                                fontSize: 16.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -383,13 +399,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: ButtonStyle(
                                           textStyle: MaterialStateProperty
                                               .resolveWith<TextStyle>(
-                                                  (Set<MaterialState> states) {
-                                            return TextStyle(
-                                              color: kMainTextColor,
-                                              fontSize: 18.sp,
-                                              fontWeight: FontWeight.w400,
-                                            );
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
+                                                fontWeight: FontWeight.w400,
+                                              );
+                                            },
+                                          ),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             const RoundedRectangleBorder(
@@ -400,9 +419,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                            return kMainPink.withOpacity(0.1);
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return kMainPink.withOpacity(0.1);
+                                            },
+                                          ),
                                         ),
                                         child: Column(
                                           children: [
@@ -421,7 +441,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                             SizedBox(
                                               height:
-                                                  ScreenUtil().setHeight(15),
+                                                  getProportionateScreenHeight(
+                                                      16),
                                             ),
                                             Text(
                                               AchivementsModel.list
@@ -429,7 +450,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   .title,
                                               style: TextStyle(
                                                 color: kMainTextColor,
-                                                fontSize: 16.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -449,13 +472,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         style: ButtonStyle(
                                           textStyle: MaterialStateProperty
                                               .resolveWith<TextStyle>(
-                                                  (Set<MaterialState> states) {
-                                            return TextStyle(
-                                              color: kMainTextColor,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w400,
-                                            );
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return TextStyle(
+                                                color: kMainTextColor,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
+                                                fontWeight: FontWeight.w400,
+                                              );
+                                            },
+                                          ),
                                           shape: MaterialStateProperty.all<
                                               RoundedRectangleBorder>(
                                             const RoundedRectangleBorder(
@@ -466,9 +492,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                           overlayColor: MaterialStateProperty
                                               .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                            return kMainPink.withOpacity(0.1);
-                                          }),
+                                            (Set<MaterialState> states) {
+                                              return kMainPink.withOpacity(0.1);
+                                            },
+                                          ),
                                         ),
                                         child: Column(
                                           children: [
@@ -487,7 +514,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                             SizedBox(
                                               height:
-                                                  ScreenUtil().setHeight(15),
+                                                  getProportionateScreenHeight(
+                                                      16),
                                             ),
                                             Text(
                                               AchivementsModel.list
@@ -495,7 +523,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   .title,
                                               style: TextStyle(
                                                 color: kMainTextColor,
-                                                fontSize: 16.sp,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        16),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -510,7 +540,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                         SizedBox(
-                          height: ScreenUtil().setHeight(20),
+                          height: getProportionateScreenHeight(20),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(30.0),
@@ -550,23 +580,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                   "Помощь по приложению",
                                   style: TextStyle(
                                     color: kMainTextColor.withOpacity(0.8),
-                                    fontSize: 16.sp,
+                                    fontSize: getProportionateScreenWidth(16),
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                height: ScreenUtil().setHeight(30),
+                                height: getProportionateScreenHeight(30),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(
-                                    ScreenUtil().setWidth(135),
-                                    ScreenUtil().setHeight(50),
+                                    getProportionateScreenWidth(110),
+                                    getProportionateScreenHeight(50),
                                   ),
                                   maximumSize: Size(
-                                    ScreenUtil().setWidth(185),
-                                    ScreenUtil().setHeight(50),
+                                    getProportionateScreenWidth(160),
+                                    getProportionateScreenHeight(50),
                                   ),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
@@ -591,14 +621,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: kWhite,
                                     ),
                                     SizedBox(
-                                      width: ScreenUtil().setWidth(10),
+                                      width: getProportionateScreenWidth(10),
                                     ),
                                     Text(
                                       "Выйти",
                                       style: TextStyle(
-                                          color: kWhite,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w600),
+                                        color: kWhite,
+                                        fontSize:
+                                            getProportionateScreenWidth(16),
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     )
                                   ],
                                 ),

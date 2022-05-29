@@ -6,8 +6,8 @@ import 'package:easy_peasy/screens/choice_of_word/choice_of_word.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_peasy/size_config.dart';
 
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({Key? key}) : super(key: key);
@@ -111,196 +111,197 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: generateCards(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(
-                    color: kMainPink,
-                  ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(20),
-                  ),
-                  Text(
-                    "Подождите несколько секунд.\nПервый раз получаем карточки с сервера ...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: kMainTextColor,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Scaffold(
-              backgroundColor: kSecondBlue,
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: ScreenUtil().setHeight(50),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: ScreenUtil().setWidth(30),
-                        ),
-                        child: Text(
-                          "Начальный уровень:",
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(150),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.fromLTRB(
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                ),
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: beginnerDictionary.length,
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: ScreenUtil().setWidth(20),
-                                  );
-                                },
-                                itemBuilder: (context, index) {
-                                  return categoryCard(
-                                    "Beginer",
-                                    index,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(50),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: ScreenUtil().setWidth(30),
-                        ),
-                        child: Text(
-                          "Средний уровень:",
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(150),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.fromLTRB(
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                ),
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: intermediateDictionary.length,
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: ScreenUtil().setWidth(20),
-                                  );
-                                },
-                                itemBuilder: (context, index) {
-                                  return categoryCard(
-                                    "Intermediate",
-                                    index,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(50),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: ScreenUtil().setWidth(30),
-                        ),
-                        child: Text(
-                          "По сериалам и фильмам:",
-                          style: TextStyle(
-                            color: kMainTextColor,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(20),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(150),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.fromLTRB(
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                  ScreenUtil().setWidth(20),
-                                  ScreenUtil().setHeight(0),
-                                ),
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: filmsDictionary.length,
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: ScreenUtil().setWidth(20),
-                                  );
-                                },
-                                itemBuilder: (context, index) {
-                                  return categoryCard(
-                                    "Films",
-                                    index,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+      future: generateCards(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(
+                  color: kMainPink,
+                ),
+                SizedBox(
+                  height: getProportionateScreenHeight(20),
+                ),
+                Text(
+                  "Подождите несколько секунд.\nПервый раз получаем данные с сервера ...",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: kMainTextColor,
+                    fontSize: getProportionateScreenWidth(18),
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
+              ],
+            ),
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: kSecondBlue,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: getProportionateScreenWidth(20),
+                      ),
+                      child: Text(
+                        "Начальный уровень:",
+                        style: TextStyle(
+                          color: kMainTextColor,
+                          fontSize: getProportionateScreenWidth(18),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(150),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                              ),
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: beginnerDictionary.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  width: getProportionateScreenWidth(10),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                return categoryCard(
+                                  "Beginer",
+                                  index,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: getProportionateScreenWidth(20),
+                      ),
+                      child: Text(
+                        "Средний уровень:",
+                        style: TextStyle(
+                          color: kMainTextColor,
+                          fontSize: getProportionateScreenWidth(18),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(150),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                              ),
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: intermediateDictionary.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  width: getProportionateScreenWidth(10),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                return categoryCard(
+                                  "Intermediate",
+                                  index,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: getProportionateScreenWidth(20),
+                      ),
+                      child: Text(
+                        "По сериалам и фильмам:",
+                        style: TextStyle(
+                          color: kMainTextColor,
+                          fontSize: getProportionateScreenWidth(18),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(150),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.fromLTRB(
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                                getProportionateScreenWidth(15),
+                                getProportionateScreenHeight(0),
+                              ),
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: filmsDictionary.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  width: getProportionateScreenWidth(10),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                return categoryCard(
+                                  "Films",
+                                  index,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            );
-          }
-        });
+            ),
+          );
+        }
+      },
+    );
   }
 
   Widget categoryCard(String typeList, int index) {
@@ -331,7 +332,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   : null;
 
       return SizedBox(
-        width: ScreenUtil().setWidth(180),
+        width: getProportionateScreenWidth(180),
         child: GestureDetector(
           onTap: () async {
             Navigator.of(context).push(
@@ -390,7 +391,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     Expanded(
                       flex: 2,
                       child: CachedNetworkImage(
-                        width: ScreenUtil().setWidth(180),
+                        width: getProportionateScreenWidth(180),
                         fit: BoxFit.cover,
                         imageUrl: img,
                         progressIndicatorBuilder: (
@@ -414,17 +415,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
-                        ScreenUtil().setWidth(0),
-                        ScreenUtil().setHeight(10),
-                        ScreenUtil().setWidth(0),
-                        ScreenUtil().setHeight(10),
+                        getProportionateScreenWidth(0),
+                        getProportionateScreenHeight(10),
+                        getProportionateScreenWidth(0),
+                        getProportionateScreenHeight(10),
                       ),
                       child: Text(
                         name,
                         style: TextStyle(
                           color: kMainTextColor,
                           fontWeight: FontWeight.w400,
-                          fontSize: 16.sp,
+                          fontSize: getProportionateScreenWidth(16),
                         ),
                       ),
                     ),

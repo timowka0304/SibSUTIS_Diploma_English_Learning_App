@@ -52,8 +52,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 )),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: getProportionateScreenHeight(100),
-                  top: getProportionateScreenHeight(100)),
+                bottom: getProportionateScreenHeight(100),
+                top: getProportionateScreenHeight(100),
+              ),
               child: StepsContainer(
                   page: page, list: _list, controller: _controller),
             ),

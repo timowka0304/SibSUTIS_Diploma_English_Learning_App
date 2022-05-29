@@ -41,7 +41,9 @@ class _StepsContainerState extends State<StepsContainer> {
           ),
           Center(
             child: InkWell(
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(
+                getProportionateScreenHeight(50),
+              ),
               highlightColor: kMainPurple.withOpacity(0.4),
               splashColor: kMainPurple.withOpacity(0.5),
               onTap: () async {
@@ -78,8 +80,6 @@ class _StepsContainerState extends State<StepsContainer> {
                       },
                     ),
                   );
-                  // Navigator.of(context).pushNamedAndRemoveUntil(
-                  //     SignIn.routeName, (route) => false);
                 }
               },
               child: Container(

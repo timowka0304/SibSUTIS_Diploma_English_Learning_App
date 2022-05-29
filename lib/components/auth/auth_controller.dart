@@ -1,5 +1,4 @@
 import 'package:easy_peasy/components/others/dialogs.dart';
-import 'package:easy_peasy/components/others/shared_pref.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

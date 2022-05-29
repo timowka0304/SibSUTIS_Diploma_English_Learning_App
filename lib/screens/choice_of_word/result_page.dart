@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_peasy/size_config.dart';
 import 'package:confetti/confetti.dart';
 
 class ResultPage extends StatefulWidget {
@@ -42,7 +42,7 @@ class _ResultPageState extends State<ResultPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: kMainTextColor,
-                      fontSize: 26.sp,
+                      fontSize: getProportionateScreenWidth(24),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -54,19 +54,19 @@ class _ResultPageState extends State<ResultPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: kMainTextColor,
-                      fontSize: 22.sp,
+                      fontSize: getProportionateScreenWidth(20),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(
-                        ScreenUtil().setWidth(80),
-                        ScreenUtil().setHeight(40),
+                        getProportionateScreenWidth(80),
+                        getProportionateScreenHeight(40),
                       ),
                       maximumSize: Size(
-                        ScreenUtil().setWidth(100),
-                        ScreenUtil().setHeight(40),
+                        getProportionateScreenWidth(100),
+                        getProportionateScreenHeight(40),
                       ),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
@@ -111,7 +111,7 @@ class _ResultPageState extends State<ResultPage> {
                       'Готово',
                       style: TextStyle(
                         color: kWhite,
-                        fontSize: 16.sp,
+                        fontSize: getProportionateScreenWidth(16),
                       ),
                     ),
                   ),

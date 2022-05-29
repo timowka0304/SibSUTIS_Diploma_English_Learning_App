@@ -68,7 +68,7 @@ Future<void> firebaseRequest(BuildContext context) async {
         await storeMorningAchievement(
             _morningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
       } catch (_) {
-        await timeAchievement(context);
+        await timeMorningAchievement(context);
       }
 
       try {
@@ -76,7 +76,7 @@ Future<void> firebaseRequest(BuildContext context) async {
         await storeEveningAchievement(
             _eveningTimeAchievement, FirebaseAuth.instance.currentUser!.uid);
       } catch (_) {
-        await timeAchievement(context);
+        await timeEveningAchievement(context);
       }
 
       try {
@@ -92,14 +92,12 @@ Future<void> firebaseRequest(BuildContext context) async {
   );
 }
 
-Future<void> timeAchievement(BuildContext context) async {
+Future<void> timeMorningAchievement(BuildContext context) async {
   String user = FirebaseAuth.instance.currentUser!.uid.toString();
 
   late bool _morningTime;
-  late bool _eveningTime;
 
   late bool _morningTimeAchievement;
-  late bool _eveningTimeAchievement;
 
   await getMorningAchievement(user).then((value) async {
     if (value != null) {
@@ -118,6 +116,27 @@ Future<void> timeAchievement(BuildContext context) async {
     }
   });
 
+  if (_morningTime && !_morningTimeAchievement) {
+    showAchievementView(context, AchivementsModel.list[0]);
+    _morningTimeAchievement = true;
+    await storeMorningAchievement(_morningTimeAchievement, user);
+  }
+
+  if (_morningTimeAchievement) {
+    FirebaseFirestore.instance.collection('users').doc(user).update(
+      {
+        'morningTimeAchievement': true,
+      },
+    );
+  }
+}
+
+Future<void> timeEveningAchievement(BuildContext context) async {
+  String user = FirebaseAuth.instance.currentUser!.uid.toString();
+
+  late bool _eveningTime;
+
+  late bool _eveningTimeAchievement;
   await getEveningAchievement(user).then((data) async {
     if (data != null) {
       _eveningTimeAchievement = data;
@@ -135,23 +154,10 @@ Future<void> timeAchievement(BuildContext context) async {
     }
   });
 
-  if (_morningTime && !_morningTimeAchievement) {
-    showAchievementView(context, AchivementsModel.list[0]);
-    _morningTimeAchievement = true;
-    await storeMorningAchievement(_morningTimeAchievement, user);
-  }
   if (_eveningTime && !_eveningTimeAchievement) {
     showAchievementView(context, AchivementsModel.list[2]);
     _eveningTimeAchievement = true;
     await storeEveningAchievement(_eveningTimeAchievement, user);
-  }
-
-  if (_morningTimeAchievement) {
-    FirebaseFirestore.instance.collection('users').doc(user).update(
-      {
-        'morningTimeAchievement': true,
-      },
-    );
   }
 
   if (_eveningTimeAchievement) {
@@ -161,11 +167,6 @@ Future<void> timeAchievement(BuildContext context) async {
       },
     );
   }
-
-  // print('_morningTime = ' + _morningTime.toString());
-  // print('_eveningTime = ' + _eveningTime.toString());
-  // print('_morningTimeAchievement = ' + _morningTimeAchievement.toString());
-  // print('_eveningTimeAchievement = ' + _eveningTimeAchievement.toString());
 }
 
 void showAchievementView(BuildContext context, AchivementsModel achivement) {
