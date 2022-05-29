@@ -243,6 +243,7 @@ class _WordsChoiceState extends State<WordsChoice> {
               ],
             ),
             Draggable(
+              maxSimultaneousDrags: 1,
               childWhenDragging: Container(),
               data: data,
               onDragStarted: () {
@@ -591,7 +592,9 @@ class _WordsChoiceState extends State<WordsChoice> {
                 child: AnimatedOpacity(
                   opacity: _visible && _hintVisible ? 1 : 0,
                   curve: Curves.easeInOut,
-                  duration: const Duration(milliseconds: 400,),
+                  duration: const Duration(
+                    milliseconds: 400,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

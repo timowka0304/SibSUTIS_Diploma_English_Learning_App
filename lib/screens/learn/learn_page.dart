@@ -324,6 +324,7 @@ class _LearnPageState extends State<LearnPage> {
               ],
             ),
             Draggable(
+              maxSimultaneousDrags: 1,
               childWhenDragging: Container(),
               data: data,
               onDragStarted: () {
