@@ -7,6 +7,7 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/achivements_model.dart';
 import 'package:easy_peasy/screens/auth/sign_in.dart';
 import 'package:easy_peasy/screens/help/help_page.dart';
+import 'package:easy_peasy/screens/rating/rating_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_peasy/size_config.dart';
@@ -114,7 +115,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
-                                getProportionateScreenWidth(15),),
+                              getProportionateScreenWidth(15),
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.05),
@@ -546,6 +548,48 @@ class _ProfilePageState extends State<ProfilePage> {
                           padding: const EdgeInsets.all(30.0),
                           child: Column(
                             children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const RatingPage(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = 0.0;
+                                        const end = 1.0;
+                                        const curve = Curves.ease;
+
+                                        var tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(
+                                          CurveTween(
+                                            curve: curve,
+                                          ),
+                                        );
+
+                                        return FadeTransition(
+                                          opacity: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Рейтинг пользователей",
+                                  style: TextStyle(
+                                    color: kMainTextColor.withOpacity(0.8),
+                                    fontSize: getProportionateScreenWidth(16),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: getProportionateScreenHeight(20),
+                              ),
                               InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(
