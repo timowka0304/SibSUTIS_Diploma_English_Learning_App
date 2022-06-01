@@ -14,25 +14,36 @@ Future<void> checkNumOfLearnedWords(BuildContext context) async {
       .get()
       .then(
     (value) async {
-      if (value.get('numberOfLearnedWords') == 100) {
-        await getNumWordsAchievement(FirebaseAuth.instance.currentUser!.uid)
-            .then(
-          (value) async {
-            if (value == null) {
-              showAchievementView(context, AchivementsModel.list[1]);
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .update(
-                {
-                  'learn100WordsAchievement': true,
-                },
-              );
-              await storeNumWordsAchievement(
-                true,
-                FirebaseAuth.instance.currentUser!.uid,
-              );
-            }
+      try {
+        if (value.get('numberOfLearnedWords') == 100) {
+          await getNumWordsAchievement(FirebaseAuth.instance.currentUser!.uid)
+              .then(
+            (value) async {
+              if (value == null) {
+                showAchievementView(context, AchivementsModel.list[1]);
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .update(
+                  {
+                    'learn100WordsAchievement': true,
+                  },
+                );
+                await storeNumWordsAchievement(
+                  true,
+                  FirebaseAuth.instance.currentUser!.uid,
+                );
+              }
+            },
+          );
+        }
+      } catch (_) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update(
+          {
+            'numberOfLearnedWords': 0,
           },
         );
       }

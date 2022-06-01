@@ -233,17 +233,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           children: [
                                             TextSpan(
                                               text: (snapshot.data!.data()
-                                                                  as Map<String,
-                                                                      dynamic>)[
-                                                              'numberOfLearnedWords']
-                                                          .toString() ==
-                                                      'null'
-                                                  ? '0'
-                                                  : (snapshot.data!.data()
-                                                              as Map<String,
-                                                                  dynamic>)[
-                                                          'numberOfLearnedWords']
-                                                      .toString(),
+                                                          as Map<String,
+                                                              dynamic>)[
+                                                      'numberOfLearnedWords']
+                                                  .toString(),
                                               style: TextStyle(
                                                 color: kWhite,
                                                 fontWeight: FontWeight.w800,

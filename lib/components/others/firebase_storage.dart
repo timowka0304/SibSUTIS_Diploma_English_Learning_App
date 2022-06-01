@@ -19,6 +19,15 @@ Future updateImg(User user) async {
   final comletedTask = await uploadTask;
   final String downloadUrl = await comletedTask.ref.getDownloadURL();
 
+  await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+    {
+      'profileImg': downloadUrl,
+    },
+    SetOptions(
+      merge: true,
+    ),
+  );
+
   return downloadUrl;
 }
 
