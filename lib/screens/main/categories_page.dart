@@ -404,7 +404,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   kMainPink.withOpacity(0.3),
                                 ),
                                 backgroundColor: kWhite,
-                                value: downloadProgress.progress),
+                                value: downloadProgress.progress,),
                         errorWidget: (
                           context,
                           url,

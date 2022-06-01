@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_peasy/screens/choice_of_word/choice_of_word.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +157,9 @@ class _RatingPageState extends State<RatingPage> {
                                               downloadProgress,
                                             ) =>
                                                 LinearProgressIndicator(
+                                              minHeight:
+                                                  getProportionateScreenWidth(
+                                                      100),
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
                                                 kMainPink.withOpacity(0.3),

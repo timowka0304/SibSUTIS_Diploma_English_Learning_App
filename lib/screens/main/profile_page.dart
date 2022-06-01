@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late Future<DocumentSnapshot> _dataStream;
+  late Future<DocumentSnapshot> _dataFuture;
   late User _user;
   late String _userImg = _user.photoURL!;
   late String uid;
@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> firebaseRequest() async {
     _user = FirebaseAuth.instance.currentUser!;
-    _dataStream =
+    _dataFuture =
         FirebaseFirestore.instance.collection('users').doc(_user.uid).get();
   }
 
@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: _dataStream,
+      future: _dataFuture,
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -541,11 +541,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(20),
-                        ),
                         Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: EdgeInsets.all(
+                            getProportionateScreenHeight(20),
+                          ),
                           child: Column(
                             children: [
                               InkWell(
@@ -652,9 +651,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onPressed: () => signOutUser().then(
                                   (value) {
                                     Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignIn()));
+                                      MaterialPageRoute(
+                                        builder: (context) => const SignIn(),
+                                      ),
+                                    );
                                   },
                                 ),
                                 child: Row(

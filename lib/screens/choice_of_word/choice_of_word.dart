@@ -271,7 +271,7 @@ class _WordsChoiceState extends State<WordsChoice> {
               },
               feedback: !_flipped
                   ? SizedBox(
-                      height: getProportionateScreenHeight(350),
+                      height: getProportionateScreenWidth(350),
                       width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
@@ -338,7 +338,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                       ),
                     )
                   : SizedBox(
-                      height: getProportionateScreenHeight(350),
+                      height: getProportionateScreenWidth(350),
                       width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
@@ -382,7 +382,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                       ),
                     ),
               child: SizedBox(
-                height: getProportionateScreenHeight(350),
+                height: getProportionateScreenWidth(350),
                 width: getProportionateScreenWidth(350),
                 child: FlipCard(
                   controller: _controller,

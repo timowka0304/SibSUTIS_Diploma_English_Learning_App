@@ -322,7 +322,7 @@ class _LearnPageState extends State<LearnPage> {
               },
               feedback: !_flipped
                   ? SizedBox(
-                      height: getProportionateScreenHeight(350),
+                      height: getProportionateScreenWidth(350),
                       width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
@@ -389,7 +389,7 @@ class _LearnPageState extends State<LearnPage> {
                       ),
                     )
                   : SizedBox(
-                      height: getProportionateScreenHeight(350),
+                      height: getProportionateScreenWidth(350),
                       width: getProportionateScreenWidth(350),
                       child: Stack(
                         children: [
@@ -433,7 +433,7 @@ class _LearnPageState extends State<LearnPage> {
                       ),
                     ),
               child: SizedBox(
-                height: getProportionateScreenHeight(350),
+                height: getProportionateScreenWidth(350),
                 width: getProportionateScreenWidth(350),
                 child: FlipCard(
                   controller: _controller,

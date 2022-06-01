@@ -95,11 +95,23 @@ class HelpPage extends StatelessWidget {
                     return ExpansionTile(
                       textColor: kMainPurple,
                       iconColor: kMainPurple,
-                      title: Text(HelpModel.list[index].title),
+                      title: Text(
+                        HelpModel.list[index].title,
+                        style: TextStyle(
+                          color: kMainTextColor,
+                          fontSize: getProportionateScreenWidth(18),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       children: <Widget>[
                         ListTile(
                           title: Text(
                             HelpModel.list[index].text,
+                            style: TextStyle(
+                              color: kMainTextColor,
+                              fontSize: getProportionateScreenWidth(16),
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ],
