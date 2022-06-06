@@ -52,7 +52,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int page = 0;
+  int _page = 0;
   bool _done = false;
 
   final List<Widget> pageList = <Widget>[
@@ -65,16 +65,16 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     int newPage = widget.pageIndex;
     int pageIndexFinal = widget.isStart
-        ? page
+        ? _page
         : _done
-            ? page
+            ? _page
             : newPage;
 
     return Scaffold(
       extendBody: true,
       body: pageList[pageIndexFinal],
       bottomNavigationBar: BottomTabBar(
-        index: pageIndexFinal,
+        finalIndex: pageIndexFinal,
         onChangedTab: onChangeTab,
       ),
     );
@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
   void onChangeTab(int index) {
     setState(
       () {
-        page = index;
+        _page = index;
         _done = true;
       },
     );

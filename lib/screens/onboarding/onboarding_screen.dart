@@ -29,9 +29,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       });
     });
     return Scaffold(
-        backgroundColor: kWhite,
-        body: SafeArea(
-            child: Column(
+      backgroundColor: kWhite,
+      body: SafeArea(
+        child: Column(
           children: [
             Expanded(
               flex: 1,
@@ -40,25 +40,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   : SkipButton(controller: _controller),
             ),
             Expanded(
-                flex: 4,
-                child: PageView.builder(
-                  controller: _controller,
-                  itemCount: _list.length,
-                  itemBuilder: (context, index) => MainContent(
-                    list: _list,
-                    index: index,
-                  ),
-                  physics: const BouncingScrollPhysics(),
-                )),
+              flex: 4,
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: _list.length,
+                itemBuilder: (context, index) => MainContent(
+                  list: _list,
+                  index: index,
+                ),
+                physics: const BouncingScrollPhysics(),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                 bottom: getProportionateScreenHeight(100),
                 top: getProportionateScreenHeight(100),
               ),
               child: StepsContainer(
-                  page: page, list: _list, controller: _controller),
+                page: page,
+                list: _list,
+                controller: _controller,
+              ),
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
 }

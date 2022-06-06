@@ -33,7 +33,7 @@ class WordsChoice extends StatefulWidget {
 }
 
 class _WordsChoiceState extends State<WordsChoice> {
-  late Future<void> dataFuture;
+  late Future<void> _dataFuture;
 
   var datas = <Word>[];
 
@@ -54,7 +54,7 @@ class _WordsChoiceState extends State<WordsChoice> {
 
   @override
   void initState() {
-    dataFuture = initial();
+    _dataFuture = initial();
     super.initState();
   }
 
@@ -210,7 +210,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe('dislike');
+                          _dataFuture = swipe('dislike');
                         },
                       );
                     },
@@ -238,7 +238,7 @@ class _WordsChoiceState extends State<WordsChoice> {
                           _flipped = false;
                           _returnFlipped = false;
                           cardIndex++;
-                          dataFuture = swipe('like');
+                          _dataFuture = swipe('like');
                         },
                       );
                     },
@@ -631,7 +631,7 @@ class _WordsChoiceState extends State<WordsChoice> {
     }
 
     return FutureBuilder(
-      future: dataFuture,
+      future: _dataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(

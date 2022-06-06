@@ -5,7 +5,7 @@ import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
 
-class StepsContainer extends StatefulWidget {
+class StepsContainer extends StatelessWidget {
   const StepsContainer({
     Key? key,
     required this.page,
@@ -20,11 +20,6 @@ class StepsContainer extends StatefulWidget {
   final PageController _controller;
 
   @override
-  State<StepsContainer> createState() => _StepsContainerState();
-}
-
-class _StepsContainerState extends State<StepsContainer> {
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: getProportionateScreenHeight(60),
@@ -35,9 +30,10 @@ class _StepsContainerState extends State<StepsContainer> {
             width: getProportionateScreenHeight(60),
             height: getProportionateScreenHeight(60),
             child: CircularProgressIndicator(
-                strokeWidth: getProportionateScreenHeight(4),
-                valueColor: const AlwaysStoppedAnimation(kMainPink),
-                value: (widget.page + 1) / (widget._list.length)),
+              strokeWidth: getProportionateScreenHeight(4),
+              valueColor: const AlwaysStoppedAnimation(kMainPink),
+              value: (page + 1) / (_list.length),
+            ),
           ),
           Center(
             child: InkWell(
@@ -47,11 +43,12 @@ class _StepsContainerState extends State<StepsContainer> {
               highlightColor: kMainPurple.withOpacity(0.4),
               splashColor: kMainPurple.withOpacity(0.5),
               onTap: () async {
-                if (widget.page < widget._list.length &&
-                    widget.page != widget._list.length - 1) {
-                  widget._controller.animateToPage(widget.page + 1,
-                      duration: kAnimationDuration,
-                      curve: Curves.easeInOutCirc);
+                if (page < _list.length && page != _list.length - 1) {
+                  _controller.animateToPage(
+                    page + 1,
+                    duration: kAnimationDuration,
+                    curve: Curves.easeInOutCirc,
+                  );
                 } else {
                   await storeOnboardInfo();
                   Navigator.of(context).pushReplacement(
@@ -86,9 +83,13 @@ class _StepsContainerState extends State<StepsContainer> {
                 width: getProportionateScreenHeight(50),
                 height: getProportionateScreenHeight(50),
                 decoration: BoxDecoration(
-                    color: kMainPurple,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(getProportionateScreenHeight(100)))),
+                  color: kMainPurple,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      getProportionateScreenHeight(100),
+                    ),
+                  ),
+                ),
                 child: Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: Colors.white,

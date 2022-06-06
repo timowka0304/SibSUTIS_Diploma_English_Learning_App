@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-const kWhite = Color(0xFFFFFFFF);
-const kMainPurple = Color(0xFF595ABA);
-const kMainPink = Color(0xFFED6078);
-const kSecondBlue = Color(0xFFE7F0FF);
-const kMainTextColor = Color(0xFF414141);
+const Color kWhite = Color(0xFFFFFFFF);
+const Color kMainPurple = Color(0xFF595ABA);
+const Color kMainPink = Color(0xFFED6078);
+const Color kSecondBlue = Color(0xFFE7F0FF);
+const Color kMainTextColor = Color(0xFF414141);
 
 const String k1stImageOnboardingPath = 'assets/images/onboarding/1st_img.png';
 const String k2ndImageOnboardingPath = 'assets/images/onboarding/2nd_img.png';
@@ -16,6 +16,6 @@ const String kLogoGoogle = 'assets/logo/google_icon.png';
 const String kDefaultAvatar =
     'https://firebasestorage.googleapis.com/v0/b/easy-peasy-25d2d.appspot.com/o/default_avatar.png?alt=media&token=6d5299ea-7a62-4158-a11a-2c51ce85aedd';
 
-const kAnimationDuration = Duration(milliseconds: 200);
+const Duration kAnimationDuration = Duration(milliseconds: 200);
 
 const String logo = "<span class='material-icons'>face</span>";

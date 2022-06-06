@@ -16,8 +16,9 @@ Future googleSignIn() async {
         await googleSignInAccount.authentication;
 
     AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication.idToken,
-        accessToken: googleSignInAuthentication.accessToken);
+      idToken: googleSignInAuthentication.idToken,
+      accessToken: googleSignInAuthentication.accessToken,
+    );
 
     try {
       await auth.signInWithCredential(credential);

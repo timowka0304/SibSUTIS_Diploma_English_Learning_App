@@ -197,9 +197,6 @@ void showAchievementView(BuildContext context, AchivementsModel achivement) {
       bottomLeft: Radius.circular(10.0),
     ),
     color: kMainPurple,
-    //textStyleTitle: TextStyle(),
-    //textStyleSubTitle: TextStyle(),
-    //alignment: Alignment.topCenter,
     duration: const Duration(
       seconds: 3,
     ),

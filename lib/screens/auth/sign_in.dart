@@ -203,163 +203,164 @@ class _SignInState extends State<SignIn> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-          extendBody: true,
-          resizeToAvoidBottomInset: false,
-          backgroundColor: kMainPurple,
-          body: SafeArea(
-            child: Center(
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        height: getProportionateScreenHeight(50),
-                      ),
-                      Image.asset(
-                        kLogoWhitePath,
-                        height: getProportionateScreenHeight(135),
-                        width: getProportionateScreenWidth(180),
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(100),
-                      ),
-                      Column(
-                        children: const [
-                          Center(
-                            child: GoogleButton(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(30),
-                      ),
-                      Flexible(
-                        child: Column(
-                          children: [
-                            Text(
-                              "или",
-                              style: TextStyle(
-                                color: kWhite,
-                                fontSize: getProportionateScreenWidth(16),
-                              ),
-                            ),
-                            SizedBox(
-                              height: getProportionateScreenHeight(20),
-                            ),
-                            emeilFiled(),
-                            SizedBox(
-                              height: getProportionateScreenHeight(20),
-                            ),
-                            passwordField(),
-                            SizedBox(
-                              height: getProportionateScreenHeight(30),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                primary: kWhite,
-                              ),
-                              onPressed: _trySubmitForm,
-                              child: Text(
-                                'Войти',
-                                style: TextStyle(
-                                  color: kMainTextColor,
-                                  fontSize: getProportionateScreenWidth(16),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: getProportionateScreenHeight(60),
-                            ),
-                          ],
+        extendBody: true,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: kMainPurple,
+        body: SafeArea(
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
+                    ),
+                    Image.asset(
+                      kLogoWhitePath,
+                      height: getProportionateScreenHeight(135),
+                      width: getProportionateScreenWidth(180),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(100),
+                    ),
+                    Column(
+                      children: const [
+                        Center(
+                          child: GoogleButton(),
                         ),
-                      ),
-                      Column(
+                      ],
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(30),
+                    ),
+                    Flexible(
+                      child: Column(
                         children: [
-                          InkWell(
-                            onTap: () => _displayTextInputDialog(context),
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Text(
-                              "Забыли пароль?",
-                              style: TextStyle(
-                                color: kWhite,
-                                fontWeight: FontWeight.w600,
-                                fontSize: getProportionateScreenWidth(16),
-                              ),
+                          Text(
+                            "или",
+                            style: TextStyle(
+                              color: kWhite,
+                              fontSize: getProportionateScreenWidth(16),
                             ),
                           ),
                           SizedBox(
                             height: getProportionateScreenHeight(20),
                           ),
-                          RichText(
-                              text: TextSpan(
-                                  text: "Еще нет аккаунта? ",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: getProportionateScreenWidth(16),
-                                  ),
-                                  children: [
-                                TextSpan(
-                                  text: "Зарегистрируйся!",
-                                  style: TextStyle(
-                                    color: kWhite,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: getProportionateScreenWidth(16),
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () =>
-                                        // Navigator.pushNamed(
-                                        //     context, SignUp.routeName),
-                                        Navigator.of(context).push(
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation,
-                                                    secondaryAnimation) =>
-                                                const SignUp(),
-                                            transitionsBuilder: (context,
-                                                animation,
-                                                secondaryAnimation,
-                                                child) {
-                                              const begin = 0.0;
-                                              const end = 1.0;
-                                              const curve = Curves.ease;
-
-                                              var tween = Tween(
-                                                begin: begin,
-                                                end: end,
-                                              ).chain(
-                                                CurveTween(
-                                                  curve: curve,
-                                                ),
-                                              );
-
-                                              return FadeTransition(
-                                                opacity: animation.drive(tween),
-                                                child: child,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                )
-                              ])),
+                          emeilFiled(),
+                          SizedBox(
+                            height: getProportionateScreenHeight(20),
+                          ),
+                          passwordField(),
                           SizedBox(
                             height: getProportionateScreenHeight(30),
                           ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              primary: kWhite,
+                            ),
+                            onPressed: _trySubmitForm,
+                            child: Text(
+                              'Войти',
+                              style: TextStyle(
+                                color: kMainTextColor,
+                                fontSize: getProportionateScreenWidth(16),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(60),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: () => _displayTextInputDialog(context),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          child: Text(
+                            "Забыли пароль?",
+                            style: TextStyle(
+                              color: kWhite,
+                              fontWeight: FontWeight.w600,
+                              fontSize: getProportionateScreenWidth(16),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: getProportionateScreenHeight(20),
+                        ),
+                        RichText(
+                            text: TextSpan(
+                                text: "Еще нет аккаунта? ",
+                                style: TextStyle(
+                                  color: kWhite,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: getProportionateScreenWidth(16),
+                                ),
+                                children: [
+                              TextSpan(
+                                text: "Зарегистрируйся!",
+                                style: TextStyle(
+                                  color: kWhite,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: getProportionateScreenWidth(16),
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () =>
+                                      // Navigator.pushNamed(
+                                      //     context, SignUp.routeName),
+                                      Navigator.of(context).push(
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              const SignUp(),
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
+                                            const begin = 0.0;
+                                            const end = 1.0;
+                                            const curve = Curves.ease;
+
+                                            var tween = Tween(
+                                              begin: begin,
+                                              end: end,
+                                            ).chain(
+                                              CurveTween(
+                                                curve: curve,
+                                              ),
+                                            );
+
+                                            return FadeTransition(
+                                              opacity: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                              )
+                            ])),
+                        SizedBox(
+                          height: getProportionateScreenHeight(30),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -387,69 +388,72 @@ class _SignInState extends State<SignIn> {
           return null;
         },
         decoration: InputDecoration(
-            prefixIcon: const Icon(
-              Icons.lock,
-              color: kWhite,
+          prefixIcon: Icon(
+            Icons.lock,
+            color: kWhite,
+            size: getProportionateScreenWidth(16),
+          ),
+          hintStyle: TextStyle(
+            color: kWhite.withOpacity(0.5),
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
+          labelText: "Пароль",
+          labelStyle: TextStyle(
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(16),
+          ),
+          hintText: 'qwerty123',
+          isDense: true,
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kMainPink,
+              width: 1.0,
             ),
-            hintStyle: TextStyle(
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kMainPink,
+              width: 1.0,
+            ),
+          ),
+          errorStyle: TextStyle(
+            color: kWhite,
+            fontWeight: FontWeight.w300,
+            fontSize: getProportionateScreenWidth(14),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kWhite,
+              width: 1.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: kWhite,
+              width: 1.0,
+            ),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isObscure ? Icons.visibility : Icons.visibility_off,
               color: kWhite.withOpacity(0.5),
-              fontWeight: FontWeight.w300,
-              fontSize: getProportionateScreenWidth(16),
+              size: getProportionateScreenWidth(16),
             ),
-            labelText: "Пароль",
-            labelStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w300,
-              fontSize: getProportionateScreenWidth(16),
-            ),
-            hintText: 'qwerty123',
-            isDense: true,
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: kMainPink,
-                width: 1.0,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: kMainPink,
-                width: 1.0,
-              ),
-            ),
-            errorStyle: TextStyle(
-              color: kWhite,
-              fontWeight: FontWeight.w300,
-              fontSize: getProportionateScreenWidth(14),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: kWhite,
-                width: 1.0,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: kWhite,
-                width: 1.0,
-              ),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _isObscure ? Icons.visibility : Icons.visibility_off,
-                color: kWhite.withOpacity(0.5),
-              ),
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
-              },
-            )),
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onPressed: () {
+              setState(() {
+                _isObscure = !_isObscure;
+              });
+            },
+          ),
+        ),
       ),
     );
   }
@@ -477,9 +481,10 @@ class _SignInState extends State<SignIn> {
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.mail,
             color: kWhite,
+            size: getProportionateScreenWidth(16),
           ),
           hintStyle: TextStyle(
             color: kWhite.withOpacity(0.5),

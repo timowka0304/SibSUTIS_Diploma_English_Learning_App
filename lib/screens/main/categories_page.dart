@@ -24,43 +24,45 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Map<String, dynamic> filmsDictionary;
 
   Future<void> generateCards() async {
-    await getCategoriesInfo().then((value) async {
-      beginnerDictionary = {};
-      intermediateDictionary = {};
-      filmsDictionary = {};
-      wordsImage = {};
+    await getCategoriesInfo().then(
+      (value) async {
+        beginnerDictionary = {};
+        intermediateDictionary = {};
+        filmsDictionary = {};
+        wordsImage = {};
 
-      if (value == null) {
-        await getDictionaryJSON().then(
-          ((value) async {
-            final response = await fetchJSON(value);
-            Map<String, dynamic> dictionary =
-                json.decode(utf8.decode(response.bodyBytes));
+        if (value == null) {
+          await getDictionaryJSON().then(
+            ((value) async {
+              final response = await fetchJSON(value);
+              Map<String, dynamic> dictionary =
+                  json.decode(utf8.decode(response.bodyBytes));
 
-            beginnerDictionary = dictionary["begginer"];
-            intermediateDictionary = dictionary["intermediate"];
-            filmsDictionary = dictionary["films"];
-          }),
-        );
+              beginnerDictionary = dictionary["begginer"];
+              intermediateDictionary = dictionary["intermediate"];
+              filmsDictionary = dictionary["films"];
+            }),
+          );
 
-        await getImagesForBegginers();
-        await getImagesForIntermediate();
-        await getImagesForFilms();
+          await getImagesForBegginers();
+          await getImagesForIntermediate();
+          await getImagesForFilms();
 
-        await storeCategoriesInfo(
-          json.encode(wordsImage),
-          json.encode(beginnerDictionary),
-          json.encode(intermediateDictionary),
-          json.encode(filmsDictionary),
-        );
-      } else {
-        wordsImage = json.decode(await getCategoriesImages());
+          await storeCategoriesInfo(
+            json.encode(wordsImage),
+            json.encode(beginnerDictionary),
+            json.encode(intermediateDictionary),
+            json.encode(filmsDictionary),
+          );
+        } else {
+          wordsImage = json.decode(await getCategoriesImages());
 
-        beginnerDictionary = json.decode(await getBeginersDict());
-        intermediateDictionary = json.decode(await getIntermediateDict());
-        filmsDictionary = json.decode(await getFilmsDict());
-      }
-    });
+          beginnerDictionary = json.decode(await getBeginersDict());
+          intermediateDictionary = json.decode(await getIntermediateDict());
+          filmsDictionary = json.decode(await getFilmsDict());
+        }
+      },
+    );
   }
 
   Future<http.Response> fetchJSON(String value) async {
@@ -400,11 +402,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           downloadProgress,
                         ) =>
                             LinearProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  kMainPink.withOpacity(0.3),
-                                ),
-                                backgroundColor: kWhite,
-                                value: downloadProgress.progress,),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            kMainPink.withOpacity(0.3),
+                          ),
+                          backgroundColor: kWhite,
+                          value: downloadProgress.progress,
+                        ),
                         errorWidget: (
                           context,
                           url,
