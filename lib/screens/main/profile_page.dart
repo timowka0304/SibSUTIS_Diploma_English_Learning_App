@@ -642,11 +642,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                   primary: kMainPink,
                                 ),
                                 onPressed: () => signOutUser().then(
-                                  (value) {
-                                    Navigator.of(context).pushReplacement(
+                                  (_) {
+                                    Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (context) => const SignIn(),
                                       ),
+                                      (Route<dynamic> route) => false,
                                     );
                                   },
                                 ),
