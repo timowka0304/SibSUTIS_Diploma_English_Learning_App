@@ -644,8 +644,33 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onPressed: () => signOutUser().then(
                                   (_) {
                                     Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => const SignIn(),
+                                      // MaterialPageRoute(
+                                      //   builder: (context) => const SignIn(),
+                                      // ),
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            const SignIn(),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          const begin = 0.0;
+                                          const end = 1.0;
+                                          const curve = Curves.ease;
+
+                                          var tween = Tween(
+                                            begin: begin,
+                                            end: end,
+                                          ).chain(
+                                            CurveTween(
+                                              curve: curve,
+                                            ),
+                                          );
+
+                                          return FadeTransition(
+                                            opacity: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
                                       ),
                                       (Route<dynamic> route) => false,
                                     );
