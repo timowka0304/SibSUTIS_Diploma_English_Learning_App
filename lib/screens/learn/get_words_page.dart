@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_peasy/constants.dart';
 import 'package:easy_peasy/screens/learn/learn_page.dart';
@@ -45,10 +48,14 @@ class _GetWordsPageState extends State<GetWordsPage> {
       wordsList.add(element.key);
     }
     wordsList.shuffle();
+    Map<String, dynamic> temp = {};
 
     for (var element in wordsList) {
-      fullDataWords.addAll({element: snapshot[element]});
+      temp.addAll({element: snapshot[element]});
     }
+
+    fullDataWords = Map.fromEntries(
+        temp.entries.toList()..sort((k1, k2) => k1.value.compareTo(k2.value)));
   }
 
   Future<void> goToNewPage(
